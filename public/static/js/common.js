@@ -10,10 +10,10 @@ window.base = {
             type: params.type,
             data: params.data,
             success: function (data) {
-                params.sCallback(data) && params.sCallback(data);
+                params.sCallback && params.sCallback(data);
             },
             error: function (err) {
-                params.eCallback(err) && params.eCallback(err);
+                params.eCallback && params.eCallback(err);
             }
         })
     }

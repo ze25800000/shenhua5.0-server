@@ -27,3 +27,6 @@ Route::get('oiling/list', 'oiling/manager/facilityList');
 
 //系统管理
 Route::get('manager', 'user/manager/index');
+//通过id获取用户信息，进行编辑
+Route::get('user/edit/:id', 'user/manager/getUserById');
+Route::post('user/update', 'user/manager/updateUserById');

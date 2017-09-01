@@ -67,7 +67,7 @@
                             <thead>
                             <tr>
                                 <th>
-                                    员工编号
+                                    账号
                                 </th>
                                 <th>
                                     姓名
@@ -78,34 +78,160 @@
                                 <th>
                                     权限
                                 </th>
+                                <th>
+                                    操作
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
                             {foreach $users as $v}
                             <tr>
                                 <td>
-                                    {$v.id}
+                                    {$v.account}
                                 </td>
                                 <td>
                                     {$v.name}
                                 </td>
                                 <td>
-                                    {$v.scope}
+                                    {$v.phone}
                                 </td>
                                 <td>
-                                    操作
+                                    {if condition="$v.scope==36"}
+                                    超级管理员
+                                    {elseif condition="$v.scope==18"/}
+                                    系统维护员
+                                    {else/}
+                                    普通工作人员
+                                    {/if}
+                                </td>
+                                <td>
+                                    <a id="edit" href="#modal-container-708375" role="button"
+                                       class="edit btn btn-primary"
+                                       data-toggle="modal" data-id="{$v.id}">编辑</a>
+                                    <a id="delete" href="#modal-container-708375" role="button"
+                                       class="delete btn btn-danger"
+                                       data-toggle="modal" data-id="{$v.id}">删除</a>
                                 </td>
                             </tr>
                             {/foreach}
                             </tbody>
                         </table>
+                        <a id="addworker" href="#modal-container-708375" role="button"
+                           class="addworker btn btn-default"
+                           data-toggle="modal" data-id="{$v.id}">添加新员工</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="modal fade" id="modal-container-708375" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        编辑员工信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="account" class="col-sm-2 control-label">账号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="account" name="account"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd" class="col-sm-2 control-label">密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="pwd" name="pwd"
+                                       placeholder="输入密码将覆盖原来的密码"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">姓名</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="name" name="name"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="col-sm-2 control-label">手机</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="phone" name="phone"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="scope" class="col-sm-2 control-label">权限</label>
+                            <div class="col-sm-10">
+                                <select name="scope" id="scope" class="form-control">
+                                    <option value="9">普通工作人员</option>
+                                    <option value="18">系统维护员</option>
+                                    <option value="36">超级管理员</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" id="hidden" value="">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="save btn btn-primary" data-dismiss="modal">保存</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 </div>
 
 
 <?php require(APP_PATH.'/user/view/common/footer.html');?>
+<script>
+    $(function () {
+        varparams={}
+        var account = $('#account'),
+            pwd = $('#pwd'),
+            name = $('#name'),
+            phone = $('#phone'),
+            scope = $('#scope'),
+            hidden = $('#hidden');
+        //点击编辑按钮，弹出对话框
+        $(document).on('click', '.edit', function () {
+            var id = $(this).data('id');
+            var params = {
+                url: 'user/edit/' + id + '?XDEBUG_SESSION_START=13207',
+                sCallback: function (data) {
+                    account.val(data.user.account);
+                    pwd.val('');
+                    phone.val(data.user.phone);
+                    name.val(data.user.name);
+                    scope.val(data.user.scope);
+                    hidden.val(id);
+                }
+            };
+            window.base.getData(params);
+        });
+        $(document).on('click', '.save', function () {
+            var params = {
+                url: 'user/update',
+                type: 'post',
+                data: {
+                    id: hidden.val(),
+                    account: account.val(),
+                    password: pwd.val(),
+                    name: name.val(),
+                    phone: phone.val(),
+                    scope: scope.val()
+                },
+                sCallback: function (data) {
+                    window.location.href = "/manager";
+//                    $('#authority').addClass('active').attr('aria-expanded', true);
+//                    $('#information').removeClass('active').attr('aria-expanded', false);
+                }
+            };
+            window.base.getData(params);
+        });
+    });
+
+</script>
