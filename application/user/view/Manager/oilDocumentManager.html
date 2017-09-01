@@ -1,0 +1,64 @@
+<?php require(APP_PATH.'/user/view/common/header.html');?>
+
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <h2>
+                系统管理
+            </h2>
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <!-- Nav tabs -->
+                    <ul class="nav navbar-nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#information">基础数据录入</a></li>
+                        <li role="presentation"><a href="member">员工管理</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="javascript:void (0)">{$userName}</a>
+                        </li>
+                        <li>
+                            <a href="#">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="__ROOT__logout">退出</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="tab-content">
+                <div class="col-md-12 column" style="padding-left: 0px;padding-right: 0px;">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="active" role="presentation">
+                            <a class=""
+                               href="#standard"
+                               aria-controls="standard"
+                               role="tab"
+                               data-toggle="tab">设备润滑标准管理</a>
+                        </li>
+                        <li class="" role="presentation">
+                            <a class=""
+                               href="#cost"
+                               aria-controls="cost"
+                               role="tab"
+                               data-toggle="tab">润滑保养成本管理</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col-md-12 column">
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="standard">设备润滑标准管理</div>
+                        <div role="tabpanel" class="tab-pane" id="cost">润滑保养成本管理</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<?php require(APP_PATH.'/user/view/common/footer.html');?>

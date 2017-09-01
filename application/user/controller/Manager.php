@@ -19,7 +19,13 @@ class Manager extends BaseController {
         'checkStaffScope' => ['only' => 'index']
     ];
 
-    public function index() {
+    public function oilDocumentManager() {
+        $userName = session('userName');
+        $this->assign('userName', $userName);
+        return $this->fetch();
+    }
+
+    public function member() {
         $users    = User::select();
         $userName = session('userName');
         $scope    = session('userScope');
@@ -47,6 +53,8 @@ class Manager extends BaseController {
         (new IDMustBePositiveInt())->goCheck();
         if ($_POST['password']) {
             $_POST['password'] = md5($_POST['password']);
+        } else {
+            unset($_POST['password']);
         }
         $result = User::update($_POST);
         if (!$result) {
