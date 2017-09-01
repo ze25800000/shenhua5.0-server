@@ -1,0 +1,62 @@
+<?php require(APP_PATH.'/user/view/common/header.html');?>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="jumbotron">
+                <h1>
+                    神华集团
+                </h1>
+                <p>
+                    欢迎使用设备管理系统
+                </p>
+            </div>
+            <nav class="navbar navbar-default" role="navigation">
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#">{$userName}</a>
+                        </li>
+                        {if condition="$userScope>=18"}
+                        <li>
+                            <a href="__ROOT__manager">系统管理</a>
+                        </li>
+                        {/if}
+                        <li>
+                            <a href="#">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="__ROOT__logout">退出</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="/oiling/warning" class="thumbnail">
+                        <img alt="300x200"
+                             src="http://ibootstrap-file.b0.upaiyun.com/lorempixel.com/600/200/people/default.jpg"/>
+                        <div class="caption">
+                            <h3>
+                                设备润滑管理
+                            </h3>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="" class="thumbnail">
+                        <img alt="300x200"
+                             src="http://ibootstrap-file.b0.upaiyun.com/lorempixel.com/600/200/city/default.jpg"/>
+                        <div class="caption">
+                            <h3>
+                                设备维修档案管理
+                            </h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php require(APP_PATH.'/user/view/common/footer.html');?>

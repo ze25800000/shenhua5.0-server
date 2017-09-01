@@ -1,0 +1,38 @@
+<?php require(APP_PATH.'/user/view/common/header.html');?>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="jumbotron">
+                <h1>
+                    神华集团
+                </h1>
+                <p>
+                    欢迎使用设备管理系统
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-4 column">
+        </div>
+        <div class="col-md-4 column">
+            <form role="form" method="post">
+                <div class="form-group">
+                    <label for="username">账号：</label><input type="email" class="form-control"
+                                                            id="username" name="username"/>
+                    <div class="error-tips"></div>
+                </div>
+                <div class="form-group">
+                    <label for="pwd">密码：</label><input type="password" class="form-control"
+                                                       id="pwd" name="pwd"/>
+                    <div class="error-tips"></div>
+                </div>
+                <a id="login" href="javascript:void(0)" class="btn btn-default">登录</a>
+            </form>
+        </div>
+        <div class="col-md-4 column">
+        </div>
+    </div>
+</div>
+
+<?php require(APP_PATH.'/user/view/common/footer.html');?>
