@@ -13,7 +13,7 @@ window.base = {
                 params.sCallback && params.sCallback(data);
             },
             error: function (err) {
-                params.eCallback && params.eCallback(err);
+                params.eCallback && params.eCallback(err.responseJSON);
             }
         })
     }

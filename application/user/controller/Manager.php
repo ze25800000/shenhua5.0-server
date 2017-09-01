@@ -13,6 +13,7 @@ use app\lib\exception\UserException;
 use app\service\BaseController;
 use app\user\model\User;
 use app\validate\IDMustBePositiveInt;
+use app\validate\UserValidate;
 
 class Manager extends BaseController {
     protected $beforeActionList = [
@@ -50,7 +51,7 @@ class Manager extends BaseController {
     }
 
     public function updateUserById() {
-        (new IDMustBePositiveInt())->goCheck();
+        (new UserValidate())->goCheck();
         if ($_POST['password']) {
             $_POST['password'] = md5($_POST['password']);
         } else {
@@ -66,6 +67,20 @@ class Manager extends BaseController {
         return json([
             'errorCode' => 0,
             'msg'       => '用户信息更新成功'
+        ], 201);
+    }
+
+    public function addUser() {
+        (new UserValidate())->goCheck();
+        $result = User::insert($_POST);
+        if (!$result) {
+            throw new UserException([
+                'msg' => '创建用户失败，请创新输入'
+            ]);
+        }
+        return json([
+            'errorCode' => 0,
+            'msg'       => '创建用户成功'
         ], 201);
     }
 }

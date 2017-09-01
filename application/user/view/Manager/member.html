@@ -83,7 +83,7 @@
                     </table>
                     <a id="addworker" href="#modal-container-708375" role="button"
                        class="addworker btn btn-default"
-                       data-toggle="modal" data-id="{$v.id}">添加新员工</a>
+                       data-toggle="modal">添加新员工</a>
                 </div>
             </div>
         </div>
@@ -99,7 +99,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal " role="form"">
+                    <form class="form-horizontal " role="form">
                         <div class="form-group">
                             <label for="account" class="col-sm-2 control-label">账号</label>
                             <div class="col-sm-5">
@@ -110,7 +110,7 @@
                             <label for="pwd" class="col-sm-2 control-label">密码</label>
                             <div class="col-sm-5">
                                 <input type="password" class="form-control" id="pwd" name="pwd"
-                                       placeholder="输入密码将覆盖原来的密码"/>
+                                       placeholder="请输入密码"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -140,7 +140,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="update btn btn-primary" data-dismiss="modal">保存</button>
+                    <button id="savedate" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
                 </div>
             </div>
 
@@ -152,7 +152,6 @@
 <?php require(APP_PATH.'/user/view/common/footer.html');?>
 <script>
     $(function () {
-        varparams = {}
         var account = $('#account'),
             pwd = $('#pwd'),
             name = $('#name'),
@@ -162,8 +161,10 @@
         //点击编辑按钮，弹出对话框
         $(document).on('click', '.edit', function () {
             var id = $(this).data('id');
+            $('#savedate').removeClass('add');
+            $('#savedate').addClass('save');
             var params = {
-                url: 'user/edit/' + id + '?XDEBUG_SESSION_START=13207',
+                url: 'user/edit/' + id,
                 sCallback: function (data) {
                     account.val(data.user.account);
                     pwd.val('');
@@ -174,26 +175,60 @@
                 }
             };
             window.base.getData(params);
-        });
-        $(document).on('click', '.update', function () {
-            var params = {
-                url: 'user/update',
-                type: 'post',
-                data: {
-                    id: hidden.val(),
-                    account: account.val(),
-                    password: pwd.val(),
-                    name: name.val(),
-                    phone: phone.val(),
-                    scope: scope.val()
-                },
-                sCallback: function (data) {
-                    window.location.href = "/manager/member";
+            $(document).on('click', '.save', function () {
+                var params = {
+                    url: 'user/update',
+                    type: 'post',
+                    data: {
+                        id: hidden.val(),
+                        account: account.val(),
+                        password: pwd.val(),
+                        name: name.val(),
+                        phone: phone.val(),
+                        scope: scope.val()
+                    },
+                    sCallback: function (data) {
+                        $('#savedate').removeClass('save');
+                        window.location.href = "/manager/member";
 //                    $('#authority').addClass('active').attr('aria-expanded', true);
 //                    $('#information').removeClass('active').attr('aria-expanded', false);
-                }
-            };
-            window.base.getData(params);
+                    }
+                };
+                window.base.getData(params);
+            });
+        });
+        $(document).on('click', '.addworker', function () {
+            account.val('');
+            pwd.val('');
+            phone.val('');
+            name.val('');
+            scope.val('');
+            hidden.val('');
+            $('#savedate').addClass('add');
+            $('#savedate').removeClass('save');
+            $(document).on('click', '.add', function () {
+                var params = {
+                    url: 'user/add',
+                    type: 'post',
+                    data: {
+                        account: account.val(),
+                        password: pwd.val(),
+                        name: name.val(),
+                        phone: phone.val(),
+                        scope: scope.val()
+                    },
+                    sCallback: function (data) {
+                        $('#savedate').removeClass('add');
+                        window.location.href = "/manager/member";
+                    },
+                    eCallback: function (err) {
+                        if (err.errcode == 1) {
+                            alert('创建员工失败');
+                        }
+                    }
+                };
+                window.base.getData(params);
+            });
         });
     });
 
