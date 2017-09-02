@@ -18,7 +18,7 @@ use think\Request;
 
 class Manager extends BaseController {
     protected $beforeActionList = [
-        'checkStaffScope' => ['only' => 'index']
+        'checkStaffScope' => ['only' => 'member,getUserById,updateUserById,addUser,deleteUserById']
     ];
 
     public function oilDocumentManager() {
