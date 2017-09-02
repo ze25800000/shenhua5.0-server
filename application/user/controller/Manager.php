@@ -14,6 +14,7 @@ use app\service\BaseController;
 use app\user\model\User;
 use app\validate\IDMustBePositiveInt;
 use app\validate\UserValidate;
+use think\Request;
 
 class Manager extends BaseController {
     protected $beforeActionList = [
@@ -27,7 +28,7 @@ class Manager extends BaseController {
     }
 
     public function member() {
-        $users    = User::select();
+        $users    = User::order('scope desc')->select();
         $userName = session('userName');
         $scope    = session('userScope');
         $this->assign('users', $users);
@@ -81,6 +82,21 @@ class Manager extends BaseController {
         return json([
             'errorCode' => 0,
             'msg'       => '创建用户成功'
+        ], 201);
+    }
+
+    public function deleteUserById() {
+        (new IDMustBePositiveInt())->goCheck();
+        $delete = Request::instance()->delete();
+        $result = User::where('id', '=', $delete['id'])->delete();
+        if (!$result) {
+            throw new UserException([
+                'msg' => '删除用户失败'
+            ]);
+        }
+        return json([
+            'errorCode' => 0,
+            'msg'       => '删除用户成功'
         ], 201);
     }
 }

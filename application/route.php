@@ -32,3 +32,4 @@ Route::get('manager/member', 'user/manager/member');
 Route::get('user/edit/:id', 'user/manager/getUserById');
 Route::post('user/update', 'user/manager/updateUserById');
 Route::post('user/add', 'user/manager/addUser');
+Route::delete('user/delete', 'user/manager/deleteUserById');

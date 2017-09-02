@@ -8,9 +8,8 @@
 
 namespace app\lib\exception;
 
-
 class UserException extends BaseException {
     public $code = 401;
     public $msg = '用户名或密码错误';
-    public $errorCode = 10000;
+    public $errorCode = 1;
 }

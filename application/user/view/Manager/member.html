@@ -74,7 +74,7 @@
                                    class="edit btn btn-primary"
                                    data-toggle="modal" data-id="{$v.id}">编辑</a>
                                 <a id="modal-315591" href="#modal-container-315591" role="button"
-                                   class="delete btn btn-danger" data-toggle="modal">删除</a>
+                                   class="deletebtn btn btn-danger" data-toggle="modal" data-id="{$v.id}">删除</a>
                             </td>
                         </tr>
                         {/foreach}
@@ -151,15 +151,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="">
-                        标题
-                    </h4>
                 </div>
                 <div class="modal-body">
-                    内容...
+                    <h3>你确认要删除该员工？</h3>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> <button type="button" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id="delete" type="button" class="btn btn-danger">删除</button>
                 </div>
             </div>
 
@@ -255,6 +253,25 @@
                 window.base.getData(params);
             });
         });
+        $(document).on('click', '.deletebtn', function () {
+            var id = $(this).data('id');
+            $('#delete').click(function () {
+                var params = {
+                    url: 'user/delete',
+                    type: 'delete',
+                    data: {id: id},
+                    sCallback: function (data) {
+                        window.location.href = "/manager/member";
+                    },
+                    eCallback: function (err) {
+                        if (err) {
+                            alter('删除员工失败');
+                        }
+                    }
+                };
+                window.base.getData(params);
+            });
+        })
     });
 
 </script>
