@@ -190,8 +190,11 @@
                     sCallback: function (data) {
                         $('#savedate').removeClass('save');
                         window.location.href = "/manager/member";
-//                    $('#authority').addClass('active').attr('aria-expanded', true);
-//                    $('#information').removeClass('active').attr('aria-expanded', false);
+                    },
+                    eCallback: function (err) {
+                        if (err) {
+                            alert('编辑员工信息失败');
+                        }
                     }
                 };
                 window.base.getData(params);
@@ -222,7 +225,7 @@
                         window.location.href = "/manager/member";
                     },
                     eCallback: function (err) {
-                        if (err.errcode == 1) {
+                        if (err) {
                             alert('创建员工失败');
                         }
                     }
