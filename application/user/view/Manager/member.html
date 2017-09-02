@@ -73,9 +73,8 @@
                                 <a id="edit" href="#modal-container-708375" role="button"
                                    class="edit btn btn-primary"
                                    data-toggle="modal" data-id="{$v.id}">编辑</a>
-                                <a id="delete" href="#modal-container-708375" role="button"
-                                   class="delete btn btn-danger"
-                                   data-toggle="modal" data-id="{$v.id}">删除</a>
+                                <a id="modal-315591" href="#modal-container-315591" role="button"
+                                   class="delete btn btn-danger" data-toggle="modal">删除</a>
                             </td>
                         </tr>
                         {/foreach}
@@ -90,13 +89,12 @@
     </div>
 
     <div class="modal fade" id="modal-container-708375" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="myModalLabel">
-                        编辑员工信息
-                    </h4>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal " role="form">
@@ -147,7 +145,29 @@
         </div>
 
     </div>
+
+    <div class="modal fade" id="modal-container-315591" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="">
+                        标题
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    内容...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 </div>
+
 
 <?php require(APP_PATH.'/user/view/common/footer.html');?>
 <script>
@@ -163,6 +183,7 @@
             var id = $(this).data('id');
             $('#savedate').removeClass('add');
             $('#savedate').addClass('save');
+            $('#myModalLabel').text('编辑员工信息');
             var params = {
                 url: 'user/edit/' + id,
                 sCallback: function (data) {
@@ -209,6 +230,7 @@
             hidden.val('');
             $('#savedate').addClass('add');
             $('#savedate').removeClass('save');
+            $('#myModalLabel').text('添加新员工');
             $(document).on('click', '.add', function () {
                 var params = {
                     url: 'user/add',
