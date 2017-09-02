@@ -25,7 +25,11 @@ class Manager extends BaseController {
     ];
 
     public function oilDocumentManager() {
-        $userName = session('userName');
+        $userName     = session('userName');
+        $equ_list     = Db::table('equipment')->select();
+        $oil_standard = Db::table('oil_standard')->select();
+        $this->assign('oil_standard', $oil_standard);
+        $this->assign('equ_list', $equ_list);
         $this->assign('userName', $userName);
         return $this->fetch();
     }

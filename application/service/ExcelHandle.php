@@ -55,12 +55,15 @@ class ExcelHandle {
             $arr[$k]['period']       = $v[7];
             $arr[$k]['interval']     = $v[8];
         }
-        $info = Db::name('oil_standard');
-        if ($info) {
-            $sql = "TRUNCATE oil_standard";
-            $info->execute($sql);
+        $equipment_info    = Db::name('equipment')->where('equ_no','=',$arr[]);
+        $equ_no            = $equipment_info->equ_no;
+        if ($equ_no) {
         }
-        $result = $info->insertAll($arr);
+        $oil_standard_info = Db::name('oil_standard');
+        if ($oil_standard_info->equ_no == $arr[1]['equ_no']) {
+            $oil_standard_info->where('equ_no', '=', $oil_standard_info->equ_no)->delete();
+        }
+        $result = $oil_standard_info->insertAll($arr);
         if (!$result) {
             throw new UploadException([
                 'msg' => '录入数据库失败'
