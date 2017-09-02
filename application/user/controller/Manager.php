@@ -11,10 +11,13 @@ namespace app\user\controller;
 
 use app\lib\exception\UserException;
 use app\service\BaseController;
-use app\user\model\User;
+use app\model\User;
+use app\service\ExcelHandle;
 use app\validate\IDMustBePositiveInt;
 use app\validate\UserValidate;
+use app\lib\exception\UploadException;
 use think\Request;
+use think\Db;
 
 class Manager extends BaseController {
     protected $beforeActionList = [
@@ -25,6 +28,23 @@ class Manager extends BaseController {
         $userName = session('userName');
         $this->assign('userName', $userName);
         return $this->fetch();
+    }
+
+    public function uploadExcel() {
+
+        $excel_array = ExcelHandle::excelToArray();
+        $ex_type     = Request::instance()->param();
+        switch ($ex_type['exceltype']) {
+            case 'oilstandard':
+                $result = ExcelHandle::oilStandard($excel_array);
+                break;
+            case 'oilanalysis':
+                $result = ExcelHandle::oilAnalysis($excel_array);
+                break;
+        }
+        if ($result) {
+            return $this->ajaxReturn('信息录入成功');
+        }
     }
 
     public function member() {

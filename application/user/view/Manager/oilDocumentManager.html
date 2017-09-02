@@ -51,7 +51,20 @@
                 <div class="col-md-12 column">
                     <!-- Tab panes -->
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="standard">设备润滑标准管理</div>
+                        <div role="tabpanel" class="tab-pane active" id="standard">
+
+                            <a href="javascript:void (0)" class="btn btn-default">新建设备润滑标准</a>
+
+                            <form role="form" id="uploadForm">
+                                <div class="form-group">
+                                    <label for="excel">上传文件</label>
+                                    <input class="" type="file" id="excel" name="excel"/>
+                                    <input type="hidden" value="excel_oil_standard">
+                                </div>
+                                <button type="submit" class="btn btn-default" id="upload">上传</button>
+                            </form>
+
+                        </div>
                         <div role="tabpanel" class="tab-pane" id="cost">润滑保养成本管理</div>
                     </div>
                 </div>
@@ -62,3 +75,25 @@
 
 
 <?php require(APP_PATH.'/user/view/common/footer.html');?>
+<script>
+    $(function () {
+
+        $(document).on('click', '#upload', function () {
+            $.ajax({
+                url: 'http://shenhua.cn/manager/oil/upload?exceltype=oilstandard&XDEBUG_SESSION_START=16782',
+                type: 'post',
+                data: new FormData($("#uploadForm")[0]),
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            })
+        });
+    });
+</script>

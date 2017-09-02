@@ -3,11 +3,10 @@
 namespace app\user\controller;
 
 
-use app\lib\enum\ScopeEnum;
 use app\lib\exception\SuccessMessage;
 use app\lib\exception\UserException;
 use app\service\BaseController;
-use app\user\model\User;
+use app\model\User;
 use think\Request;
 
 class Index extends BaseController {

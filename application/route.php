@@ -25,9 +25,14 @@ Route::get('oiling/warning', 'oiling/manager/warning');
 //设备列表
 Route::get('oiling/list', 'oiling/manager/facilityList');
 
+
 //系统管理
 Route::get('manager/document', 'user/manager/oilDocumentManager');
 Route::get('manager/member', 'user/manager/member');
+
+//上传保存excel到数据库
+Route::post('manager/oil/upload','user/manager/uploadExcel');
+
 //通过id获取用户信息，进行编辑
 Route::get('user/edit/:id', 'user/manager/getUserById');
 Route::post('user/update', 'user/manager/updateUserById');
