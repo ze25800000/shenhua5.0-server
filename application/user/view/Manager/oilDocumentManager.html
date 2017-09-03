@@ -54,7 +54,7 @@
                         <div role="tabpanel" class="tab-pane active" id="standard">
 
                             <a id="modal-506849" href="#modal-container-506849" role="button" class="btn btn-default"
-                               data-toggle="modal">新建设备润滑标准</a>
+                               data-toggle="modal">添加新设备</a>
 
 
                             <div class="tabbable" id="tabs-270320">
@@ -62,6 +62,10 @@
                                     {foreach $equ_list as $k=>$v}
                                     <li class="list-group-item {if condition=" $k==0"}active{/if}">
                                         <a href="#panel-{$v.equ_no}" data-toggle="tab">{$v.name}</a>
+
+                                        <a role="button" data-toggle="modal" href="#modal-container-0"
+                                           class="del_btn btn-sm pull-right" style="font-size: 12px"
+                                           data-equ_no="{$v.equ_no}">删除</a>
                                     </li>
                                     {/foreach}
                                 </ul>
@@ -70,8 +74,8 @@
                                     <div class="tab-pane {if condition=" $k==0"}active{/if}" id="panel-{$v.equ_no}">
                                         <form role="form" id="uploadForm" class="">
                                             <div class="form-group">
-                                                <label for="excel" class="col-md-3">上传<span
-                                                        style="font-weight: bold;color: red;">{$v.name}</span>润滑标准</label>
+                                                <label for="excel" class="col-md-5">上传设备编号为<span style="color: red;">{$v.equ_no}</span>的<span
+                                                        style="color: red;">{$v.name}</span>润滑标准</label>
                                                 <input class="col-md-3" type="file" id="excel" name="excel"/>
                                                 <button type="submit" class="btn btn-default col-md-2" id="upload"
                                                         data-param="exceltype=oilstandard&equ_no={$v.equ_no}">上传
@@ -166,7 +170,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title" id="myModalLabel">
-                    新建标准
+                    添加新设备
                 </h4>
             </div>
             <div class="modal-body">
@@ -174,26 +178,46 @@
                     <div class="form-group">
                         <label for="equ_name" class="col-sm-2 control-label">设备名称</label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="equ_name"/>
+                            <input type="text" class="form-control" id="equ_name" name="equ_name"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="equ_no" class="col-sm-2 control-label">设备编号</label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="equ_no"/>
+                            <input type="text" class="form-control" id="equ_no" name="equ_no"/>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default">确认</button>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">保存</button>
+                <button id="add_equ" type="submit" class="btn btn-default">确认</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div class="modal fade" id="modal-container-0" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">
+                    删除设备
+                </h4>
+            </div>
+            <div class="modal-body">
+                <h3>你确认要删除该设备？</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="delete_equ" type="submit" class="btn btn-default">确认</button>
             </div>
         </div>
 
@@ -203,24 +227,47 @@
 <?php require(APP_PATH.'/user/view/common/footer.html');?>
 <script>
     $(function () {
-
         $(document).on('click', '#upload', function () {
             var param = $(this).data('param');
-            $.ajax({
-                url: 'http://shenhua.cn/manager/oil/upload?' + param,
-                type: 'post',
-                data: new FormData($("#uploadForm")[0]),
-                async: false,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    console.log(data);
-                },
-                error: function (err) {
-                    console.log(err);
+            var params = {
+                url: 'manager/oil/upload?' + param,
+                sCallback: function (data) {
+                    alert('上传成功');
                 }
-            })
+            };
+            window.base.uploadFile(params);
+        });
+        $(document).on('click', '#add_equ', function () {
+            var name = $('#equ_name').val(),
+                equ_no = $('#equ_no').val();
+            var params = {
+                url: 'document/oilstandard/addequ?XDEBUG_SESSION_START=16232',
+                type: 'post',
+                data: {name: name, equ_no: equ_no},
+                sCallback: function (data) {
+                    window.location.reload();
+                },
+                eCallback: function (err) {
+                    alert(err.msg);
+                }
+            };
+            window.base.getData(params);
+        });
+        $(document).on('click', '.del_btn', function () {
+            var equ_no = $(this).data('equ_no');
+            $('#delete_equ').click(function () {
+                var params = {
+                    url: 'document/oilstandard/delete_equ/' + equ_no + '?XDEBUG_SESSION_START=10628',
+                    type: 'delete',
+                    sCallback: function (data) {
+                        window.location.reload();
+                    },
+                    eCallback: function (err) {
+                        alert(err.msg);
+                    }
+                };
+                window.base.getData(params);
+            });
         });
     });
 </script>

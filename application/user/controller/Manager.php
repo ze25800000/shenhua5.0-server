@@ -9,10 +9,15 @@
 namespace app\user\controller;
 
 
+use app\lib\exception\DocumentException;
 use app\lib\exception\UserException;
+use app\model\Equipment;
+use app\model\OilStandard;
 use app\service\BaseController;
 use app\model\User;
 use app\service\ExcelHandle;
+use app\validate\EquipmentNoValidate;
+use app\validate\EquipmentValidate;
 use app\validate\IDMustBePositiveInt;
 use app\validate\UserValidate;
 use app\lib\exception\UploadException;
@@ -42,6 +47,38 @@ class Manager extends BaseController {
         $this->assign('userName', $userName);
         $this->assign('scope', $scope);
         return $this->fetch();
+    }
+
+    public function addEquipment() {
+        (new EquipmentValidate())->goCheck();
+        $param = Request::instance()->param();
+        $sql   = "SELECT * FROM equipment WHERE equ_no={$param['equ_no']} or name='{$param['name']}'";
+        $info  = Equipment::execute($sql);
+        if ($info) {
+            throw new DocumentException([
+                'msg' => '设备编号或者设备名称重复，请重新输入'
+            ]);
+        }
+        $result = Equipment::insert($_POST);
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '添加设备失败'
+            ]);
+        }
+        return $this->ajaxReturn('添加设备成功');
+    }
+
+    public function deleteEquipmentByNo($equ_no) {
+        (new EquipmentNoValidate())->goCheck();
+        $equ_info          = Equipment::where('equ_no', '=', $equ_no)->delete();
+        $oil_standard_info = OilStandard::where('equ_no', '=', $equ_no)->delete();
+        if ($equ_info) {
+            return $this->ajaxReturn('删除设备成功');
+        } else {
+            throw new DocumentException([
+                'msg' => '设备删除失败'
+            ]);
+        }
     }
 
     public function uploadExcel() {
