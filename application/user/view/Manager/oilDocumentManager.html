@@ -72,14 +72,15 @@
                                 <div class="tab-content col-md-10">
                                     {foreach $equ_list as $k=>$v}
                                     <div class="tab-pane {if condition=" $k==0"}active{/if}" id="panel-{$v.equ_no}">
-                                        <form role="form" id="uploadForm" class="">
+                                        <form role="form" class="uploadForm" class="">
                                             <div class="form-group">
                                                 <label for="excel" class="col-md-5">上传设备编号为<span style="color: red;">{$v.equ_no}</span>的<span
                                                         style="color: red;">{$v.name}</span>润滑标准</label>
                                                 <input class="col-md-3" type="file" id="excel" name="excel"/>
-                                                <button type="submit" class="btn btn-default col-md-2" id="upload"
-                                                        data-param="exceltype=oilstandard&equ_no={$v.equ_no}">上传
-                                                </button>
+                                                <a href="javascript:void (0)"
+                                                   class="btn btn-default col-md-2 upload_excel"
+                                                   data-param="exceltype=oilstandard&equ_no={$v.equ_no}">上传
+                                                </a>
                                             </div>
                                         </form>
                                         <table class="table table-bordered table-hover table-condensed">
@@ -227,12 +228,17 @@
 <?php require(APP_PATH.'/user/view/common/footer.html');?>
 <script>
     $(function () {
-        $(document).on('click', '#upload', function () {
+        $(document).on('click', '.upload_excel', function () {
             var param = $(this).data('param');
             var params = {
-                url: 'manager/oil/upload?' + param,
+                url: 'manager/oil/upload?' + param + '&XDEBUG_SESSION_START=15903',
+                data: new FormData($(this).parent().parent()[0]),
                 sCallback: function (data) {
                     alert('上传成功');
+                    window.location.reload();
+                },
+                eCallback: function (err) {
+                    alert(err.msg);
                 }
             };
             window.base.uploadFile(params);

@@ -43,29 +43,29 @@ class ExcelHandle {
     }
 
     public static function oilStandard($excel_array, $equ_no) {
-        $arr = [];
-        foreach ($excel_array as $k => $v) {
-            $arr[$k]['equ_no']       = $v[0];
-            $arr[$k]['equ_oil_no']   = $v[1];
-            $arr[$k]['oil_name']     = $v[2];
-            $arr[$k]['oil_no']       = $v[3];
-            $arr[$k]['quantity']     = $v[4];
-            $arr[$k]['unit']         = $v[5];
-            $arr[$k]['first_period'] = $v[6];
-            $arr[$k]['period']       = $v[7];
-            $arr[$k]['interval']     = $v[8];
-        }
         $equipment_equ_no = Db::name('equipment')->where('equ_no', '=', $equ_no)->find();
         if (!$equipment_equ_no) {
             throw new UploadException([
                 'msg' => '该设备编号不存在，请添加新设备后，再上传Excel'
             ]);
         }
-        $oil_standard_info = Db::name('oil_standard');
-        if ($oil_standard_info->equ_no == $arr[1]['equ_no']) {
-            $oil_standard_info->where('equ_no', '=', $oil_standard_info->equ_no)->delete();
+        $arr = [];
+        foreach ($excel_array as $k => $v) {
+            if ($equ_no == $v[0]) {
+                $arr[$k]['equ_no']       = $v[0];
+                $arr[$k]['equ_oil_no']   = $v[1];
+                $arr[$k]['oil_name']     = $v[2];
+                $arr[$k]['oil_no']       = $v[3];
+                $arr[$k]['quantity']     = $v[4];
+                $arr[$k]['unit']         = $v[5];
+                $arr[$k]['first_period'] = $v[6];
+                $arr[$k]['period']       = $v[7];
+                $arr[$k]['interval']     = $v[8];
+            }
         }
-        $result = $oil_standard_info->insertAll($arr);
+
+        $oil_standard_info = Db::name('oil_standard')->where('equ_no', '=', $equipment_equ_no['equ_no'])->delete();
+        $result            = Db::name('oil_standard')->insertAll($arr);
         if (!$result) {
             throw new UploadException([
                 'msg' => '录入数据库失败'

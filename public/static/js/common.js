@@ -25,7 +25,7 @@ window.base = {
         $.ajax({
             url: that.g_restUrl + params.url,
             type: params.type,
-            data: new FormData($("#uploadForm")[0]),
+            data: params.data,
             async: false,
             cache: false,
             contentType: false,
@@ -34,7 +34,7 @@ window.base = {
                 params.sCallback && params.sCallback(data);
             },
             error: function (err) {
-                params.eCallback && params.eCallback(err);
+                params.eCallback && params.eCallback(err.responseJSON);
             }
         })
     }
