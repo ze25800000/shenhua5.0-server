@@ -59,10 +59,16 @@ class BaseController extends Controller {
         }
     }
 
-    public function ajaxReturn($msg = '', $errcode = 0) {
-        return json([
+    public function ajaxReturn($msg = '', $errcode = 0, $data = []) {
+        $arr = [
             'msg'     => $msg,
-            'errcode' => $errcode
-        ], 201);
+            'errcode' => $errcode,
+            'data'    => $data
+        ];
+        if (empty($data)) {
+            unset($arr['data']);
+        }
+        return json($arr, 201);
+
     }
 }

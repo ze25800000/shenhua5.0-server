@@ -42,7 +42,7 @@ class ExcelHandle {
         return $excel_array;
     }
 
-    public static function oilStandard($excel_array) {
+    public static function oilStandard($excel_array, $equ_no) {
         $arr = [];
         foreach ($excel_array as $k => $v) {
             $arr[$k]['equ_no']       = $v[0];
@@ -55,9 +55,11 @@ class ExcelHandle {
             $arr[$k]['period']       = $v[7];
             $arr[$k]['interval']     = $v[8];
         }
-        $equipment_info    = Db::name('equipment')->where('equ_no','=',$arr[]);
-        $equ_no            = $equipment_info->equ_no;
-        if ($equ_no) {
+        $equipment_equ_no = Db::name('equipment')->where('equ_no', '=', $equ_no)->find();
+        if (!$equipment_equ_no) {
+            throw new UploadException([
+                'msg' => '该设备编号不存在，请添加新设备后，再上传Excel'
+            ]);
         }
         $oil_standard_info = Db::name('oil_standard');
         if ($oil_standard_info->equ_no == $arr[1]['equ_no']) {

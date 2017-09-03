@@ -34,23 +34,6 @@ class Manager extends BaseController {
         return $this->fetch();
     }
 
-    public function uploadExcel() {
-
-        $excel_array = ExcelHandle::excelToArray();
-        $ex_type     = Request::instance()->param();
-        switch ($ex_type['exceltype']) {
-            case 'oilstandard':
-                $result = ExcelHandle::oilStandard($excel_array);
-                break;
-            case 'oilanalysis':
-                $result = ExcelHandle::oilAnalysis($excel_array);
-                break;
-        }
-        if ($result) {
-            return $this->ajaxReturn('信息录入成功');
-        }
-    }
-
     public function member() {
         $users    = User::order('scope desc')->select();
         $userName = session('userName');
@@ -61,6 +44,23 @@ class Manager extends BaseController {
         return $this->fetch();
     }
 
+    public function uploadExcel() {
+
+        $excel_array = ExcelHandle::excelToArray();
+        $param       = Request::instance()->param();
+        switch ($param['exceltype']) {
+            case 'oilstandard':
+                $result = ExcelHandle::oilStandard($excel_array, $param['equ_no']);
+                break;
+            case 'oilanalysis':
+                $result = ExcelHandle::oilAnalysis($excel_array);
+                break;
+        }
+        if ($result) {
+            return $this->ajaxReturn('信息录入成功');
+        }
+    }
+
     public function getUserById($id) {
         (new IDMustBePositiveInt())->goCheck();
         $user = User::find($id);
@@ -69,10 +69,7 @@ class Manager extends BaseController {
                 'msg' => '用户不存在'
             ]);
         }
-        return json([
-            'errorcode' => 0,
-            'user'      => $user
-        ], 201);
+        return $this->ajaxReturn('获取成功', 0, $user);
     }
 
     public function updateUserById() {
@@ -89,10 +86,7 @@ class Manager extends BaseController {
                 'errorCode' => 1
             ]);
         }
-        return json([
-            'errorCode' => 0,
-            'msg'       => '用户信息更新成功'
-        ], 201);
+        return $this->ajaxReturn('用户信息更新成功');
     }
 
     public function addUser() {
@@ -103,10 +97,7 @@ class Manager extends BaseController {
                 'msg' => '创建用户失败，请创新输入'
             ]);
         }
-        return json([
-            'errorCode' => 0,
-            'msg'       => '创建用户成功'
-        ], 201);
+        return $this->ajaxReturn('创建用户成功');
     }
 
     public function deleteUserById() {
@@ -118,9 +109,6 @@ class Manager extends BaseController {
                 'msg' => '删除用户失败'
             ]);
         }
-        return json([
-            'errorCode' => 0,
-            'msg'       => '删除用户成功'
-        ], 201);
+        return $this->ajaxReturn('删除用户成功');
     }
 }

@@ -185,11 +185,12 @@
             var params = {
                 url: 'user/edit/' + id,
                 sCallback: function (data) {
-                    account.val(data.user.account);
+                    var data = data.data;
+                    account.val(data.account);
                     pwd.val('');
-                    phone.val(data.user.phone);
-                    name.val(data.user.name);
-                    scope.val(data.user.scope);
+                    phone.val(data.phone);
+                    name.val(data.name);
+                    scope.val(data.scope);
                     hidden.val(id);
                 }
             };

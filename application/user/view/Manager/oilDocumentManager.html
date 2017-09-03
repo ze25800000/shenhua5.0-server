@@ -70,10 +70,11 @@
                                     <div class="tab-pane {if condition=" $k==0"}active{/if}" id="panel-{$v.equ_no}">
                                         <form role="form" id="uploadForm" class="">
                                             <div class="form-group">
-                                                <label for="excel" class="col-md-2">上传文件</label>
+                                                <label for="excel" class="col-md-3">上传<span
+                                                        style="font-weight: bold;color: red;">{$v.name}</span>润滑标准</label>
                                                 <input class="col-md-3" type="file" id="excel" name="excel"/>
                                                 <button type="submit" class="btn btn-default col-md-2" id="upload"
-                                                        data-ex_type="oilstandard">上传
+                                                        data-param="exceltype=oilstandard&equ_no={$v.equ_no}">上传
                                                 </button>
                                             </div>
                                         </form>
@@ -86,7 +87,7 @@
                                                 <th>
                                                     设备润滑点编号
                                                 </th>
-                                                <th>
+                                                <th style="text-align: center">
                                                     润滑点全称
                                                 </th>
                                                 <th>
@@ -204,8 +205,9 @@
     $(function () {
 
         $(document).on('click', '#upload', function () {
+            var param = $(this).data('param');
             $.ajax({
-                url: 'http://shenhua.cn/manager/oil/upload?exceltype=oilstandard&XDEBUG_SESSION_START=16782',
+                url: 'http://shenhua.cn/manager/oil/upload?' + param,
                 type: 'post',
                 data: new FormData($("#uploadForm")[0]),
                 async: false,
