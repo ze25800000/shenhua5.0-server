@@ -93,7 +93,7 @@ class Manager extends BaseController {
         $param       = Request::instance()->param();
         switch ($param['exceltype']) {
             case 'oilstandard':
-                $result = ExcelHandle::oilStandard($excel_array, $param['equ_no']);
+                $result = ExcelHandle::oilStandard($excel_array);
                 break;
             case 'oilanalysis':
                 $result = ExcelHandle::oilAnalysis($excel_array);
