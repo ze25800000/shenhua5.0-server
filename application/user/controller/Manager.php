@@ -79,6 +79,30 @@ class Manager extends BaseController {
         return $this->ajaxReturn('获得设备列表成功', 0, $list);
     }
 
+    public function editEquipmentByNo($equ_no) {
+        (new EquipmentNoValidate())->goCheck();
+        $equ    = new Equipment();
+        $result = $equ->where("equ_no='$equ_no'")->save(input('post.'));
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '编辑设备信息失败'
+            ]);
+        }
+        return $this->ajaxReturn('编辑设备信息成功', 0);
+    }
+
+    public function deleteEquipmentByNo($equ_no) {
+        (new EquipmentNoValidate())->goCheck();
+        $equ = Equipment::where("equ_no='$equ_no'")->delete();
+        OilStandard::where('equ_no', '=', $equ_no)->delete();
+        if (!$equ) {
+            throw new DocumentException([
+                'msg' => '删除设备失败'
+            ]);
+        }
+        return $this->ajaxReturn('删除设备成功');
+    }
+
     public function member() {
         $users    = User::order('scope desc')->select();
         $userName = session('userName');
@@ -89,18 +113,6 @@ class Manager extends BaseController {
         return $this->fetch();
     }
 
-    public function deleteEquipmentByNo($equ_no) {
-        (new EquipmentNoValidate())->goCheck();
-        $equ_info          = Equipment::where('equ_no', '=', $equ_no)->delete();
-        $oil_standard_info = OilStandard::where('equ_no', '=', $equ_no)->delete();
-        if ($equ_info) {
-            return $this->ajaxReturn('删除设备成功');
-        } else {
-            throw new DocumentException([
-                'msg' => '设备删除失败'
-            ]);
-        }
-    }
 
     public function uploadExcel() {
 
