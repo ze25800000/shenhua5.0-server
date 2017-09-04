@@ -50,9 +50,9 @@ window.base = {
         };
         this.getData(params);
     },
-    getOilStandardList: function (equ_no, callback) {
+    getOilStandardList: function (callback) {
         var params = {
-            url: 'document/oilstandard/getlist/' + equ_no,
+            url: 'document/oilstandard/getlist',
             sCallback: function (data) {
                 callback && callback(data.data);
             },

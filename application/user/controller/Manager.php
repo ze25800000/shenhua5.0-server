@@ -96,9 +96,8 @@ class Manager extends BaseController {
     }
 
     /************************润滑标准管理*******************************************************/
-    public function getOilStandardListByNo($equ_no) {
-        (new EquipmentNoValidate())->goCheck();
-        $list = OilStandard::where('equ_no', '=', $equ_no)->select();
+    public function getOilStandardListByNo() {
+        $list = Equipment::with(['oilStandardList'])->select();
         if (!$list) {
             throw new DocumentException([
                 'msg' => '获取润滑标准失败'

@@ -105,17 +105,14 @@
 <script>
     $(function () {
         $(document).on('click', '.standard', function () {
-            var equMarkup = '<li class="list-group-item"><a href="#panel-${equ_no}" data-toggle="tab" class="get_oil_list" data-equ_no="${equ_no}">${equ_name}</a></li>';
-            $.template('equTemplate', equMarkup);
-            window.base.getEquipmentList(function (list) {
-                $.tmpl('equTemplate', list).appendTo("#equ_list");
-                $('#equ_list').children('li:first').addClass('active');
+            window.base.getOilStandardList(function (list) {
+                console.log(list);
+                $.tmpl('OilStandardTemplate', list).appendTo("#oil-standard-list")
             });
         });
         $(document).on('click', '.get_oil_list', function () {
-            var OilStandardMarkup = $('#OilStandardTemplate')[0],
-                equ_no = $(this).data('equ_no');
-            $.template('OilStandardTemplate', OilStandardMarkup);
+            var OilStandardMarkup = $('#OilStandardTemplate')[0];
+            template('OilStandardTemplate', OilStandardMarkup);
             window.base.getOilStandardList(equ_no, function (list) {
                 console.log(list);
                 $.tmpl('OilStandardTemplate', list).appendTo("#oil-standard-list")
