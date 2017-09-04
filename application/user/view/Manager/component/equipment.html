@@ -59,20 +59,13 @@
                 </th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="equ_body">
             <tr>
-                <td>
-                    1
-                </td>
-                <td>
-                    TB - Monthly
-                </td>
-                <td>
-                    01/04/2012
-                </td>
-                <td>
-                    <a href="javascript:void (0)" class="btn btn-default">编辑</a>
-                    <a href="javascript:void (0)" class="btn btn-danger">删除</a>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><a href="javascript:void (0)" class="edit_equ btn btn-default">编辑</a><a href="javascript:void (0)"
+                                                                                            class="del_equ btn btn-danger">删除</a>
                 </td>
             </tr>
 
@@ -83,18 +76,27 @@
 
 <script>
     $(function () {
+        //预加载
         $(this).ready(function () {
             var params = {
                 url: 'document/equipment/getlist',
                 sCallback: function (data) {
-                    console.log(data);
+                    var list = data.data;
+                    var html = '';
+                    for (var i = 0; i < list.length; i++) {
+                        html += '<tr>';
+                        html += '<td>' + list[i].equ_no + '</td><td>' + list[i].equ_name + '</td><td>' + list[i].create_time + '</td><td><a href="javascript:void (0)" class="edit_equ btn btn-default">编辑</a><a href="javascript:void (0)" class="del_equ btn btn-danger">删除</a></td>'
+                        html += "</tr>";
+                    }
+                    $('#equ_body').html(html);
                 },
                 eCallback: function (err) {
-                    console.log(err);
+                    alert(err.msg);
                 }
             };
             window.base.getData(params);
         });
+        //添加设备
         $(document).on('click', '.save_equ', function () {
             var params = {
                 url: 'document/equipment/add?XDEBUG_SESSION_START=18950',
@@ -104,13 +106,21 @@
                     equ_name: $('#equ_name').val()
                 },
                 sCallback: function (data) {
-                    console.log(data);
+                    window.location.reload();
                 },
                 eCallback: function (err) {
-                    console.log(err);
+                    alert(err.msg);
                 }
             };
             window.base.getData(params);
         });
+        //编辑设备
+        $(document).on('click', '.edit_equ', function () {
+
+        });
+        //删除设备
+        $(document).on('click', '.del_equ', function () {
+
+        })
     });
 </script>

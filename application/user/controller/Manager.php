@@ -30,13 +30,6 @@ class Manager extends BaseController {
     ];
 
     public function oilDocumentManager() {
-//        $userName     = session('userName');
-//        $equ_list     = Db::table('equipment')->select();
-//        $oil_standard = Db::table('oil_standard')->select();
-//        $this->assign('oil_standard', $oil_standard);
-//        $this->assign('equ_list', $equ_list);
-//        $this->assign('userName', $userName);
-
         $this->assign([
             'oil_standard' => Db::table('oil_standard')->order('equ_oil_no asc')->select(),
             'equ_list'     => Db::table('equipment')->select(),
@@ -65,7 +58,8 @@ class Manager extends BaseController {
                 'msg' => '您所输入的设备名称或者编号已经存在'
             ]);
         }
-        $result = Equipment::insert(input('post.'));
+        $equ    = new Equipment();
+        $result = $equ->save(input('post.'));
         if (!$result) {
             throw new DocumentException([
                 'msg' => '添加设备失败'
@@ -76,7 +70,13 @@ class Manager extends BaseController {
     }
 
     public function getEquipmentList() {
-
+        $list = Equipment::select();
+        if (!$list) {
+            throw new DocumentException([
+                'msg' => '获得设备列表失败'
+            ]);
+        }
+        return $this->ajaxReturn('获得设备列表成功', 0, $list);
     }
 
     public function member() {
