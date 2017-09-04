@@ -2,46 +2,6 @@
     <div class="col-md-12 column">
         <a id="modal-685016" href="#modal-container-685016" role="button" class="btn btn-default" data-toggle="modal">添加设备</a>
 
-        <div class="modal fade" id="modal-container-685016" role="dialog" aria-labelledby="myModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            添加设备
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row clearfix">
-                            <div class="col-md-8 column">
-                                <form class="form-horizontal" role="form">
-                                    <div class="form-group">
-                                        <label for="equ_name" class="col-md-3 control-label">设备名称</label>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" id="equ_name"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="equ_no" class="col-md-3 control-label">设备编号</label>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" id="equ_no"/>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary save_equ">保存</button>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
         <table class="table table-hover table-bordered">
             <thead>
             <tr>
@@ -60,46 +20,124 @@
             </tr>
             </thead>
             <tbody id="equ_body">
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><a href="javascript:void (0)" class="edit_equ btn btn-default">编辑</a><a href="javascript:void (0)"
-                                                                                            class="del_equ btn btn-danger">删除</a>
-                </td>
-            </tr>
 
             </tbody>
         </table>
     </div>
 </div>
 
+<!--添加设备弹窗-->
+<div class="modal fade" id="modal-container-685016" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    添加设备
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row clearfix">
+                    <div class="col-md-8 column">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="equ_name" class="col-md-3 control-label">设备名称</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="equ_name"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="equ_no" class="col-md-3 control-label">设备编号</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="equ_no"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary save_equ">保存</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!--删除弹窗-->
+<div class="modal fade" id="modal-container-del" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">
+                    删除设备
+                </h4>
+            </div>
+            <div class="modal-body">
+                <h3>你确认要删除该设备？</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="delete_equ" type="submit" class="btn btn-default conform_del">确认</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--编辑弹窗-->
+
+<div class="modal fade" id="modal-container-195323" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="">
+                    编辑设备信息
+                </h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
 <script>
     $(function () {
         //预加载
         $(this).ready(function () {
-            var params = {
-                url: 'document/equipment/getlist',
-                sCallback: function (data) {
-                    var list = data.data;
-                    var html = '';
-                    for (var i = 0; i < list.length; i++) {
-                        html += '<tr>';
-                        html += '<td>' + list[i].equ_no + '</td><td>' + list[i].equ_name + '</td><td>' + list[i].create_time + '</td><td><a href="javascript:void (0)" class="edit_equ btn btn-default" data-equ_no="'+list[i].equ_no+'">编辑</a><a href="javascript:void (0)" class="del_equ btn btn-danger" data-equ_no="'+list[i].equ_no+'">删除</a></td>'
-                        html += "</tr>";
-                    }
-                    $('#equ_body').html(html);
-                },
-                eCallback: function (err) {
-                    alert(err.msg);
+            window.base.getEquipmentList(function (list) {
+                var html = '';
+                for (var i = 0; i < list.length; i++) {
+                    html += '<tr>';
+                    html += '<td>' + list[i].equ_no + '</td>' +
+                        '<td>' + list[i].equ_name + '</td>' +
+                        '<td>' + list[i].create_time + '</td>' +
+                        '<td>' +
+                        '<a href="#modal-container-del" data-toggle="modal"' +
+                        'class="del_equ btn btn-danger"' +
+                        ' data-equ_no="' + list[i].equ_no + '">删除</a></td>';
+                    html += "</tr>";
                 }
-            };
-            window.base.getData(params);
+                $('#equ_body').html(html);
+            });
         });
         //添加设备
         $(document).on('click', '.save_equ', function () {
             var params = {
-                url: 'document/equipment/add?XDEBUG_SESSION_START=18950',
+                url: 'document/equipment/add',
                 type: 'post',
                 data: {
                     equ_no: $('#equ_no').val(),
@@ -115,15 +153,45 @@
             window.base.getData(params);
         });
         //编辑设备
-        $(document).on('click', '.edit_equ', function () {
+        $(document).on('click', '.edit_equ_btn', function () {
+            var id = $(this).data('equ_id');
             var equ_no = $(this).data('equ_no');
-            var params={
-                url:
-            }
+            var equ_name = $(this).data('equ_name');
+            $('#edit_equ_no').val(equ_no);
+            $('#edit_equ_name').val(equ_name);
+            $('.save_edit_equ').click(function () {
+                var params = {
+                    url: 'document/equipment/edit/' + id + '?XDEBUG_SESSION_START=16966',
+                    type: 'post',
+                    data: {
+                        equ_no: $('#edit_equ_no').val(),
+                        equ_name: $('#edit_equ_name').val()
+                    },
+                    sCallback: function (data) {
+                        console.log(data.msg);
+                        window.location.reload();
+                    },
+                    eCallback: function (err) {
+                        alert(err.msg);
+                    }
+                };
+                window.base.getData(params);
+            });
         });
         //删除设备
-        $(document).on('click', '.del_equ', function () {
-
+        $(document).on('click', '.conform_del', function () {
+            var equ_no = $('.del_equ').data('equ_no');
+            var params = {
+                url: 'document/equipment/del/' + equ_no,
+                type: 'delete',
+                sCallback: function () {
+                    window.location.reload();
+                },
+                eCallback: function (err) {
+                    console.log(err);
+                }
+            };
+            window.base.getData(params);
         })
     });
 </script>

@@ -1,76 +1,83 @@
-<form role="form" class="uploadForm col-md-12">
-    <div class="form-group">
-        <label for="excel" class="col-md-5"></label>
-        <input class="col-md-3" type="file" id="excel" name="excel"/>
-        <a href="javascript:void (0)"
-           class="btn btn-default col-md-2 upload_excel"
-           data-param="exceltype=oilstandard">上传
-        </a>
-    </div>
-</form>
-<div class="tabbable" id="tabs-270320">
-    <ul class="list-group col-md-2" role="group">
-        <li class="list-group-item {if condition=" $k==0"}active{/if}">
-            <a href="#panel-{$v.equ_no}" data-toggle="tab"></a>
-
-            <a role="button" data-toggle="modal" href="#modal-container-0"
-               class="del_btn btn-sm pull-right" style="font-size: 12px"
-               data-equ_no="{$v.equ_no}">删除</a>
-        </li>
-    </ul>
-    <div class="tab-content col-md-10">
-        <div class="tab-pane {if condition=" $k==0"}active{/if}" id="panel-">
-
-            <table class="table table-bordered table-hover table-condensed">
-                <thead>
-                <tr align="center">
-                    <th>
-                        设备润滑点编号
-                    </th>
-                    <th style="text-align: center">
-                        润滑点全称
-                    </th>
-                    <th>
-                        物料编号
-                    </th>
-                    <th>
-                        用量
-                    </th>
-                    <th>
-                        单位
-                    </th>
-                    <th>
-                        首保周期
-                    </th>
-                    <th>
-                        更换最长周期
-                    </th>
-                    <th>
-                        油脂采样间隔
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr align="center">
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+<div class="col-md-12">
+    <form role="form" class="uploadForm">
+        <div class="form-group">
+            <label for="excel" class="col-md-3">上传润滑标准</label>
+            <input class="col-md-3" type="file" id="excel" name="excel"/>
+            <a href="javascript:void (0)"
+               class="btn btn-default col-md-2 upload_excel"
+               data-param="exceltype=oilstandard">上传
+            </a>
+        </div>
+    </form>
+</div>
+<div class="row clearfix">
+    <div class="col-md-12 column">
+        <div class="row clearfix">
+            <div class="col-md-2 column">
+                <ul class="list-group" id="equ_list">
+                </ul>
+            </div>
+            <div class="col-md-10 column">
+                <div class="tabbable" id="tabs-914403">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="panel-500537">
+                            <p>
+                                I'm in Section 1.
+                            </p>
+                        </div>
+                        <div class="tab-pane" id="panel-105926">
+                            <p>
+                                Howdy, I'm in Section 2.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $(document).on('click', '.standard', function () {
+            var markup = '<li class="list-group-item"><a href="#panel-${equ_name}" data-toggle="tab">${equ_name}</a></li>';
+            $.template('equTemplate', markup);
+            window.base.getEquipmentList(function (list) {
+                $.tmpl('equTemplate', list).appendTo("#equ_list");
+                $('#equ_list').children('li:first').addClass('active');
+            });
+        });
+
+
+        $(document).on('click', '.upload_excel', function () {
+            var param = $(this).data('param');
+            var params = {
+                url: 'document/oil/upload?' + param + '&XDEBUG_SESSION_START=10697',
+                data: new FormData($(this).parent().parent()[0]),
+                sCallback: function (data) {
+
+                },
+                eCallback: function (err) {
+                    alert(err.msg);
+                }
+            };
+            window.base.uploadFile(params);
+        });
+        $(document).on('click', '.del_btn', function () {
+            var equ_no = $(this).data('equ_no');
+            $('#delete_equ').click(function () {
+                var params = {
+                    url: 'document/oilstandard/delete_equ/' + equ_no + '?XDEBUG_SESSION_START=10628',
+                    type: 'delete',
+                    sCallback: function (data) {
+                        window.location.reload();
+                    },
+                    eCallback: function (err) {
+                        alert(err.msg);
+                    }
+                };
+                window.base.getData(params);
+            });
+        });
+    });
+</script>

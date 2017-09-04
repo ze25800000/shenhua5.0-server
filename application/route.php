@@ -40,8 +40,8 @@ Route::delete('user/delete', 'user/manager/deleteUserById');
 
 Route::get('document/equipment/getlist', 'user/manager/getEquipmentList');
 Route::post('document/equipment/add', 'user/manager/addEquipment');
-Route::post('document/equipment/edit/:equ_no', 'user/manager/editEquipmentByNo');
-Route::post('document/equipment/del/:equ_no', 'user/manager/deleteEquipmentByNo');
+//Route::post('document/equipment/edit/:id', 'user/manager/editEquipmentByNo');
+Route::delete('document/equipment/del/:equ_no', 'user/manager/deleteEquipmentByNo');
 
 //上传保存excel到数据库
 Route::post('document/oil/upload', 'user/manager/uploadExcel');

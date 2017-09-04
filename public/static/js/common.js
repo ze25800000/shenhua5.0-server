@@ -37,5 +37,17 @@ window.base = {
                 params.eCallback && params.eCallback(err.responseJSON);
             }
         })
+    },
+    getEquipmentList: function (Callback) {
+        var params = {
+            url: 'document/equipment/getlist',
+            sCallback: function (data) {
+                Callback && Callback(data.data);
+            },
+            eCallback: function (err) {
+                alert(err.msg);
+            }
+        };
+        this.getData(params);
     }
 };

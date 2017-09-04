@@ -79,17 +79,26 @@ class Manager extends BaseController {
         return $this->ajaxReturn('获得设备列表成功', 0, $list);
     }
 
-    public function editEquipmentByNo($equ_no) {
-        (new EquipmentNoValidate())->goCheck();
-        $equ    = new Equipment();
-        $result = $equ->where("equ_no='$equ_no'")->save(input('post.'));
+    /*public function editEquipmentByNo($id) {
+        $edit_equ_no   = input('post.equ_no');
+        $edit_equ_name = input('post.equ_name');
+        $test          = Equipment::where("equ_no='$edit_equ_no'  equ_name='$edit_equ_name'")->find();
+        if ($test) {
+            throw new DocumentException([
+                'msg' => '该设备编号或者设备名称已经存在'
+            ]);
+        }
+        $equ           = Equipment::get($id);
+        $equ->equ_no   = $edit_equ_no;
+        $equ->equ_name = $edit_equ_name;
+        $result        = $equ->save();
         if (!$result) {
             throw new DocumentException([
                 'msg' => '编辑设备信息失败'
             ]);
         }
-        return $this->ajaxReturn('编辑设备信息成功', 0);
-    }
+        return $this->ajaxReturn('编辑设备信息成功');
+    }*/
 
     public function deleteEquipmentByNo($equ_no) {
         (new EquipmentNoValidate())->goCheck();
