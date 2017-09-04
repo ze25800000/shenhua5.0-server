@@ -21,8 +21,6 @@
             <div class="col-md-10 column">
                 <div class="tabbable" id="tabs-914403">
                     <div class="tab-content" id="oil_table">
-
-
                     </div>
                 </div>
             </div>
@@ -173,6 +171,15 @@
             }
         });
         input.blur(function () {
+            editItem();
+        });
+        input.keydown(function (e) {
+            if (e.keyCode == 13) {
+                editItem();
+            }
+        });
+
+        function editItem() {
             var newVal = input.val(),
                 id = input.parent().data('id'),
                 key = input.parent().data('key');
@@ -192,7 +199,7 @@
             if (newVal != oldVal) {
                 window.base.getData(params);
             }
-        });
+        }
     });
 
 </script>
