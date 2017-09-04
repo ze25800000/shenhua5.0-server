@@ -91,7 +91,6 @@
     </div>
 </div>
 <script>
-    $(function () {
         //当触发oil_analysis 按钮时发送ajax请求
 //        $('.oil_analysis').ready(function () {
 //            var params = {};
@@ -104,7 +103,7 @@
                 url: 'document/oil/upload?' + param,
                 data: new FormData($(this).parent().parent().parent()[0]),
                 sCallback: function (data) {
-                    alert('上传成功');
+                    window.location.reload();
                 },
                 eCallback: function (err) {
                     alert(err.msg);
@@ -114,5 +113,4 @@
         });
         //删除oil_analysis油液分析报告
         $(document).on('click', '')
-    });
 </script>

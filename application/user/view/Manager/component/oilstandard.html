@@ -10,21 +10,18 @@
         </div>
     </form>
 </div>
-<div class="row clearfix">
+<div class="row clearfix" id="oil_standard_list">
     <div class="col-md-12 column">
         <div class="row clearfix">
             <div class="col-md-2 column">
                 <ul class="list-group" id="equ_list">
+
                 </ul>
             </div>
             <div class="col-md-10 column">
                 <div class="tabbable" id="tabs-914403">
-                    <div class="tab-content" id="oil-standard-list">
-                        <div class="tab-pane active" id="pane">
-                            <p>
-                                I'm in Section 1.
-                            </p>
-                        </div>
+                    <div class="tab-content" id="oil_table">
+
 
                     </div>
                 </div>
@@ -32,8 +29,12 @@
         </div>
     </div>
 </div>
-<script id="OilStandardTemplate" type="text/html">
-    <div class="tab-pane" id="panel-${equ_no}">
+
+<script id="OilStandardTemplate1" type="text/html">
+    <li class="list-group-item equ_item"><a href="#panel-${equ_no}" data-toggle="tab">${equ_name}</a></li>
+</script>
+<script id="OilStandardTemplate2" type="text/html">
+    <div class="tab-pane oil_tab" id="panel-${equ_no}">
         <table class="table">
             <thead>
             <tr>
@@ -67,89 +68,85 @@
             </tr>
             </thead>
             <tbody>
-            {{if list}}
+            {{each oil_standard_list}}
             <tr>
                 <td>
-                    ${equ_no}
+                    ${$value.equ_no}
                 </td>
                 <td>
-                    ${equ_oil_no}
+                    ${$value.equ_oil_no}
                 </td>
                 <td>
-                    ${oil_name}
+                    ${$value.oil_name}
                 </td>
                 <td>
-                    ${oil_no}
+                    ${$value.oil_no}
                 </td>
                 <td>
-                    ${quantity}
+                    ${$value.quantity}
                 </td>
                 <td>
-                    ${unit}
+                    ${$value.unit}
                 </td>
                 <td>
-                    ${first_period}
+                    ${$value.first_period}
                 </td>
                 <td>
-                    ${period}
+                    ${$value.period}
                 </td>
                 <td>
-                    ${interval}
+                    ${$value.interval}
                 </td>
             </tr>
-            {{/if}}
+            {{/each}}
             </tbody>
         </table>
     </div>
 </script>
 <script>
-    $(function () {
-        $(document).on('click', '.standard', function () {
+    var stan_flag = true;
+    $(document).on('click', '.standard', function () {
+        if (stan_flag) {
             window.base.getOilStandardList(function (list) {
                 console.log(list);
-                $.tmpl('OilStandardTemplate', list).appendTo("#oil-standard-list")
+                $('#OilStandardTemplate1').tmpl(list).appendTo('#equ_list');
+                $('#OilStandardTemplate2').tmpl(list).appendTo('#oil_table');
+                $('.equ_item:first').addClass('active');
+                $('.oil_tab:first').addClass('active');
             });
-        });
-        $(document).on('click', '.get_oil_list', function () {
-            var OilStandardMarkup = $('#OilStandardTemplate')[0];
-            template('OilStandardTemplate', OilStandardMarkup);
-            window.base.getOilStandardList(equ_no, function (list) {
-                console.log(list);
-                $.tmpl('OilStandardTemplate', list).appendTo("#oil-standard-list")
-            });
-        });
+        }
+        stan_flag = false;
+    });
 
-        $(document).on('click', '.upload_excel', function () {
-            var param = $(this).data('param');
+    $(document).on('click', '.upload_excel', function () {
+        var param = $(this).data('param');
+        var params = {
+            url: 'document/oil/upload?' + param + '&XDEBUG_SESSION_START=12092',
+            data: new FormData($(this).parent().parent()[0]),
+            sCallback: function (data) {
+                alert('上传成功');
+                window.location.reload();
+            },
+            eCallback: function (err) {
+                console.log(err);
+            }
+        };
+        window.base.uploadFile(params);
+    });
+    $(document).on('click', '.del_btn', function () {
+        var equ_no = $(this).data('equ_no');
+        $('#delete_equ').click(function () {
             var params = {
-                url: 'document/oil/upload?' + param + '&XDEBUG_SESSION_START=12092',
-                data: new FormData($(this).parent().parent()[0]),
+                url: 'document/oilstandard/delete_equ/' + equ_no + '?XDEBUG_SESSION_START=10628',
+                type: 'delete',
                 sCallback: function (data) {
-                    alert('上传成功');
-                    console.log(data);
-                    //                    window.location.reload();
+                    window.location.reload();
                 },
                 eCallback: function (err) {
                     alert(err.msg);
                 }
             };
-            window.base.uploadFile(params);
-        });
-        $(document).on('click', '.del_btn', function () {
-            var equ_no = $(this).data('equ_no');
-            $('#delete_equ').click(function () {
-                var params = {
-                    url: 'document/oilstandard/delete_equ/' + equ_no + '?XDEBUG_SESSION_START=10628',
-                    type: 'delete',
-                    sCallback: function (data) {
-                        window.location.reload();
-                    },
-                    eCallback: function (err) {
-                        alert(err.msg);
-                    }
-                };
-                window.base.getData(params);
-            });
+            window.base.getData(params);
         });
     });
 </script>

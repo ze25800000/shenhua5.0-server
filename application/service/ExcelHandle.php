@@ -60,7 +60,7 @@ class ExcelHandle {
         $arr         = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equ_no_list)) {
-                if (!empty($id_list)) {
+                if (!empty($id_list) && !empty($id_list[$k])) {
                     $arr[$k]['id'] = $id_list[$k];
                 }
                 $arr[$k]['equ_no']       = $v[0];
