@@ -38,14 +38,17 @@ Route::post('user/update', 'user/manager/updateUserById');
 Route::post('user/add', 'user/manager/addUser');
 Route::delete('user/delete', 'user/manager/deleteUserById');
 
+//对设备进行操作
 Route::get('document/equipment/getlist', 'user/manager/getEquipmentList');
 Route::post('document/equipment/add', 'user/manager/addEquipment');
 //Route::post('document/equipment/edit/:id', 'user/manager/editEquipmentByNo');
 Route::delete('document/equipment/del/:equ_no', 'user/manager/deleteEquipmentByNo');
 
+//操作润滑标准
+Route::get('document/oilstandard/getlist/:equ_no', 'user/manager/getOilStandardListByNo');
+Route::delete('document/oilstandard/delete_equ/:equ_no', 'user/manager/deleteEquipmentByNo');
+
 //上传保存excel到数据库
 Route::post('document/oil/upload', 'user/manager/uploadExcel');
 
-//设备标准、润滑保养成本
-Route::delete('document/oilstandard/delete_equ/:equ_no', 'user/manager/deleteEquipmentByNo');
 

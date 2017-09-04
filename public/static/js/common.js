@@ -49,5 +49,17 @@ window.base = {
             }
         };
         this.getData(params);
+    },
+    getOilStandardList: function (equ_no, callback) {
+        var params = {
+            url: 'document/oilstandard/getlist/' + equ_no,
+            sCallback: function (data) {
+                callback && callback(data.data);
+            },
+            eCallback: function (err) {
+                alert(err.msg);
+            }
+        };
+        this.getData(params);
     }
 };

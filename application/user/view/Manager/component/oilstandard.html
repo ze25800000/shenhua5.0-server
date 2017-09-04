@@ -19,35 +19,108 @@
             </div>
             <div class="col-md-10 column">
                 <div class="tabbable" id="tabs-914403">
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="panel-500537">
+                    <div class="tab-content" id="oil-standard-list">
+                        <div class="tab-pane active" id="pane">
                             <p>
                                 I'm in Section 1.
                             </p>
                         </div>
-                        <div class="tab-pane" id="panel-105926">
-                            <p>
-                                Howdy, I'm in Section 2.
-                            </p>
-                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
+<script id="OilStandardTemplate" type="text/html">
+    <div class="tab-pane" id="panel-${equ_no}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    设备编号
+                </th>
+                <th>
+                    润滑点编号
+                </th>
+                <th>
+                    润滑点名称
+                </th>
+                <th>
+                    物料编号
+                </th>
+                <th>
+                    用量
+                </th>
+                <th>
+                    单位
+                </th>
+                <th>
+                    首保周期
+                </th>
+                <th>
+                    最长更换周期
+                </th>
+                <th>
+                    油脂采样间隔
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {{if list}}
+            <tr>
+                <td>
+                    ${equ_no}
+                </td>
+                <td>
+                    ${equ_oil_no}
+                </td>
+                <td>
+                    ${oil_name}
+                </td>
+                <td>
+                    ${oil_no}
+                </td>
+                <td>
+                    ${quantity}
+                </td>
+                <td>
+                    ${unit}
+                </td>
+                <td>
+                    ${first_period}
+                </td>
+                <td>
+                    ${period}
+                </td>
+                <td>
+                    ${interval}
+                </td>
+            </tr>
+            {{/if}}
+            </tbody>
+        </table>
+    </div>
+</script>
 <script>
     $(function () {
         $(document).on('click', '.standard', function () {
-            var markup = '<li class="list-group-item"><a href="#panel-${equ_name}" data-toggle="tab">${equ_name}</a></li>';
-            $.template('equTemplate', markup);
+            var equMarkup = '<li class="list-group-item"><a href="#panel-${equ_no}" data-toggle="tab" class="get_oil_list" data-equ_no="${equ_no}">${equ_name}</a></li>';
+            $.template('equTemplate', equMarkup);
             window.base.getEquipmentList(function (list) {
                 $.tmpl('equTemplate', list).appendTo("#equ_list");
                 $('#equ_list').children('li:first').addClass('active');
             });
         });
-
+        $(document).on('click', '.get_oil_list', function () {
+            var OilStandardMarkup = $('#OilStandardTemplate')[0],
+                equ_no = $(this).data('equ_no');
+            $.template('OilStandardTemplate', OilStandardMarkup);
+            window.base.getOilStandardList(equ_no, function (list) {
+                console.log(list);
+                $.tmpl('OilStandardTemplate', list).appendTo("#oil-standard-list")
+            });
+        });
 
         $(document).on('click', '.upload_excel', function () {
             var param = $(this).data('param');
@@ -55,7 +128,9 @@
                 url: 'document/oil/upload?' + param + '&XDEBUG_SESSION_START=10697',
                 data: new FormData($(this).parent().parent()[0]),
                 sCallback: function (data) {
-
+                    alert('上传成功');
+                    console.log(data);
+                    //                    window.location.reload();
                 },
                 eCallback: function (err) {
                     alert(err.msg);

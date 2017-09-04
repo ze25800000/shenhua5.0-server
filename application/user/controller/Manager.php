@@ -29,6 +29,7 @@ class Manager extends BaseController {
         'checkStaffScope' => ['only' => 'member,getUserById,updateUserById,addUser,deleteUserById']
     ];
 
+    /****************************对数据录入和用户管理页面渲染******************************************/
     public function oilDocumentManager() {
         $this->assign([
             'oil_standard' => Db::table('oil_standard')->order('equ_oil_no asc')->select(),
@@ -38,15 +39,18 @@ class Manager extends BaseController {
         return $this->fetch();
     }
 
-    public function oilAnalysisView() {
-        $oil_analysis_list = Db::table('oil_analysis')->select();
-        if (!$oil_analysis_list) {
-            throw new DocumentException([
-                'msg' => '油液分析报告数据读取失败'
-            ]);
-        }
-        return $this->ajaxReturn('读取成功', 0, $oil_analysis_list);
+    public function member() {
+        $users    = User::order('scope desc')->select();
+        $userName = session('userName');
+        $scope    = session('userScope');
+        $this->assign('users', $users);
+        $this->assign('userName', $userName);
+        $this->assign('scope', $scope);
+        return $this->fetch();
     }
+
+    /*****************************设备管理*************************************************************/
+
 
     public function addEquipment() {
         (new EquipmentValidate())->goCheck();
@@ -79,27 +83,6 @@ class Manager extends BaseController {
         return $this->ajaxReturn('获得设备列表成功', 0, $list);
     }
 
-    /*public function editEquipmentByNo($id) {
-        $edit_equ_no   = input('post.equ_no');
-        $edit_equ_name = input('post.equ_name');
-        $test          = Equipment::where("equ_no='$edit_equ_no'  equ_name='$edit_equ_name'")->find();
-        if ($test) {
-            throw new DocumentException([
-                'msg' => '该设备编号或者设备名称已经存在'
-            ]);
-        }
-        $equ           = Equipment::get($id);
-        $equ->equ_no   = $edit_equ_no;
-        $equ->equ_name = $edit_equ_name;
-        $result        = $equ->save();
-        if (!$result) {
-            throw new DocumentException([
-                'msg' => '编辑设备信息失败'
-            ]);
-        }
-        return $this->ajaxReturn('编辑设备信息成功');
-    }*/
-
     public function deleteEquipmentByNo($equ_no) {
         (new EquipmentNoValidate())->goCheck();
         $equ = Equipment::where("equ_no='$equ_no'")->delete();
@@ -112,16 +95,17 @@ class Manager extends BaseController {
         return $this->ajaxReturn('删除设备成功');
     }
 
-    public function member() {
-        $users    = User::order('scope desc')->select();
-        $userName = session('userName');
-        $scope    = session('userScope');
-        $this->assign('users', $users);
-        $this->assign('userName', $userName);
-        $this->assign('scope', $scope);
-        return $this->fetch();
+    /************************润滑标准管理*******************************************************/
+    public function getOilStandardListByNo($equ_no) {
+        (new EquipmentNoValidate())->goCheck();
+        $list = OilStandard::where('equ_no', '=', $equ_no)->select();
+        if (!$list) {
+            throw new DocumentException([
+                'msg' => '获取润滑标准失败'
+            ]);
+        }
+        return $this->ajaxReturn('获得润滑标准成功', 0, $list);
     }
-
 
     public function uploadExcel() {
 
@@ -140,6 +124,17 @@ class Manager extends BaseController {
         }
     }
 
+    public function oilAnalysisView() {
+        $oil_analysis_list = Db::table('oil_analysis')->select();
+        if (!$oil_analysis_list) {
+            throw new DocumentException([
+                'msg' => '油液分析报告数据读取失败'
+            ]);
+        }
+        return $this->ajaxReturn('读取成功', 0, $oil_analysis_list);
+    }
+
+    /****************************用户操作*****************************************/
     public function getUserById($id) {
         (new IDMustBePositiveInt())->goCheck();
         $user = User::find($id);
