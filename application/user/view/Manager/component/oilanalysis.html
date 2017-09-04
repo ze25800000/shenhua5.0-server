@@ -1,116 +1,107 @@
+<div class="col-md-12">
+    <form role="form" class="uploadFile_oil">
+        <div class="form-group">
+            <label for="excel" class="col-md-3">上传油液分析报告</label>
+            <input class="col-md-3" type="file" id="excel" name="excel"/>
+            <a href="javascript:void (0)"
+               class="btn btn-default col-md-2 upload_excel"
+               data-param="exceltype=oilstandard">上传
+            </a>
+        </div>
+    </form>
+</div>
 <div class="row clearfix">
-    <div class="col-md-12 column">
-        <div class="row clearfix">
-            <div class="col-md-12 column">
-                <form class="form-horizontal uploadFile_oil" role="form">
-                    <div class="form-group">
-                        <label for="file" class="col-sm-2 control-label">上传油液分析报告</label>
-                        <div class="col-sm-3">
-                            <input type="file" class="" id="file"/>
-                        </div>
-                        <div class="col-sm-offset-2 col-sm-2">
-                            <a href="javascript:void(0)" class="btn btn-default upload_oil"
-                               data-param="exceltype=oilanalysis">上传</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="row clearfix">
-            <div class="col-md-2 column">
-                <ul class="list-group " role="group">
-                    <li class="list-group-item active">
-                        <a href="#panel-" data-toggle="tab">一号破碎站</a>
+    <div class="col-md-2 column">
+        <ul class="list-group " role="group">
+            <li class="list-group-item active">
+                <a href="#panel-" data-toggle="tab">一号破碎站</a>
 
-                        <a role="button" data-toggle="modal" href="#modal-container-oil"
-                           class="del_oil_btn btn-sm pull-right" style="font-size: 12px"
-                           data-equ_no="">删除</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-10 column">
-                <table class="table table-bordered table-condensed table-hover">
-                    <thead>
-                    <tr>
-                        <th>
-                            编号
-                        </th>
-                        <th>
-                            产品
-                        </th>
-                        <th>
-                            交付时间
-                        </th>
-                        <th>
-                            状态
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            TB - Monthly
-                        </td>
-                        <td>
-                            01/04/2012
-                        </td>
-                        <td>
-                            Default
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-4 column">
-            </div>
-        </div>
+                <a role="button" data-toggle="modal" href="#modal-container-oil"
+                   class="del_oil_btn btn-sm pull-right" style="font-size: 12px"
+                   data-equ_no="">删除</a>
+            </li>
+        </ul>
     </div>
-    <div class="modal fade" id="modal-container-oil" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title">
-                        删除设备
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <h3>你确认要删除该设备？</h3>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button id="delete_equ" type="submit" class="btn btn-default">确认</button>
-                </div>
+    <div class="col-md-10 column">
+        <table class="table table-bordered table-condensed table-hover">
+            <thead>
+            <tr>
+                <th>
+                    编号
+                </th>
+                <th>
+                    产品
+                </th>
+                <th>
+                    交付时间
+                </th>
+                <th>
+                    状态
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    1
+                </td>
+                <td>
+                    TB - Monthly
+                </td>
+                <td>
+                    01/04/2012
+                </td>
+                <td>
+                    Default
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4 column">
+    </div>
+</div>
+<div class="modal fade" id="modal-container-oil" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">
+                    删除设备
+                </h4>
             </div>
-
+            <div class="modal-body">
+                <h3>你确认要删除该设备？</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="delete_equ" type="submit" class="btn btn-default">确认</button>
+            </div>
         </div>
 
     </div>
 </div>
+
 <script>
-        //当触发oil_analysis 按钮时发送ajax请求
-//        $('.oil_analysis').ready(function () {
-//            var params = {};
-//            window.base.getData(params);
-//        });
-        //上传oil_analysis油液分析报告
-        $(document).on('click', '.upload_oil', function () {
-            var param = $(this).data('param');
-            var params = {
-                url: 'document/oil/upload?' + param,
-                data: new FormData($(this).parent().parent().parent()[0]),
-                sCallback: function (data) {
-                    window.location.reload();
-                },
-                eCallback: function (err) {
-                    alert(err.msg);
-                }
-            };
-            window.base.uploadFile(params);
-        });
-        //删除oil_analysis油液分析报告
-        $(document).on('click', '')
+    //当触发oil_analysis 按钮时发送ajax请求
+    //        $('.oil_analysis').ready(function () {
+    //            var params = {};
+    //            window.base.getData(params);
+    //        });
+    //上传oil_analysis油液分析报告
+    $(document).on('click', '.upload_oil', function () {
+        var param = $(this).data('param');
+        var params = {
+            url: 'document/oil/upload?' + param,
+            data: new FormData($(this).parent().parent().parent()[0]),
+            sCallback: function (data) {
+                window.location.reload();
+            },
+            eCallback: function (err) {
+                alert(err.msg);
+            }
+        };
+        window.base.uploadFile(params);
+    });
+    //删除oil_analysis油液分析报告
 </script>

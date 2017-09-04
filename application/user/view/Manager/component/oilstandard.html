@@ -65,37 +65,43 @@
                 <th>
                     油脂采样间隔
                 </th>
+                <th>
+                    操作
+                </th>
             </tr>
             </thead>
             <tbody>
             {{each oil_standard_list}}
             <tr>
-                <td>
+                <td class="equ_no">
                     ${$value.equ_no}
                 </td>
-                <td>
+                <td data-id="${$value.id}" data-key="equ_oil_no">
                     ${$value.equ_oil_no}
                 </td>
-                <td>
+                <td data-id="${$value.id}" data-key="oil_name">
                     ${$value.oil_name}
                 </td>
-                <td>
+                <td data-id="${$value.id}" data-key="oil_no">
                     ${$value.oil_no}
                 </td>
-                <td>
+                <td data-id="${$value.id}" data-key="quantity">
                     ${$value.quantity}
                 </td>
-                <td>
+                <td data-id="${$value.id}" data-key="unit">
                     ${$value.unit}
                 </td>
-                <td>
+                <td data-id="${$value.id}" data-key="first_period">
                     ${$value.first_period}
                 </td>
-                <td>
+                <td data-id="${$value.id}" data-key="period">
                     ${$value.period}
                 </td>
-                <td>
+                <td data-id="${$value.id}" data-key="interval">
                     ${$value.interval}
+                </td>
+                <td data-id="${$value.id}">
+                    <a href="" class="btn btn-sm btn-danger">删除</a>
                 </td>
             </tr>
             {{/each}}
@@ -149,4 +155,44 @@
             window.base.getData(params);
         });
     });
+    //    var td = $('#oil_table').find('td');
+    //    $(document).on('dblclick', td, function () {
+    //        console.log($(this).find('td'));
+    //        $(this).html('<input type="text" value="' + td.html() + '">');
+    //    })
+    $('#oil_table').on('dblclick', 'td', function () {
+        var _this = $(this),
+            oldVal = _this.html();
+        console.log($(this));
+        _this.html('<input type="text" value="' + oldVal + '">');
+        var input = _this.find('input');
+        input.select();
+        $(window).keydown(function (e) {
+            if (e.keyCode == 27) {
+                _this.html(oldVal);
+            }
+        });
+        input.blur(function () {
+            var newVal = input.val(),
+                id = input.parent().data('id'),
+                key = input.parent().data('key');
+            _this.html(newVal);
+            var params = {
+                url: 'document/oilstandard/edititem/' + id + '?XDEBUG_SESSION_START=12092',
+                type: 'post',
+                data: {[key]: newVal},
+                sCallback: function (data) {
+                    alert(data.msg)
+                },
+                eCallback: function (err) {
+                    alert('修改失败');
+                    _this.html(oldVal);
+                }
+            };
+            if (newVal != oldVal) {
+                window.base.getData(params);
+            }
+        });
+    });
+
 </script>

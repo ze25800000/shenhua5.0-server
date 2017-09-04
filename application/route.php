@@ -47,6 +47,7 @@ Route::delete('document/equipment/del/:equ_no', 'user/manager/deleteEquipmentByN
 //操作润滑标准
 Route::get('document/oilstandard/getlist/', 'user/manager/getOilStandardListByNo');
 Route::delete('document/oilstandard/delete_equ/:equ_no', 'user/manager/deleteEquipmentByNo');
+Route::post('document/oilstandard/edititem/:id', 'user/manager/editOilStandardDetailById');
 
 //上传保存excel到数据库
 Route::post('document/oil/upload', 'user/manager/uploadExcel');
