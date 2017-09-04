@@ -70,7 +70,7 @@
                                 <ul class="list-group col-md-2" role="group">
                                     {foreach $equ_list as $k=>$v}
                                     <li class="list-group-item {if condition=" $k==0"}active{/if}">
-                                        <a href="#panel-{$v.equ_no}" data-toggle="tab">{$v.name}</a>
+                                        <a href="#panel-{$v.equ_no}" data-toggle="tab">{$v.equ_name}</a>
 
                                         <a role="button" data-toggle="modal" href="#modal-container-0"
                                            class="del_btn btn-sm pull-right" style="font-size: 12px"
@@ -85,9 +85,6 @@
                                         <table class="table table-bordered table-hover table-condensed">
                                             <thead>
                                             <tr align="center">
-                                                <th>
-                                                    设备编号
-                                                </th>
                                                 <th>
                                                     设备润滑点编号
                                                 </th>
@@ -118,9 +115,6 @@
                                             {foreach $oil_standard as $kk=>$vv}
                                             {if condition="$v.equ_no===$vv.equ_no"}
                                             <tr align="center">
-                                                <td>
-                                                    {$vv.equ_no}
-                                                </td>
                                                 <td>
                                                     {$vv.equ_oil_no}
                                                 </td>
@@ -230,7 +224,7 @@
         $(document).on('click', '.upload_excel', function () {
             var param = $(this).data('param');
             var params = {
-                url: 'manager/oil/upload?' + param + '&XDEBUG_SESSION_START=15903',
+                url: 'manager/oil/upload?' + param + '&XDEBUG_SESSION_START=10697',
                 data: new FormData($(this).parent().parent()[0]),
                 sCallback: function (data) {
                     alert('上传成功');
