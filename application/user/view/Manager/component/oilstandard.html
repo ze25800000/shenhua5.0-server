@@ -27,7 +27,24 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal-container-188821" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                你确认要删除该条目？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary del-save">确认</button>
+            </div>
+        </div>
 
+    </div>
+
+</div>
 <script id="OilStandardTemplate1" type="text/html">
     <li class="list-group-item equ_item"><a href="#panel-${equ_no}" data-toggle="tab">${equ_name}</a></li>
 </script>
@@ -99,7 +116,7 @@
                     ${$value.interval}
                 </td>
                 <td data-id="${$value.id}">
-                    <a href="" class="btn btn-sm btn-danger">删除</a>
+                    <a href="#modal-container-188821" data-toggle="modal" class="btn btn-sm btn-danger">删除</a>
                 </td>
             </tr>
             {{/each}}
@@ -153,11 +170,23 @@
             window.base.getData(params);
         });
     });
-    //    var td = $('#oil_table').find('td');
-    //    $(document).on('dblclick', td, function () {
-    //        console.log($(this).find('td'));
-    //        $(this).html('<input type="text" value="' + td.html() + '">');
-    //    })
+    $('.btn-danger').click(function () {
+        var id = $(this).parent().data('id');
+        $('.del-save').click(function () {
+            alert();
+            var params = {
+                url: 'document/oilstandard/del/' + id,
+                type: 'delete',
+                sCallback: function (data) {
+                    alert(data.msg);
+                },
+                eCallback: function (err) {
+                    alert(err.msg);
+                }
+            };
+            window.base.getData(params);
+        });
+    });
     $('#oil_table').on('dblclick', 'td', function () {
         var _this = $(this),
             oldVal = _this.html();

@@ -98,14 +98,25 @@ class Manager extends BaseController {
     /************************润滑标准管理*******************************************************/
     public function editOilStandardDetailById($id) {
 //        (new IDMustBePositiveInt())->goCheck();
-        $OilStandard       = OilStandard::get($id);
-        $result            = $OilStandard->save(input('post.'));
+        $OilStandard = OilStandard::get($id);
+        $result      = $OilStandard->save(input('post.'));
         if (!$result) {
             throw new DocumentException([
                 'msg' => '修改详细信息失败'
             ]);
         }
         return $this->ajaxReturn('修改详细信息成功');
+    }
+
+    public function delOilStandardItemById($id) {
+//        (new IDMustBePositiveInt())->goCheck();
+        $result = OilStandard::where('id', '=', $id)->delete();
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '删除失败'
+            ]);
+        }
+        return $this->ajaxReturn('删除成功');
     }
 
     public function getOilStandardListByNo() {
