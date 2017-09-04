@@ -1,0 +1,76 @@
+<form role="form" class="uploadForm col-md-12">
+    <div class="form-group">
+        <label for="excel" class="col-md-5"></label>
+        <input class="col-md-3" type="file" id="excel" name="excel"/>
+        <a href="javascript:void (0)"
+           class="btn btn-default col-md-2 upload_excel"
+           data-param="exceltype=oilstandard">上传
+        </a>
+    </div>
+</form>
+<div class="tabbable" id="tabs-270320">
+    <ul class="list-group col-md-2" role="group">
+        <li class="list-group-item {if condition=" $k==0"}active{/if}">
+            <a href="#panel-{$v.equ_no}" data-toggle="tab"></a>
+
+            <a role="button" data-toggle="modal" href="#modal-container-0"
+               class="del_btn btn-sm pull-right" style="font-size: 12px"
+               data-equ_no="{$v.equ_no}">删除</a>
+        </li>
+    </ul>
+    <div class="tab-content col-md-10">
+        <div class="tab-pane {if condition=" $k==0"}active{/if}" id="panel-">
+
+            <table class="table table-bordered table-hover table-condensed">
+                <thead>
+                <tr align="center">
+                    <th>
+                        设备润滑点编号
+                    </th>
+                    <th style="text-align: center">
+                        润滑点全称
+                    </th>
+                    <th>
+                        物料编号
+                    </th>
+                    <th>
+                        用量
+                    </th>
+                    <th>
+                        单位
+                    </th>
+                    <th>
+                        首保周期
+                    </th>
+                    <th>
+                        更换最长周期
+                    </th>
+                    <th>
+                        油脂采样间隔
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr align="center">
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

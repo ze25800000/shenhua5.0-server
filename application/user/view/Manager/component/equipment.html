@@ -1,0 +1,116 @@
+<div class="row clearfix">
+    <div class="col-md-12 column">
+        <a id="modal-685016" href="#modal-container-685016" role="button" class="btn btn-default" data-toggle="modal">添加设备</a>
+
+        <div class="modal fade" id="modal-container-685016" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            添加设备
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row clearfix">
+                            <div class="col-md-8 column">
+                                <form class="form-horizontal" role="form">
+                                    <div class="form-group">
+                                        <label for="equ_name" class="col-md-3 control-label">设备名称</label>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="equ_name"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="equ_no" class="col-md-3 control-label">设备编号</label>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="equ_no"/>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary save_equ">保存</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>
+                    设备编号
+                </th>
+                <th>
+                    设备名称
+                </th>
+                <th>
+                    创建时间
+                </th>
+                <th>
+                    操作
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    1
+                </td>
+                <td>
+                    TB - Monthly
+                </td>
+                <td>
+                    01/04/2012
+                </td>
+                <td>
+                    <a href="javascript:void (0)" class="btn btn-default">编辑</a>
+                    <a href="javascript:void (0)" class="btn btn-danger">删除</a>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $(this).ready(function () {
+            var params = {
+                url: 'document/equipment/getlist',
+                sCallback: function (data) {
+                    console.log(data);
+                },
+                eCallback: function (err) {
+                    console.log(err);
+                }
+            };
+            window.base.getData(params);
+        });
+        $(document).on('click', '.save_equ', function () {
+            var params = {
+                url: 'document/equipment/add?XDEBUG_SESSION_START=18950',
+                type: 'post',
+                data: {
+                    equ_no: $('#equ_no').val(),
+                    equ_name: $('#equ_name').val()
+                },
+                sCallback: function (data) {
+                    console.log(data);
+                },
+                eCallback: function (err) {
+                    console.log(err);
+                }
+            };
+            window.base.getData(params);
+        });
+    });
+</script>

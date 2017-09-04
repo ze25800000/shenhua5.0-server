@@ -45,6 +45,40 @@ class Manager extends BaseController {
         return $this->fetch();
     }
 
+    public function oilAnalysisView() {
+        $oil_analysis_list = Db::table('oil_analysis')->select();
+        if (!$oil_analysis_list) {
+            throw new DocumentException([
+                'msg' => '油液分析报告数据读取失败'
+            ]);
+        }
+        return $this->ajaxReturn('读取成功', 0, $oil_analysis_list);
+    }
+
+    public function addEquipment() {
+        (new EquipmentValidate())->goCheck();
+        $equ_no   = input('post.equ_no');
+        $equ_name = input('post.equ_name');
+        $info     = Equipment::where("equ_no='{$equ_no}' or equ_name='{$equ_name}'")->find();
+        if ($info) {
+            throw new DocumentException([
+                'msg' => '您所输入的设备名称或者编号已经存在'
+            ]);
+        }
+        $result = Equipment::insert(input('post.'));
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '添加设备失败'
+            ]);
+        }
+        $this->ajaxReturn('添加设备成功', 0);
+
+    }
+
+    public function getEquipmentList() {
+
+    }
+
     public function member() {
         $users    = User::order('scope desc')->select();
         $userName = session('userName');
@@ -53,25 +87,6 @@ class Manager extends BaseController {
         $this->assign('userName', $userName);
         $this->assign('scope', $scope);
         return $this->fetch();
-    }
-
-    public function addEquipment() {
-        (new EquipmentValidate())->goCheck();
-        $param = Request::instance()->param();
-        $sql   = "SELECT * FROM equipment WHERE equ_no={$param['equ_no']} or name='{$param['name']}'";
-        $info  = Equipment::execute($sql);
-        if ($info) {
-            throw new DocumentException([
-                'msg' => '设备编号或者设备名称重复，请重新输入'
-            ]);
-        }
-        $result = Equipment::insert($_POST);
-        if (!$result) {
-            throw new DocumentException([
-                'msg' => '添加设备失败'
-            ]);
-        }
-        return $this->ajaxReturn('添加设备成功');
     }
 
     public function deleteEquipmentByNo($equ_no) {

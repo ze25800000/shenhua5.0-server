@@ -32,14 +32,28 @@
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="active" role="presentation">
-                            <a class=""
+                            <a class="equipment"
+                               href="#equipment"
+                               aria-controls="equipment"
+                               role="tab"
+                               data-toggle="tab">设备管理</a>
+                        </li>
+                        <li class="" role="presentation">
+                            <a class="standard"
                                href="#standard"
                                aria-controls="standard"
                                role="tab"
                                data-toggle="tab">设备润滑标准管理</a>
                         </li>
                         <li class="" role="presentation">
-                            <a class=""
+                            <a class="oil_analysis"
+                               href="#oil_analysis"
+                               aria-controls="oil_analysis"
+                               role="tab"
+                               data-toggle="tab">油液分析报告管理</a>
+                        </li>
+                        <li class="" role="presentation">
+                            <a class="cost"
                                href="#cost"
                                aria-controls="cost"
                                role="tab"
@@ -49,107 +63,11 @@
 
                 </div>
                 <div class="col-md-12 column">
-                    <!-- Tab panes -->
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="standard">
-
-                            <a id="modal-506849" href="#modal-container-506849" role="button" class="btn btn-default"
-                               data-toggle="modal">添加新设备</a>
-                            <form role="form" class="uploadForm" class="">
-                                <div class="form-group">
-                                    <label for="excel" class="col-md-5"></label>
-                                    <input class="col-md-3" type="file" id="excel" name="excel"/>
-                                    <a href="javascript:void (0)"
-                                       class="btn btn-default col-md-2 upload_excel"
-                                       data-param="exceltype=oilstandard">上传
-                                    </a>
-                                </div>
-                            </form>
-
-                            <div class="tabbable" id="tabs-270320">
-                                <ul class="list-group col-md-2" role="group">
-                                    {foreach $equ_list as $k=>$v}
-                                    <li class="list-group-item {if condition=" $k==0"}active{/if}">
-                                        <a href="#panel-{$v.equ_no}" data-toggle="tab">{$v.equ_name}</a>
-
-                                        <a role="button" data-toggle="modal" href="#modal-container-0"
-                                           class="del_btn btn-sm pull-right" style="font-size: 12px"
-                                           data-equ_no="{$v.equ_no}">删除</a>
-                                    </li>
-                                    {/foreach}
-                                </ul>
-                                <div class="tab-content col-md-10">
-                                    {foreach $equ_list as $k=>$v}
-                                    <div class="tab-pane {if condition=" $k==0"}active{/if}" id="panel-{$v.equ_no}">
-
-                                        <table class="table table-bordered table-hover table-condensed">
-                                            <thead>
-                                            <tr align="center">
-                                                <th>
-                                                    设备润滑点编号
-                                                </th>
-                                                <th style="text-align: center">
-                                                    润滑点全称
-                                                </th>
-                                                <th>
-                                                    物料编号
-                                                </th>
-                                                <th>
-                                                    用量
-                                                </th>
-                                                <th>
-                                                    单位
-                                                </th>
-                                                <th>
-                                                    首保周期
-                                                </th>
-                                                <th>
-                                                    更换最长周期
-                                                </th>
-                                                <th>
-                                                    油脂采样间隔
-                                                </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {foreach $oil_standard as $kk=>$vv}
-                                            {if condition="$v.equ_no===$vv.equ_no"}
-                                            <tr align="center">
-                                                <td>
-                                                    {$vv.equ_oil_no}
-                                                </td>
-                                                <td>
-                                                    {$vv.oil_name}
-                                                </td>
-                                                <td>
-                                                    {$vv.oil_no}
-                                                </td>
-                                                <td>
-                                                    {$vv.quantity}
-                                                </td>
-                                                <td>
-                                                    {$vv.unit}
-                                                </td>
-                                                <td>
-                                                    {$vv.first_period}
-                                                </td>
-                                                <td>
-                                                    {$vv.period}
-                                                </td>
-                                                <td>
-                                                    {$vv.interval}
-                                                </td>
-                                            </tr>
-                                            {/if}
-                                            {/foreach}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    {/foreach}
-                                </div>
-                            </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="cost">润滑保养成本管理</div>
+                        <div role="tabpanel" class="tab-pane active" id="equipment"><?php require(APP_PATH.'/user/view/Manager/component/equipment.html');?></div>
+                        <div role="tabpanel" class="tab-pane" id="standard"><?php require(APP_PATH.'/user/view/Manager/component/oilstandard.html');?></div>
+                        <div role="tabpanel" class="tab-pane" id="oil_analysis"><?php require(APP_PATH.'/user/view/Manager/component/oilanalysis.html');?></div>
+                        <div role="tabpanel" class="tab-pane" id="cost"><?php require(APP_PATH.'/user/view/Manager/component/maintenance.html');?></div>
                     </div>
                 </div>
             </div>
@@ -158,45 +76,6 @@
 </div>
 
 
-<div class="modal fade" id="modal-container-506849" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">
-                    添加新设备
-                </h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label for="equ_name" class="col-sm-2 control-label">设备名称</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="equ_name" name="equ_name"/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="equ_no" class="col-sm-2 control-label">设备编号</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="equ_no" name="equ_no"/>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button id="add_equ" type="submit" class="btn btn-default">确认</button>
-            </div>
-        </div>
-
-    </div>
-
-</div>
 <div class="modal fade" id="modal-container-0" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -224,7 +103,7 @@
         $(document).on('click', '.upload_excel', function () {
             var param = $(this).data('param');
             var params = {
-                url: 'manager/oil/upload?' + param + '&XDEBUG_SESSION_START=10697',
+                url: 'document/oil/upload?' + param + '&XDEBUG_SESSION_START=10697',
                 data: new FormData($(this).parent().parent()[0]),
                 sCallback: function (data) {
                     alert('上传成功');
@@ -235,22 +114,6 @@
                 }
             };
             window.base.uploadFile(params);
-        });
-        $(document).on('click', '#add_equ', function () {
-            var name = $('#equ_name').val(),
-                equ_no = $('#equ_no').val();
-            var params = {
-                url: 'document/oilstandard/addequ?XDEBUG_SESSION_START=16232',
-                type: 'post',
-                data: {name: name, equ_no: equ_no},
-                sCallback: function (data) {
-                    window.location.reload();
-                },
-                eCallback: function (err) {
-                    alert(err.msg);
-                }
-            };
-            window.base.getData(params);
         });
         $(document).on('click', '.del_btn', function () {
             var equ_no = $(this).data('equ_no');
