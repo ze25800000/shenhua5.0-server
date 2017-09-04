@@ -8,6 +8,8 @@
 
 namespace app\service;
 
+use app\model\Equipment;
+use app\model\OilStandard;
 use think\Db;
 use app\lib\exception\UploadException;
 use think\Request;
@@ -42,53 +44,41 @@ class ExcelHandle {
         return $excel_array;
     }
 
-    public static function arrayConvert($arr) {
-        $equ_name = [];
-        $equ_no   = [];
-        $result   = [];
+    public static function arrayConvert($arr, $str) {
+        $result = [];
         foreach ($arr as $k => $v) {
-            array_push($equ_name, $v['equ_name']);
-            array_push($equ_no, $v['equ_no']);
-        }
-        $temp1 = array_unique($equ_name);
-        $temp2 = array_unique($equ_no);
-        foreach ($temp1 as $k => $v) {
-            array_push($result, ['equ_name' => $temp1[$k], 'equ_no' => $temp2[$k]]);
+            array_push($result, $v[$str]);
         }
         return $result;
     }
 
     public static function oilStandard($excel_array) {
-
-        $arr = [];
+        $temp        = Equipment::field('equ_no')->select();
+        $oilTemp     = OilStandard::field('id')->select();
+        $equ_no_list = self::arrayConvert($temp, 'equ_no');
+        $id_list     = self::arrayConvert($oilTemp, 'id');
+        $arr         = [];
         foreach ($excel_array as $k => $v) {
-
-            $arr[$k]['equ_no']       = $v[0];
-            $arr[$k]['equ_name']     = $v[1];
-            $arr[$k]['equ_oil_no']   = $v[2];
-            $arr[$k]['oil_name']     = $v[3];
-            $arr[$k]['oil_no']       = $v[4];
-            $arr[$k]['quantity']     = $v[5];
-            $arr[$k]['unit']         = $v[6];
-            $arr[$k]['first_period'] = $v[7];
-            $arr[$k]['period']       = $v[8];
-            $arr[$k]['interval']     = $v[9];
+            if (in_array($v[0], $equ_no_list)) {
+                if (!empty($id_list)) {
+                    $arr[$k]['id'] = $id_list[$k];
+                }
+                $arr[$k]['equ_no']       = $v[0];
+                $arr[$k]['equ_oil_no']   = $v[1];
+                $arr[$k]['oil_name']     = $v[2];
+                $arr[$k]['oil_no']       = $v[3];
+                $arr[$k]['quantity']     = $v[4];
+                $arr[$k]['unit']         = $v[5];
+                $arr[$k]['first_period'] = $v[6];
+                $arr[$k]['period']       = $v[7];
+                $arr[$k]['interval']     = $v[8];
+            }
         }
-        $equ_nos = Db::name('equipment')->field('equ_no')->select();
-        $a       = [];
-        foreach ($equ_nos as $equ_no) {
-            array_push($a, $equ_no['equ_no']);
-        }
-        $a   = array_unique($a);
-        $str = implode(',', $a);
-        Db::name('oil_standard')->where("equ_no in ({$str})")->delete();
-        Db::name('equipment')->where("equ_no in ({$str})")->delete();
-        $arrToEquipment = self::arrayConvert($arr);
-        $result         = Db::name('oil_standard')->insertAll($arr);
-        $result1        = Db::name('equipment')->insertAll($arrToEquipment);
+        $OilStandard = new OilStandard();
+        $result      = $OilStandard->saveAll($arr);
         if (!$result) {
             throw new UploadException([
-                'msg' => '录入数据库失败'
+                'msg' => '上传文件失败，未存入数据库'
             ]);
         }
         return true;
