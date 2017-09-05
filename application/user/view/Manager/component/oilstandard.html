@@ -38,7 +38,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary del-save">确认</button>
+                <button type="button" class="btn btn-primary del-save" data-dismiss="modal">确认</button>
             </div>
         </div>
 
@@ -46,7 +46,9 @@
 
 </div>
 <script id="OilStandardTemplate1" type="text/html">
-    <li class="list-group-item equ_item"><a href="#panel-${equ_no}" data-toggle="tab">${equ_name}</a></li>
+    <li class="list-group-item equ_item">
+        <a href="#panel-${equ_no}" data-toggle="tab">${equ_name}</a>
+    </li>
 </script>
 <script id="OilStandardTemplate2" type="text/html">
     <div class="tab-pane oil_tab" id="panel-${equ_no}">
@@ -116,7 +118,8 @@
                     ${$value.interval}
                 </td>
                 <td data-id="${$value.id}">
-                    <a href="#modal-container-188821" data-toggle="modal" class="btn btn-sm btn-danger">删除</a>
+                    <a href="#modal-container-188821" data-toggle="modal" class="btn btn-sm btn-danger del_oil_item"
+                       >删除</a>
                 </td>
             </tr>
             {{/each}}
@@ -154,31 +157,32 @@
         };
         window.base.uploadFile(params);
     });
-    $(document).on('click', '.del_btn', function () {
-        var equ_no = $(this).data('equ_no');
-        $('#delete_equ').click(function () {
-            var params = {
-                url: 'document/oilstandard/delete_equ/' + equ_no + '?XDEBUG_SESSION_START=10628',
-                type: 'delete',
-                sCallback: function (data) {
-                    window.location.reload();
-                },
-                eCallback: function (err) {
-                    alert(err.msg);
-                }
-            };
-            window.base.getData(params);
-        });
-    });
-    $('.btn-danger').click(function () {
-        var id = $(this).parent().data('id');
+//    $(document).on('click', '.del_btn', function () {
+//        var equ_no = $(this).data('equ_no');
+//        $('#delete_equ').click(function () {
+//            var params = {
+//                url: 'document/oilstandard/delete_equ/' + equ_no + '?XDEBUG_SESSION_START=10628',
+//                type: 'delete',
+//                sCallback: function (data) {
+//                    window.location.reload();
+//                },
+//                eCallback: function (err) {
+//                    alert(err.msg);
+//                }
+//            };
+//            window.base.getData(params);
+//        });
+//    });
+    $(document).on('click', '.del_oil_item', function (e) {
+        var id = $(this).parent().data('id'),
+            _this = $(this);
+        e.stopPropagation();
         $('.del-save').click(function () {
-            alert();
             var params = {
                 url: 'document/oilstandard/del/' + id,
                 type: 'delete',
                 sCallback: function (data) {
-                    alert(data.msg);
+                    _this.parent().parent().hide().remove();
                 },
                 eCallback: function (err) {
                     alert(err.msg);
@@ -189,46 +193,12 @@
     });
     $('#oil_table').on('dblclick', 'td', function () {
         var _this = $(this),
-            oldVal = _this.html();
-        console.log($(this));
+            oldVal = _this.html(),
+            url = 'document/oilstandard/edititem/';
         _this.html('<input type="text" value="' + oldVal + '">');
         var input = _this.find('input');
         input.select();
-        $(window).keydown(function (e) {
-            if (e.keyCode == 27) {
-                _this.html(oldVal);
-            }
-        });
-        input.blur(function () {
-            editItem();
-        });
-        input.keydown(function (e) {
-            if (e.keyCode == 13) {
-                editItem();
-            }
-        });
-
-        function editItem() {
-            var newVal = input.val(),
-                id = input.parent().data('id'),
-                key = input.parent().data('key');
-            _this.html(newVal);
-            var params = {
-                url: 'document/oilstandard/edititem/' + id + '?XDEBUG_SESSION_START=12092',
-                type: 'post',
-                data: {[key]: newVal},
-                sCallback: function (data) {
-                    alert(data.msg)
-                },
-                eCallback: function (err) {
-                    alert('修改失败');
-                    _this.html(oldVal);
-                }
-            };
-            if (newVal != oldVal) {
-                window.base.getData(params);
-            }
-        }
+        window.base.editItemByDblClick(_this, input, oldVal, url);
     });
 
 </script>

@@ -61,5 +61,54 @@ window.base = {
             }
         };
         this.getData(params);
+    },
+    getAnalysisList: function (callback) {
+        var params = {
+            url: 'document/oilanalysis/getlist',
+            sCallback: function (data) {
+                callback && callback(data.data);
+            },
+            eCallback: function (err) {
+                alert(err.msg);
+            }
+        };
+        this.getData(params);
+    },
+    editItemByDblClick: function (_this, input, oldVal, url) {
+        $(window).keydown(function (e) {
+            if (e.keyCode == 27) {
+                _this.html(oldVal);
+            }
+        });
+        input.blur(function () {
+            editItem();
+        });
+        input.keydown(function (e) {
+            if (e.keyCode == 13) {
+                editItem();
+            }
+        });
+
+        function editItem() {
+            var newVal = input.val(),
+                id = input.parent().data('id'),
+                key = input.parent().data('key');
+            _this.html(newVal);
+            var params = {
+                url: url + id,
+                type: 'post',
+                data: {[key]: newVal},
+                sCallback: function (data) {
+                    alert(data.msg)
+                },
+                eCallback: function (err) {
+                    alert('修改失败');
+                    _this.html(oldVal);
+                }
+            };
+            if (newVal != oldVal) {
+                window.base.getData(params);
+            }
+        }
     }
 };

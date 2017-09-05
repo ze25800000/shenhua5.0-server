@@ -1,99 +1,238 @@
 <div class="col-md-12">
-    <form role="form" class="uploadFile_oil">
+    <form role="form" class="uploadFile_oil_analysis">
         <div class="form-group">
             <label for="excel" class="col-md-3">上传油液分析报告</label>
             <input class="col-md-3" type="file" id="excel" name="excel"/>
             <a href="javascript:void (0)"
-               class="btn btn-default col-md-2 upload_excel"
-               data-param="exceltype=oilstandard">上传
+               class="btn btn-default col-md-2 upload_oil_analysis"
+               data-param="exceltype=oilanalysis">上传
             </a>
         </div>
     </form>
 </div>
-<div class="row clearfix">
-    <div class="col-md-2 column">
-        <ul class="list-group " role="group">
-            <li class="list-group-item active">
-                <a href="#panel-" data-toggle="tab">一号破碎站</a>
+<div class="row clearfix" id="oil_analysis_list">
+    <div class="col-md-12 column">
+        <div class="row clearfix">
+            <div class="col-md-2 column">
+                <ul class="list-group" id="equ_oilanalysis_list">
 
-                <a role="button" data-toggle="modal" href="#modal-container-oil"
-                   class="del_oil_btn btn-sm pull-right" style="font-size: 12px"
-                   data-equ_no="">删除</a>
-            </li>
-        </ul>
-    </div>
-    <div class="col-md-10 column">
-        <table class="table table-bordered table-condensed table-hover">
-            <thead>
-            <tr>
-                <th>
-                    编号
-                </th>
-                <th>
-                    产品
-                </th>
-                <th>
-                    交付时间
-                </th>
-                <th>
-                    状态
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    1
-                </td>
-                <td>
-                    TB - Monthly
-                </td>
-                <td>
-                    01/04/2012
-                </td>
-                <td>
-                    Default
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="col-md-4 column">
+                </ul>
+            </div>
+            <div class="col-md-10 column">
+                <div class="tabbable" id="tabs-914403">
+                    <div class="tab-content" id="oil_analysis_table">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<div class="modal fade" id="modal-container-oil" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-container-oil-analysis" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">
-                    删除设备
-                </h4>
             </div>
             <div class="modal-body">
-                <h3>你确认要删除该设备？</h3>
+                你确认要删除该条目？
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button id="delete_equ" type="submit" class="btn btn-default">确认</button>
+                <button type="button" class="btn btn-primary del-oil-analysis-save" data-dismiss="modal">确认</button>
             </div>
         </div>
 
     </div>
+
 </div>
+<script id="OilAnalysisTemplate1" type="text/html">
+    <li class="list-group-item equ_oilanalysis_item">
+        <a href="#panel-${equ_no}" data-toggle="tab">${equ_name}</a>
+    </li>
+</script>
+<script id="OilAnalysisTemplate2" type="text/html">
+    <div class="tab-pane oil_analysis_tab" id="panel-${equ_no}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    设备编号
+                </th>
+                <th>
+                    润滑点编号
+                </th>
+                <th>
+                    润滑点名称
+                </th>
+                <th>
+                    油品名称
+                </th>
+                <th>
+                    采样日期
+                </th>
+                <th>
+                    运行设备
+                </th>
+                <th>
+                    采样部位
+                </th>
+                <th>
+                    油品使用
+                </th>
+                <th>
+                    Fe
+                </th>
+                <th>
+                    Cu
+                </th>
+                <th>
+                    Pb
+                </th>
+                <th>
+                    Al
+                </th>
+                <th>
+                    Cr
+                </th>
+                <th>
+                    Si
+                </th>
+                <th>
+                    Na
+                </th>
+                <th>
+                    Mo
+                </th>
+                <th>
+                    粘度
+                </th>
+                <th>
+                    燃油稀释
+                </th>
+                <th>
+                    ph
+                </th>
+                <th>
+                    水H2O
+                </th>
+                <th>
+                    PQ
+                </th>
+                <th>
+                    污染度
+                </th>
+                <th>
+                    状态
+                </th>
+                <th>
+                    处理意见
+                </th>
+                <th>
+                    处理结果
+                </th>
+                <th>
+                    操作
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {{each oil_analysis_list}}
+            <tr>
+                <td class="equ_no">
+                    ${$value.equ_no}
+                </td>
+                <td data-id="${$value.id}" data-key="equ_oil_no">
+                    ${$value.equ_oil_no}
+                </td>
+                <td data-id="${$value.id}" data-key="oil_no">
+                    ${$value.oil_no}
+                </td>
+                <td data-id="${$value.id}" data-key="oil_name">
+                    ${$value.oil_name}
+                </td>
+                <td data-id="${$value.id}" data-key="sampling_time">
+                    ${$value.sampling_time}
+                </td>
+                <td data-id="${$value.id}" data-key="working">
+                    ${$value.working}
+                </td>
+                <td data-id="${$value.id}" data-key="part">
+                    ${$value.part}
+                </td>
+                <td data-id="${$value.id}" data-key="oil_used">
+                    ${$value.oil_used}
+                </td>
+                <td data-id="${$value.id}" data-key="Fe">
+                    ${$value.Fe}
+                </td>
+                <td data-id="${$value.id}" data-key="Cu">
+                    ${$value.Cu}
+                </td>
+                <td data-id="${$value.id}" data-key="Pb">
+                    ${$value.Pb}
+                </td>
+                <td data-id="${$value.id}" data-key="Al">
+                    ${$value.Al}
+                </td>
+                <td data-id="${$value.id}" data-key="Cr">
+                    ${$value.Cr}
+                </td>
+                <td data-id="${$value.id}" data-key="Si">
+                    ${$value.Si}
+                </td>
+                <td data-id="${$value.id}" data-key="Na">
+                    ${$value.Na}
+                </td>
+                <td data-id="${$value.id}" data-key="Mo">
+                    ${$value.Mo}
+                </td>
+                <td data-id="${$value.id}" data-key="viscosity">
+                    ${$value.viscosity}
+                </td>
+                <td data-id="${$value.id}" data-key="fuel_dilution">
+                    ${$value.fuel_dilution}
+                </td>
+                <td data-id="${$value.id}" data-key="ph">
+                    ${$value.ph}
+                </td>
+                <td data-id="${$value.id}" data-key="h2o">
+                    ${$value.h2o}
+                </td>
+                <td data-id="${$value.id}" data-key="pq">
+                    ${$value.pq}
+                </td>
+                <td data-id="${$value.id}" data-key="contaminate">
+                    ${$value.contaminate}
+                </td>
+                <td data-id="${$value.id}" data-key="status">
+                    ${$value.status}
+                </td>
+                <td data-id="${$value.id}" data-key="advise">
+                    ${$value.advise}
+                </td>
+                <td data-id="${$value.id}" data-key="result">
+                    ${$value.result}
+                </td>
+                <td data-id="${$value.id}">
+                    <a href="#modal-container-oil-analysis" data-toggle="modal"
+                       class="btn btn-sm btn-danger del_oil_analysis_item"
+                       id="">删除</a>
+                </td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</script>
 
 <script>
-    //当触发oil_analysis 按钮时发送ajax请求
-    //        $('.oil_analysis').ready(function () {
-    //            var params = {};
-    //            window.base.getData(params);
-    //        });
-    //上传oil_analysis油液分析报告
-    $(document).on('click', '.upload_oil', function () {
+    //上传油液分析报告
+    $(document).on('click', '.upload_oil_analysis', function () {
         var param = $(this).data('param');
         var params = {
-            url: 'document/oil/upload?' + param,
-            data: new FormData($(this).parent().parent().parent()[0]),
+            url: 'document/oil/upload?' + param + '&XDEBUG_SESSION_START=10400',
+            data: new FormData($(this).parent().parent()[0]),
             sCallback: function (data) {
                 window.location.reload();
             },
@@ -103,5 +242,47 @@
         };
         window.base.uploadFile(params);
     });
-    //删除oil_analysis油液分析报告
+    //获得油液分析数据
+    var analy_flag = true;
+    $(document).on('click', '.oil_analysis', function () {
+        if (analy_flag) {
+            window.base.getAnalysisList(function (list) {
+                console.log(list);
+                $('#OilAnalysisTemplate1').tmpl(list).appendTo('#equ_oilanalysis_list');
+                $('#OilAnalysisTemplate2').tmpl(list).appendTo('#oil_analysis_table');
+                $('.equ_oilanalysis_item:first').addClass('active');
+                $('.oil_analysis_tab:first').addClass('active');
+            });
+        }
+        analy_flag = false;
+    });
+    //修改详细信息
+    $('#oil_analysis_table').on('dblclick', 'td', function () {
+        var _this = $(this),
+            oldVal = _this.html(),
+            url = 'document/oilanalysis/edititem/';
+        _this.html('<input type="text" value="' + oldVal + '">');
+        var input = _this.find('input');
+        input.select();
+        window.base.editItemByDblClick(_this, input, oldVal, url);
+    });
+    //删除油液分析数据条目
+    $(document).on('click', '.del_oil_analysis_item', function () {
+        var id = $(this).parent().data('id'),
+            _this = $(this);
+        $('.del-oil-analysis-save').click(function (e) {
+            var params = {
+                url: 'document/oilanalysis/del/' + id,
+                type: 'delete',
+                sCallback: function (data) {
+                    _this.parent().parent().hide().remove();
+                    e.stopPropagation();
+                },
+                eCallback: function (err) {
+                    console.log(err.msg);
+                }
+            };
+            window.base.getData(params);
+        });
+    });
 </script>

@@ -12,6 +12,7 @@ namespace app\user\controller;
 use app\lib\exception\DocumentException;
 use app\lib\exception\UserException;
 use app\model\Equipment;
+use app\model\OilAnalysis;
 use app\model\OilStandard;
 use app\service\BaseController;
 use app\model\User;
@@ -119,7 +120,7 @@ class Manager extends BaseController {
         return $this->ajaxReturn('删除成功');
     }
 
-    public function getOilStandardListByNo() {
+    public function getOilStandardList() {
         $list = Equipment::with(['oilStandardList'])->select();
         if (!$list) {
             throw new DocumentException([
@@ -129,11 +130,12 @@ class Manager extends BaseController {
         return $this->ajaxReturn('获得润滑标准成功', 0, $list);
     }
 
+    /******************************excel上传**********************************/
     public function uploadExcel() {
 
         $excel_array = ExcelHandle::excelToArray();
-        $param       = Request::instance()->param();
-        switch ($param['exceltype']) {
+        $param       = input('get.exceltype');
+        switch ($param) {
             case 'oilstandard':
                 $result = ExcelHandle::oilStandard($excel_array);
                 break;
@@ -146,14 +148,36 @@ class Manager extends BaseController {
         }
     }
 
-    public function oilAnalysisView() {
-        $oil_analysis_list = Db::table('oil_analysis')->select();
+    /*********************************油液分析报告**********************************************/
+    public function getOilAnalysisList() {
+        $oil_analysis_list = Equipment::with(['oilAnalysisList'])->select();
         if (!$oil_analysis_list) {
             throw new DocumentException([
                 'msg' => '油液分析报告数据读取失败'
             ]);
         }
         return $this->ajaxReturn('读取成功', 0, $oil_analysis_list);
+    }
+
+    public function editOilAnalysisDetailById($id) {
+        $OilStandard = OilAnalysis::get($id);
+        $result      = $OilStandard->save(input('post.'));
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '修改详细信息失败'
+            ]);
+        }
+        return $this->ajaxReturn('修改详细信息成功');
+    }
+
+    public function delOilAnalysisItemById($id) {
+        $result = OilAnalysis::where('id', '=', $id)->delete();
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '删除失败'
+            ]);
+        }
+        return $this->ajaxReturn('删除成功');
     }
 
     /****************************用户操作*****************************************/
