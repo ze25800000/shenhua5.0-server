@@ -74,6 +74,18 @@ window.base = {
         };
         this.getData(params);
     },
+    getOilDetailList: function (callback) {
+        var params = {
+            url: 'document/oildetail/getlist',
+            sCallback: function (data) {
+                callback && callback(data.data);
+            },
+            eCallback: function (err) {
+                alert(err.msg);
+            }
+        };
+        this.getData(params);
+    },
     editItemByDblClick: function (_this, input, oldVal, url) {
         $(window).keydown(function (e) {
             if (e.keyCode == 27) {
@@ -95,7 +107,7 @@ window.base = {
                 key = input.parent().data('key');
             _this.html(newVal);
             var params = {
-                url: url + id,
+                url: url + id+'?XDEBUG_SESSION_START=13415',
                 type: 'post',
                 data: {[key]: newVal},
                 sCallback: function (data) {

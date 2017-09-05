@@ -8,8 +8,10 @@
 
 namespace app\service;
 
+use app\lib\exception\DocumentException;
 use app\model\Equipment;
 use app\model\OilAnalysis;
+use app\model\OilDetail;
 use app\model\OilStandard;
 use think\Db;
 use app\lib\exception\UploadException;
@@ -129,6 +131,30 @@ class ExcelHandle {
         if (!$result) {
             throw new UploadException([
                 'msg' => '上传文件失败，未存入数据库'
+            ]);
+        }
+        return true;
+    }
+
+    public static function oilDetail($excel_array) {
+        $oilDetailModel  = new OilDetail();
+        $items           = $oilDetailModel::field('id')->select();
+        $getOilDetailIds = self::arrayConvert($items,'id');
+        $arr             = [];
+        foreach ($excel_array as $k => $v) {
+            if (!empty($getOilDetailIds) && !empty($getOilDetailIds[$k])) {
+                $arr[$k]['id'] = $getOilDetailIds[$k];
+            }
+            $arr[$k]['oil_no']   = $v[0];
+            $arr[$k]['oil_name'] = $v[1];
+            $arr[$k]['detail']   = $v[2];
+            $arr[$k]['unit']     = $v[3];
+            $arr[$k]['price']    = $v[4];
+        }
+        $result = $oilDetailModel->saveAll($arr);
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '润滑保养成本管理 ，录入数据库失败'
             ]);
         }
         return true;

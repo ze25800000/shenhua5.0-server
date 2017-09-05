@@ -118,6 +118,7 @@
         //预加载
         $(this).ready(function () {
             window.base.getEquipmentList(function (list) {
+                console.log(list);
                 var html = '';
                 for (var i = 0; i < list.length; i++) {
                     html += '<tr>';

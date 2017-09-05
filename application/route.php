@@ -55,6 +55,11 @@ Route::get('document/oilanalysis/getlist', 'user/manager/getOilAnalysisList');
 Route::post('document/oilanalysis/edititem/:id', 'user/manager/editOilAnalysisDetailById');
 Route::delete('document/oilanalysis/del/:id', 'user/manager/delOilAnalysisItemById');
 
+//润滑油标准、成本管理
+Route::get('document/oildetail/getlist', 'user/manager/getOilDetailList');
+Route::post('document/oildetail/edititem/:id', 'user/manager/editOilDetailById');
+Route::delete('document/oildetail/del/:id', 'user/manager/delOilDetailItemById');
+
 //上传保存excel到数据库
 Route::post('document/oil/upload', 'user/manager/uploadExcel');
 

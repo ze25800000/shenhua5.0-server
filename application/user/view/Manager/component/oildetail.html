@@ -1,0 +1,143 @@
+<div class="col-md-12">
+    <form role="form" class="uploadFile_oildetail">
+        <div class="form-group">
+            <label for="excel" class="col-md-3">上传润滑油、润滑脂标准汇总统计表</label>
+            <input class="col-md-3" type="file" id="excel" name="excel"/>
+            <a href="javascript:void (0)"
+               class="btn btn-default col-md-2 oildetail"
+               data-param="exceltype=oildetail">上传
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="col-md-12 column">
+    <table class="table table-hover table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th>
+                物料编码
+            </th>
+            <th>
+                润滑油名称
+            </th>
+            <th>
+                物料描述
+            </th>
+            <th>
+                单位
+            </th>
+            <th>
+                价格
+            </th>
+            <th>
+                操作
+            </th>
+        </tr>
+        </thead>
+        <tbody id="OilDetailList">
+
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="modal-container-oildetail" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                你确认要删除该条目？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary del-oil-detail-save" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script id="OilDetailListTemplate" type="text/html">
+    <tr>
+        <td data-id="${id}" data-key="oil_no">
+            ${oil_no}
+        </td>
+        <td data-id="${id}" data-key="oil_name">
+            ${oil_name}
+        </td>
+        <td data-id="${id}" data-key="detail">
+            ${detail}
+        </td>
+        <td data-id="${id}" data-key="unit">
+            ${unit}
+        </td>
+        <td data-id="${id}" data-key="price">
+            ${price}
+        </td>
+        <td data-id="${id}" href="javascript:void (0)">
+            <a href="#modal-container-oildetail" data-toggle="modal" class="btn btn-sm btn-danger del_oil_detail_item"
+            >删除</a>
+        </td>
+    </tr>
+</script>
+<script>
+    //上传润滑成本管理
+    $(document).on('click', '.oildetail', function () {
+        var param = $(this).data('param'),
+            params = {
+                url: 'document/oil/upload?' + param,
+                data: new FormData($(this).parent().parent()[0]),
+                sCallback: function (data) {
+                    alert('上传成功');
+                    window.location.reload();
+                },
+                eCallback: function (err) {
+                    console.log(err);
+                }
+            };
+        window.base.uploadFile(params);
+    });
+
+    //获得润滑管理列表
+    var detail_flag = true;
+    $(document).on('click', '.oildetail', function () {
+        if (detail_flag) {
+            window.base.getOilDetailList(function (list) {
+                console.log(list);
+                $('#OilDetailListTemplate').tmpl(list).appendTo('#OilDetailList');
+            });
+        }
+        detail_flag = false;
+    });
+
+    //修改润滑管理列表
+    $('#OilDetailList').on('dblclick', 'td', function () {
+        var _this = $(this),
+            oldVal = _this.html(),
+            url = 'document/oildetail/edititem/';
+        _this.html('<input type="text" value="' + oldVal + '">');
+        var input = _this.find('input');
+        input.select();
+        window.base.editItemByDblClick(_this, input, oldVal, url);
+    });
+    //删除润滑管理列表条目
+    $(document).on('click', '.del_oil_detail_item', function (e) {
+        var id = $(this).parent().data('id'),
+            _this = $(this);
+        e.stopPropagation();
+        $('.del-oil-detail-save').click(function () {
+            var params = {
+                url: 'document/oildetail/del/' + id,
+                type: 'delete',
+                sCallback: function (data) {
+                    _this.parent().parent().hide().remove();
+                },
+                eCallback: function (err) {
+                    console.log(err.msg);
+                }
+            };
+            window.base.getData(params);
+        });
+    });
+</script>

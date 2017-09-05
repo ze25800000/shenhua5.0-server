@@ -13,6 +13,7 @@ use app\lib\exception\DocumentException;
 use app\lib\exception\UserException;
 use app\model\Equipment;
 use app\model\OilAnalysis;
+use app\model\OilDetail;
 use app\model\OilStandard;
 use app\service\BaseController;
 use app\model\User;
@@ -142,6 +143,8 @@ class Manager extends BaseController {
             case 'oilanalysis':
                 $result = ExcelHandle::oilAnalysis($excel_array);
                 break;
+            case 'oildetail':
+                $result = ExcelHandle::oilDetail($excel_array);
         }
         if ($result) {
             return $this->ajaxReturn('信息录入成功');
@@ -172,6 +175,40 @@ class Manager extends BaseController {
 
     public function delOilAnalysisItemById($id) {
         $result = OilAnalysis::where('id', '=', $id)->delete();
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '删除失败'
+            ]);
+        }
+        return $this->ajaxReturn('删除成功');
+    }
+
+    /********************************润滑保养成本管理************************************/
+    public function getOilDetailList() {
+        $OilDetailList = OilDetail::select();
+        if (!$OilDetailList) {
+            throw new DocumentException([
+                'msg' => '获得列表信息失败'
+            ]);
+        }
+        return $this->ajaxReturn('获得润滑保养成本列表成功', 0, $OilDetailList);
+    }
+
+    public function editOilDetailById($id) {
+        (new IDMustBePositiveInt())->goCheck();
+        $oilDetail = OilDetail::get($id);
+        $oilDetail->save(input('post.'));
+        if (!$oilDetail) {
+            throw new DocumentException([
+                'msg' => '修改详细信息失败'
+            ]);
+        }
+        return $this->ajaxReturn('修改详细信息成功');
+    }
+
+    public function delOilDetailItemById($id) {
+        (new IDMustBePositiveInt())->goCheck();
+        $result = OilDetail::where('id', '=', $id)->delete();
         if (!$result) {
             throw new DocumentException([
                 'msg' => '删除失败'
