@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
+Source Server         : localhost_3306
 Source Server Version : 50553
 Source Host           : localhost:3306
 Source Database       : shenhua
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2017-09-05 11:56:37
+Date: 2017-09-05 17:57:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -92,19 +92,39 @@ INSERT INTO `oil_analysis` VALUES ('57', '200', '1', null, null, '7/5/17 0:00', 
 DROP TABLE IF EXISTS `oil_detail`;
 CREATE TABLE `oil_detail` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `oil_no` int(11) DEFAULT NULL,
-  `oil_name` varchar(150) DEFAULT NULL,
-  `detail` varchar(255) DEFAULT NULL,
-  `uint` varchar(10) DEFAULT NULL,
-  `price` float(10,2) DEFAULT NULL,
+  `oil_no` int(11) DEFAULT NULL COMMENT '物料编码',
+  `oil_name` varchar(150) DEFAULT NULL COMMENT '润滑油名称',
+  `detail` varchar(255) DEFAULT NULL COMMENT '物料描述',
+  `unit` varchar(10) DEFAULT NULL COMMENT '单位',
+  `price` float(10,2) DEFAULT NULL COMMENT '价格',
+  `create_time` int(11) DEFAULT NULL,
+  `update_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `oil_detail_id_uindex` (`id`),
   UNIQUE KEY `oil_detail_oil_no_uindex` (`oil_no`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of oil_detail
 -- ----------------------------
+INSERT INTO `oil_detail` VALUES ('24', '10889994', '通用锂基脂', '尚博 2#;1×17kg\\长城', 'KG', '13.50', '1504598260', '1504598304');
+INSERT INTO `oil_detail` VALUES ('23', '11249924', '通用锂基脂', '尚博 1#;1×17kg\\长城', 'KG', '12.95', '1504598260', '1504598260');
+INSERT INTO `oil_detail` VALUES ('5', '10209358', '抗磨液压油', 'DTE 25;VG46;1×208L\\美孚', 'L ', '20.56', '1504595393', '1504598260');
+INSERT INTO `oil_detail` VALUES ('7', '10209348', '抗磨液压油', 'DTE 10 超凡 15;VG15;1×208L\\美孚', 'L ', '21.34', '1504595393', '1504598260');
+INSERT INTO `oil_detail` VALUES ('9', '10209351', '抗磨液压油', 'DTE 10 超凡 32;VG32;1×208L\\美孚', 'L ', '21.70', '1504595393', '1504598260');
+INSERT INTO `oil_detail` VALUES ('10', '10209286', '超级齿轮油', '600 XP 220;VG220;1×208L\\美孚', 'L ', '17.01', '1504595393', '1504598260');
+INSERT INTO `oil_detail` VALUES ('11', '10209288', '超级齿轮油', '600 XP 320;VG320;1×208L\\美孚', 'L ', '18.61', '1504595393', '1504598260');
+INSERT INTO `oil_detail` VALUES ('12', '10209289', '超级齿轮油', '600 XP 460;VG460;1×208L\\美孚', 'L ', '18.77', '1504595393', '1504598260');
+INSERT INTO `oil_detail` VALUES ('13', '11102440', '液力传动油', '6#;1×170kg;200L\\昆仑', 'KG', '12.60', '1504595393', '1504598260');
+INSERT INTO `oil_detail` VALUES ('14', '10209398', '传动油', '424;1×208L\\美孚', 'L ', '24.30', '1504595393', '1504598260');
+INSERT INTO `oil_detail` VALUES ('22', '11249923', '通用锂基脂', '尚博 0#;1×17kg\\长城', 'KG', '12.95', '1504598260', '1504598260');
+INSERT INTO `oil_detail` VALUES ('21', '10061964', '极压锂基润滑脂', '尚博 3#;1×17kg\\长城', 'KG', '13.98', '1504598260', '1504598260');
+INSERT INTO `oil_detail` VALUES ('17', '10209313', '合成齿轮油', 'SHC 626;VG68;1×208L\\美孚', 'L ', '98.03', '1504595393', '1504598260');
+INSERT INTO `oil_detail` VALUES ('18', '10209315', '合成齿轮油', 'SHC 629;VG150;1×208L\\美孚', 'L ', '98.89', '1504595393', '1504598260');
+INSERT INTO `oil_detail` VALUES ('19', '11249919', '极压锂基润滑脂', '尚博 0#;1×17kg\\长城', 'KG', '14.03', '1504595393', '1504598260');
+INSERT INTO `oil_detail` VALUES ('27', '10705085', '二硫化钼锂基润滑脂', '尚博 2#;1×17KG\\长城', 'KG', '15.11', '1504598260', '1504598260');
+INSERT INTO `oil_detail` VALUES ('28', '11249914', '高温高速润滑脂', 'HTHS 2#;1×17kg\\长城', 'KG', '34.53', '1504598260', '1504598260');
+INSERT INTO `oil_detail` VALUES ('29', '10209438', '复合锂基润滑脂', '力富 SHC 100;NLGI 2;1×16kg\\美孚', 'KG', '121.50', '1504598260', '1504598260');
 
 -- ----------------------------
 -- Table structure for oil_standard
@@ -185,6 +205,5 @@ CREATE TABLE `user` (
 -- ----------------------------
 INSERT INTO `user` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '36', '杨泽', '15272828938');
 INSERT INTO `user` VALUES ('3', 'yangze', 'e10adc3949ba59abbe56e057f20f883e', '18', 'asdf', '15148623483');
-INSERT INTO `user` VALUES ('6', 'runhua1', '4297f44b13955235245b2497399d7a93', '9', '小芳', '15847928989');
 INSERT INTO `user` VALUES ('7', 'runhua2', '123123', '18', '你好', '15847928989');
 INSERT INTO `user` VALUES ('8', 'runhua3', '123123', '18', '列表', '15148625000');
