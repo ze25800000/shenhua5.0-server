@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>设备润滑管理</title>
-</head>
-<link rel="stylesheet" href="__CSS__/bootstrap.min.css">
-<body>
+<?php require(APP_PATH.'/user/view/common/header.html');?>
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-12 column">
@@ -60,5 +53,48 @@
         </div>
     </div>
 </div>
-</body>
-</html>
+
+<div class="col-md-12">
+    <form role="form" class="uploadForm">
+        <div class="form-group">
+            <label for="excel" class="col-md-3">上传运行时间</label>
+            <input class="col-md-3" type="file" id="excel" name="excel"/>
+            <a href="javascript:void (0)"
+               class="btn btn-default col-md-2 upload_excel"
+               data-param="exceltype=workhour">上传
+            </a>
+        </div>
+    </form>
+</div>
+<div class="col-md-12">
+    <form role="form" class="uploadForm">
+        <div class="form-group">
+            <label for="excel" class="col-md-3">上传润滑提示与润滑记录</label>
+            <input class="col-md-3" type="file"  name="excel"/>
+            <a href="javascript:void (0)"
+               class="btn btn-default col-md-2 upload_excel"
+               data-param="exceltype=infowarning">上传
+            </a>
+        </div>
+    </form>
+</div>
+<?php require(APP_PATH.'/user/view/common/header.html');?>
+
+<script>
+    $(document).on('click', '.upload_excel', function () {
+        var param = $(this).data('param');
+        var params = {
+            url: 'document/oil/upload?' + param + '&XDEBUG_SESSION_START=12092',
+            data: new FormData($(this).parent().parent()[0]),
+            sCallback: function (data) {
+                alert('上传成功');
+                window.location.reload();
+            },
+            eCallback: function (err) {
+                console.log(err);
+            }
+        };
+        window.base.uploadFile(params);
+    });
+
+</script>

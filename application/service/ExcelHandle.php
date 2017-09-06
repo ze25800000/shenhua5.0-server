@@ -10,9 +10,11 @@ namespace app\service;
 
 use app\lib\exception\DocumentException;
 use app\model\Equipment;
+use app\model\InfoWarning;
 use app\model\OilAnalysis;
 use app\model\OilDetail;
 use app\model\OilStandard;
+use app\model\WorkHour;
 use think\Db;
 use app\lib\exception\UploadException;
 use think\Request;
@@ -48,7 +50,7 @@ class ExcelHandle {
         return $excel_array;
     }
 
-    public static function arrayConvert($arr, $str) {
+    public static function listMoveToArray($arr, $str) {
         $result = [];
         foreach ($arr as $k => $v) {
             array_push($result, $v[$str]);
@@ -57,15 +59,15 @@ class ExcelHandle {
     }
 
     public static function oilStandard($excel_array) {
-        $temp        = Equipment::field('equ_no')->select();
-        $oilTemp     = OilStandard::field('id')->select();
-        $equ_no_list = self::arrayConvert($temp, 'equ_no');
-        $id_list     = self::arrayConvert($oilTemp, 'id');
-        $arr         = [];
+        $equipmentEquNoList = Equipment::field('equ_no')->select();
+        $equNoArr           = self::listMoveToArray($equipmentEquNoList, 'equ_no');
+        $oilStandardIdList  = OilStandard::field('id')->select();
+        $idArr              = self::listMoveToArray($oilStandardIdList, 'id');
+        $arr                = [];
         foreach ($excel_array as $k => $v) {
-            if (in_array($v[0], $equ_no_list)) {
-                if (!empty($id_list) && !empty($id_list[$k])) {
-                    $arr[$k]['id'] = $id_list[$k];
+            if (in_array($v[0], $equNoArr)) {
+                if (!empty($idArr) && !empty($idArr[$k])) {
+                    $arr[$k]['id'] = $idArr[$k];
                 }
                 $arr[$k]['equ_no']       = $v[0];
                 $arr[$k]['equ_oil_no']   = $v[1];
@@ -89,15 +91,16 @@ class ExcelHandle {
     }
 
     public static function oilAnalysis($excel_array) {
-        $temp        = Equipment::field('equ_no')->select();
-        $oilTemp     = OilAnalysis::field('id')->select();
-        $equ_no_list = self::arrayConvert($temp, 'equ_no');
-        $id_list     = self::arrayConvert($oilTemp, 'id');
-        $arr         = [];
+        $equipmentEquNoList = Equipment::field('equ_no')->select();
+        $equNoArr           = self::listMoveToArray($equipmentEquNoList, 'equ_no');
+        $oilAnalysisModel   = new OilAnalysis();
+        $oilAnalysisIdList  = $oilAnalysisModel::field('id')->select();
+        $idArr              = self::listMoveToArray($oilAnalysisIdList, 'id');
+        $arr                = [];
         foreach ($excel_array as $k => $v) {
-            if (in_array($v[0], $equ_no_list)) {
-                if (!empty($id_list) && !empty($id_list[$k])) {
-                    $arr[$k]['id'] = $id_list[$k];
+            if (in_array($v[0], $equNoArr)) {
+                if (!empty($idArr) && !empty($idArr[$k])) {
+                    $arr[$k]['id'] = $idArr[$k];
                 }
                 $arr[$k]['equ_no']        = $v[0];
                 $arr[$k]['equ_oil_no']    = $v[1];
@@ -126,8 +129,7 @@ class ExcelHandle {
                 $arr[$k]['result']        = $v[24];
             }
         }
-        $OilStandard = new OilAnalysis();
-        $result      = $OilStandard->saveAll($arr);
+        $result = $oilAnalysisModel->saveAll($arr);
         if (!$result) {
             throw new UploadException([
                 'msg' => '上传文件失败，未存入数据库'
@@ -138,12 +140,12 @@ class ExcelHandle {
 
     public static function oilDetail($excel_array) {
         $oilDetailModel  = new OilDetail();
-        $items           = $oilDetailModel::field('id')->select();
-        $getOilDetailIds = self::arrayConvert($items,'id');
+        $oilDetailIdList = $oilDetailModel::field('id')->select();
+        $idArr           = self::arrayConvert($oilDetailIdList, 'id');
         $arr             = [];
         foreach ($excel_array as $k => $v) {
-            if (!empty($getOilDetailIds) && !empty($getOilDetailIds[$k])) {
-                $arr[$k]['id'] = $getOilDetailIds[$k];
+            if (!empty($idArr) && !empty($idArr[$k])) {
+                $arr[$k]['id'] = $idArr[$k];
             }
             $arr[$k]['oil_no']   = $v[0];
             $arr[$k]['oil_name'] = $v[1];
@@ -158,5 +160,120 @@ class ExcelHandle {
             ]);
         }
         return true;
+    }
+
+
+    public static function workHour($excel_array) {
+        $equipmentModel = Equipment::field('equ_no')->select();
+        $equNoArr       = self::arrayConvert($equipmentModel, 'equ_no');
+        $arr            = [];
+        foreach ($excel_array as $k => $v) {
+            if (in_array($v[0], $equNoArr)) {
+                $arr[$k]['equ_no']       = $v[0];
+                $arr[$k]['equ_oil_no']   = $v[1];
+                $arr[$k]['equ_oil_name'] = $v[2];
+                $arr[$k]['working_hour'] = $v[3];
+                $arr[$k]['start_time']   = strtotime($v[4]);
+            }
+        }
+        $workHour = new WorkHour();
+        $result   = $workHour->saveAll($arr);
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '上传运行时间文件失败，请检查excel文档'
+            ]);
+        }
+        return true;
+    }
+
+
+    public static function infoWarning($excel_array) {
+        $equipmentEquNoList = Equipment::field('equ_no')->select();
+        $equNoArr           = self::arrayConvert($equipmentEquNoList, 'equ_no');
+        $workHourList       = WorkHour::select();
+        $oilStandardList    = OilStandard::field('equ_no,equ_name,first_period,period')->select();
+        $arr                = [];
+        foreach ($excel_array as $k => $v) {
+            if (in_array($v[0], $equNoArr)) {
+                $arr[$k]['equ_no']           = $v[0];
+                $arr[$k]['equ_oil_no']       = $v[1];
+                $arr[$k]['equ_name']         = $v[2];
+                $arr[$k]['equ_oil_name']     = $v[3];
+                $arr[$k]['del_warning_time'] = strtotime($v[4]);
+                $arr[$k]['is_first_period']  = preg_match('/\u662f/', $v[5]) ? 1 : 0;
+                $arr[$k]['warning_type']     = $v[6];
+                $arr[$k]['postpone']         = empty($v[7]) ? null : $v[7];
+                $arr[$k]['how_long']         = self::howLong($workHourList, $arr[$k]);
+                $arr[$k]['status']           = self::status($oilStandardList, $arr[$k]);
+                $arr[$k]['postpone_reason']  = empty($v[8]) ? null : $v[8];
+                $arr[$k]['member']           = empty($v[9]) ? null : $v[9];
+                $arr[$k]['oil_no']           = empty($v[10]) ? null : $v[10];
+                $arr[$k]['quantity']         = empty($v[11]) ? null : $v[11];
+            }
+        }
+        $infoWarningModel = new InfoWarning();
+        $result           = $infoWarningModel->saveAll($arr);
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '文档上传失败，请检查excel数据'
+            ]);
+        }
+        return true;
+    }
+    /**计算距离上次消警的总时长
+     *
+     */
+    //$equNo, $equOilNo, $delWarningTime
+    private function howLong($workHourList, $arr) {
+        $howLong = 0;
+        foreach ($workHourList as $k => $v) {
+            if ($arr['equ_no'] == $v['equ_no'] && $arr['equ_oil_no'] == $v['equ_oil_no']) {
+                if ($v['start_time'] > $arr['del_warning_time']) {
+                    $howLong += $v['working_hour'];
+                }
+            }
+        }
+        return $howLong;
+    }
+
+    //$equNo, $equOilNo, $howLong, $isFirstPeriod,$warningType,$postpone
+    private function status($oilStandardList, $arr) {
+        $status = 0;
+        foreach ($oilStandardList as $k => $v) {
+            if ($v['equ_no'] == $arr['equ_no'] && $v['equ_oil_no'] == $arr['equ_oil_no']) {
+                //是否处于首保周期
+                if ($arr['is_first_period']) {
+                    //如果消警类型为延期，让保养周期和延期时长相加
+                    $duration = $arr['warning_type'] ? $oilStandardList['first_period'] : $oilStandardList['first_period'] + $arr['postpone'];
+                    if ($arr['how_long'] < $duration) {
+                        if ($duration - $arr['how_long'] > 100) {
+                            //正常
+                            $status = 1;
+                        } else {
+                            //临近
+                            $status = 2;
+                        }
+                    } else {
+                        //超期
+                        $status = 3;
+                    }
+                } else {
+                    $duration = $arr['warning_type'] ? $oilStandardList['period'] : $oilStandardList['period'] + $arr['postpone'];
+                    if ($arr['how_long'] < $duration) {
+                        if ($duration - $arr['how_long'] > 100) {
+                            //正常
+                            $status = 1;
+                        } else {
+                            //临近
+                            $status = 2;
+                        }
+                    } else {
+                        //超期
+                        $status = 3;
+                    }
+                }
+            }
+        }
+        return $status;
     }
 }
