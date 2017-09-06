@@ -60,7 +60,8 @@ Route::get('document/oildetail/getlist', 'user/manager/getOilDetailList');
 Route::post('document/oildetail/edititem/:id', 'user/manager/editOilDetailById');
 Route::delete('document/oildetail/del/:id', 'user/manager/delOilDetailItemById');
 
-//上传保存excel到数据库
+//上传基础数据并保存excel到数据库
 Route::post('document/oil/upload', 'user/manager/uploadExcel');
-
+//上传运行时间和润滑提示与润滑记录
+Route::post('document/info/upload', 'oiling/manager/uploadExcel');
 

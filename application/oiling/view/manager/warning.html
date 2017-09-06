@@ -78,13 +78,13 @@
         </div>
     </form>
 </div>
-<?php require(APP_PATH.'/user/view/common/header.html');?>
+<?php require(APP_PATH.'/user/view/common/footer.html');?>
 
 <script>
     $(document).on('click', '.upload_excel', function () {
         var param = $(this).data('param');
         var params = {
-            url: 'document/oil/upload?' + param + '&XDEBUG_SESSION_START=12092',
+            url: 'document/info/upload?' + param + '&XDEBUG_SESSION_START=16391',
             data: new FormData($(this).parent().parent()[0]),
             sCallback: function (data) {
                 alert('上传成功');

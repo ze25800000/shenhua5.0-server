@@ -141,7 +141,7 @@ class ExcelHandle {
     public static function oilDetail($excel_array) {
         $oilDetailModel  = new OilDetail();
         $oilDetailIdList = $oilDetailModel::field('id')->select();
-        $idArr           = self::arrayConvert($oilDetailIdList, 'id');
+        $idArr           = self::listMoveToArray($oilDetailIdList, 'id');
         $arr             = [];
         foreach ($excel_array as $k => $v) {
             if (!empty($idArr) && !empty($idArr[$k])) {
@@ -165,7 +165,7 @@ class ExcelHandle {
 
     public static function workHour($excel_array) {
         $equipmentModel = Equipment::field('equ_no')->select();
-        $equNoArr       = self::arrayConvert($equipmentModel, 'equ_no');
+        $equNoArr       = self::listMoveToArray($equipmentModel, 'equ_no');
         $arr            = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
@@ -189,9 +189,9 @@ class ExcelHandle {
 
     public static function infoWarning($excel_array) {
         $equipmentEquNoList = Equipment::field('equ_no')->select();
-        $equNoArr           = self::arrayConvert($equipmentEquNoList, 'equ_no');
-        $workHourList       = WorkHour::select();
-        $oilStandardList    = OilStandard::field('equ_no,equ_name,first_period,period')->select();
+        $equNoArr           = self::listMoveToArray($equipmentEquNoList, 'equ_no');
+        $workHourList       = WorkHour::all();
+        $oilStandardList    = OilStandard::field('equ_no,equ_oil_no,first_period,period')->select();
         $arr                = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
@@ -200,8 +200,8 @@ class ExcelHandle {
                 $arr[$k]['equ_name']         = $v[2];
                 $arr[$k]['equ_oil_name']     = $v[3];
                 $arr[$k]['del_warning_time'] = strtotime($v[4]);
-                $arr[$k]['is_first_period']  = preg_match('/\u662f/', $v[5]) ? 1 : 0;
-                $arr[$k]['warning_type']     = $v[6];
+                $arr[$k]['is_first_period']  = preg_match('/是/', $v[5]) ? 1 : 0;
+                $arr[$k]['warning_type']     = preg_match('/润滑/', $v[6]) ? 1 : 0;
                 $arr[$k]['postpone']         = empty($v[7]) ? null : $v[7];
                 $arr[$k]['how_long']         = self::howLong($workHourList, $arr[$k]);
                 $arr[$k]['status']           = self::status($oilStandardList, $arr[$k]);
@@ -224,7 +224,7 @@ class ExcelHandle {
      *
      */
     //$equNo, $equOilNo, $delWarningTime
-    private function howLong($workHourList, $arr) {
+    public static function howLong($workHourList, $arr) {
         $howLong = 0;
         foreach ($workHourList as $k => $v) {
             if ($arr['equ_no'] == $v['equ_no'] && $arr['equ_oil_no'] == $v['equ_oil_no']) {
@@ -237,16 +237,16 @@ class ExcelHandle {
     }
 
     //$equNo, $equOilNo, $howLong, $isFirstPeriod,$warningType,$postpone
-    private function status($oilStandardList, $arr) {
+    public static function status($oilStandardList, $arr) {
         $status = 0;
         foreach ($oilStandardList as $k => $v) {
             if ($v['equ_no'] == $arr['equ_no'] && $v['equ_oil_no'] == $arr['equ_oil_no']) {
-                //是否处于首保周期
+                //是否处于首保周期equ_oil_no
                 if ($arr['is_first_period']) {
                     //如果消警类型为延期，让保养周期和延期时长相加
-                    $duration = $arr['warning_type'] ? $oilStandardList['first_period'] : $oilStandardList['first_period'] + $arr['postpone'];
+                    $duration = $arr['warning_type'] ? $v['first_period'] : $v['first_period'] + $arr['postpone'];
                     if ($arr['how_long'] < $duration) {
-                        if ($duration - $arr['how_long'] > 100) {
+                        if ($duration - $arr['how_long'] > 300) {
                             //正常
                             $status = 1;
                         } else {
@@ -258,9 +258,9 @@ class ExcelHandle {
                         $status = 3;
                     }
                 } else {
-                    $duration = $arr['warning_type'] ? $oilStandardList['period'] : $oilStandardList['period'] + $arr['postpone'];
+                    $duration = $arr['warning_type'] ? $v['period'] : $v['period'] + $arr['postpone'];
                     if ($arr['how_long'] < $duration) {
-                        if ($duration - $arr['how_long'] > 100) {
+                        if ($duration - $arr['how_long'] > 300) {
                             //正常
                             $status = 1;
                         } else {
