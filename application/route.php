@@ -60,6 +60,14 @@ Route::get('document/oildetail/getlist', 'user/manager/getOilDetailList');
 Route::post('document/oildetail/edititem/:id', 'user/manager/editOilDetailById');
 Route::delete('document/oildetail/del/:id', 'user/manager/delOilDetailItemById');
 
+//报警页面获取报警信息
+Route::get('oiling/warning/getwarning', 'oiling/api.WarningInfo/getWarningMessage');
+//获取对应设备编号的设备标准
+Route::get('oiling/standard/:equ_no', 'oiling/api.Standard/getStandardByEquNo');
+//通过通过设备id获取设备详情数据
+Route::get('oiling/equ/detail', 'oiling/api.detail/getEquipmentDetailByNo');
+
+
 //上传基础数据并保存excel到数据库
 Route::post('document/oil/upload', 'user/manager/uploadExcel');
 //上传运行时间和润滑提示与润滑记录

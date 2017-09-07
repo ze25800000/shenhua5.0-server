@@ -14,4 +14,8 @@ class Equipment extends BaseModel {
     public function oilAnalysisList() {
         return $this->hasMany('OilAnalysis', 'equ_no', 'equ_no');
     }
+
+    public function statusInfo() {
+        return $this->hasMany('InfoWarning','');
+    }
 }

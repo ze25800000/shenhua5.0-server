@@ -70,13 +70,15 @@ class ExcelHandle {
                 }
                 $arr[$k]['equ_no']       = $v[0];
                 $arr[$k]['equ_oil_no']   = $v[1];
-                $arr[$k]['oil_name']     = $v[2];
-                $arr[$k]['oil_no']       = $v[3];
-                $arr[$k]['quantity']     = $v[4];
-                $arr[$k]['unit']         = $v[5];
-                $arr[$k]['first_period'] = $v[6];
-                $arr[$k]['period']       = $v[7];
-                $arr[$k]['interval']     = $v[8];
+                $arr[$k]['equ_key_no']   = $v[0] . $v[1];
+                $arr[$k]['equ_name']     = $v[2];
+                $arr[$k]['equ_oil_name'] = $v[3];
+                $arr[$k]['oil_no']       = $v[4];
+                $arr[$k]['quantity']     = $v[5];
+                $arr[$k]['unit']         = $v[6];
+                $arr[$k]['first_period'] = $v[7];
+                $arr[$k]['period']       = $v[8];
+                $arr[$k]['interval']     = $v[9];
             }
         }
         $OilStandard = new OilStandard();
@@ -103,6 +105,7 @@ class ExcelHandle {
                 }
                 $arr[$k]['equ_no']        = $v[0];
                 $arr[$k]['equ_oil_no']    = $v[1];
+                $arr[$k]['equ_key_no']    = $v[0] . $v[1];
                 $arr[$k]['oil_no']        = $v[2];
                 $arr[$k]['oil_name']      = $v[3];
                 $arr[$k]['sampling_time'] = $v[4];
@@ -131,7 +134,7 @@ class ExcelHandle {
         $result = $oilAnalysisModel->saveAll($arr);
         if (!$result) {
             throw new UploadException([
-                'msg' => '上传文件失败，未存入数据库'
+                'msg' => '上传油脂分析报告文件失败，未存入数据库'
             ]);
         }
         return true;
@@ -177,6 +180,7 @@ class ExcelHandle {
                 }
                 $arr[$k]['equ_no']       = $v[0];
                 $arr[$k]['equ_oil_no']   = $v[1];
+                $arr[$k]['equ_key_no']   = $v[0] . $v[1];
                 $arr[$k]['equ_oil_name'] = $v[2];
                 $arr[$k]['working_hour'] = $v[3];
                 $arr[$k]['start_time']   = strtotime(rtrim(preg_replace('/\"年\"|\"月\"|\"日\"/', '/', $v[4]), '/'));
@@ -223,6 +227,7 @@ class ExcelHandle {
                 }
                 $arr[$k]['equ_no']           = $v[0];
                 $arr[$k]['equ_oil_no']       = $v[1];
+                $arr[$k]['equ_key_no']       = $v[0] . $v[1];
                 $arr[$k]['equ_name']         = $v[2];
                 $arr[$k]['equ_oil_name']     = $v[3];
                 $arr[$k]['del_warning_time'] = $timeStr;
