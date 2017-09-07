@@ -133,18 +133,18 @@ class Manager extends BaseController {
 
     /******************************excel上传**********************************/
     public function uploadExcel() {
-
-        $excel_array = ExcelHandle::excelToArray();
-        $param       = input('get.exceltype');
+        $objExcelHandle = new ExcelHandle();
+        $excel_array    = $objExcelHandle->excelToArray();
+        $param          = input('get.exceltype');
         switch ($param) {
             case 'oilstandard':
-                $result = ExcelHandle::oilStandard($excel_array);
+                $result = $objExcelHandle->oilStandard($excel_array);
                 break;
             case 'oilanalysis':
-                $result = ExcelHandle::oilAnalysis($excel_array);
+                $result = $objExcelHandle->oilAnalysis($excel_array);
                 break;
             case 'oildetail':
-                $result = ExcelHandle::oilDetail($excel_array);
+                $result = $objExcelHandle->oilDetail($excel_array);
         }
         if ($result) {
             return $this->ajaxReturn('信息录入成功');

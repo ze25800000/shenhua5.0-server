@@ -16,14 +16,15 @@ class Manager extends BaseController {
     }
 
     public function uploadExcel() {
-        $excel_array = ExcelHandle::excelToArray();
-        $param       = input('get.exceltype');
+        $objExcelHandle = new ExcelHandle();
+        $excel_array    = $objExcelHandle->excelToArray();
+        $param          = input('get.exceltype');
         switch ($param) {
             case 'workhour':
-                $result = ExcelHandle::workHour($excel_array);
+                $result = $objExcelHandle->workHour($excel_array);
                 break;
             case 'infowarning':
-                $result = ExcelHandle::infoWarning($excel_array);
+                $result = $objExcelHandle->infoWarning($excel_array);
                 break;
         }
         if ($result) {

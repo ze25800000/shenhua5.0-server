@@ -9,18 +9,17 @@
 namespace app\service;
 
 use app\lib\exception\DocumentException;
+use app\lib\exception\UploadException;
 use app\model\Equipment;
 use app\model\InfoWarning;
 use app\model\OilAnalysis;
 use app\model\OilDetail;
 use app\model\OilStandard;
 use app\model\WorkHour;
-use think\Db;
-use app\lib\exception\UploadException;
 use think\Request;
 
 class ExcelHandle {
-    public static function excelToArray() {
+    public function excelToArray() {
         vendor('PHPExcel');
         $file = Request::instance()->file('excel');
         $info = $file->validate(['ext' => 'xlsx,xls'])->move(ROOT_PATH . 'public' . DS . 'upload' . DS . 'oilStandard');
@@ -50,7 +49,7 @@ class ExcelHandle {
         return $excel_array;
     }
 
-    public static function listMoveToArray($arr, $str) {
+    private function listMoveToArray($arr, $str) {
         $result = [];
         foreach ($arr as $k => $v) {
             array_push($result, $v[$str]);
@@ -58,16 +57,16 @@ class ExcelHandle {
         return $result;
     }
 
-    public static function oilStandard($excel_array) {
+    public function oilStandard($excel_array) {
         $equipmentEquNoList = Equipment::field('equ_no')->select();
-        $equNoArr           = self::listMoveToArray($equipmentEquNoList, 'equ_no');
+        $equNoArr           = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
         $oilStandardIdList  = OilStandard::field('id')->select();
-        $idArr              = self::listMoveToArray($oilStandardIdList, 'id');
+        $ids                = $this->listMoveToArray($oilStandardIdList, 'id');
         $arr                = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
-                if (!empty($idArr) && !empty($idArr[$k])) {
-                    $arr[$k]['id'] = $idArr[$k];
+                if (!empty($ids) && !empty($ids[$k])) {
+                    $arr[$k]['id'] = $ids[$k];
                 }
                 $arr[$k]['equ_no']       = $v[0];
                 $arr[$k]['equ_oil_no']   = $v[1];
@@ -90,17 +89,17 @@ class ExcelHandle {
         return true;
     }
 
-    public static function oilAnalysis($excel_array) {
+    public function oilAnalysis($excel_array) {
         $equipmentEquNoList = Equipment::field('equ_no')->select();
-        $equNoArr           = self::listMoveToArray($equipmentEquNoList, 'equ_no');
+        $equNoArr           = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
         $oilAnalysisModel   = new OilAnalysis();
         $oilAnalysisIdList  = $oilAnalysisModel::field('id')->select();
-        $idArr              = self::listMoveToArray($oilAnalysisIdList, 'id');
+        $ids                = $this->listMoveToArray($oilAnalysisIdList, 'id');
         $arr                = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
-                if (!empty($idArr) && !empty($idArr[$k])) {
-                    $arr[$k]['id'] = $idArr[$k];
+                if (!empty($ids) && !empty($ids[$k])) {
+                    $arr[$k]['id'] = $ids[$k];
                 }
                 $arr[$k]['equ_no']        = $v[0];
                 $arr[$k]['equ_oil_no']    = $v[1];
@@ -138,14 +137,14 @@ class ExcelHandle {
         return true;
     }
 
-    public static function oilDetail($excel_array) {
+    public function oilDetail($excel_array) {
         $oilDetailModel  = new OilDetail();
         $oilDetailIdList = $oilDetailModel::field('id')->select();
-        $idArr           = self::listMoveToArray($oilDetailIdList, 'id');
+        $ids             = $this->listMoveToArray($oilDetailIdList, 'id');
         $arr             = [];
         foreach ($excel_array as $k => $v) {
-            if (!empty($idArr) && !empty($idArr[$k])) {
-                $arr[$k]['id'] = $idArr[$k];
+            if (!empty($ids) && !empty($ids[$k])) {
+                $arr[$k]['id'] = $ids[$k];
             }
             $arr[$k]['oil_no']   = $v[0];
             $arr[$k]['oil_name'] = $v[1];
@@ -163,21 +162,40 @@ class ExcelHandle {
     }
 
 
-    public static function workHour($excel_array) {
-        $equipmentModel = Equipment::field('equ_no')->select();
-        $equNoArr       = self::listMoveToArray($equipmentModel, 'equ_no');
-        $arr            = [];
+    public function workHour($excel_array) {
+        $equipmentModel    = Equipment::field('equ_no')->select();
+        $equNoArr          = $this->listMoveToArray($equipmentModel, 'equ_no');
+        $workHourModel     = new WorkHour();
+        $workHourModelList = $workHourModel::field('id,start_time')->select();
+        $startTimes        = $this->listMoveToArray($workHourModelList, 'start_time');
+        $ids               = $this->listMoveToArray($workHourModelList, 'id');
+        $arr               = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
+                if (!empty($ids) && !empty($ids) && in_array(strtotime($v[4]), $startTimes)) {
+                    $arr[$k]['id'] = $ids[$k];
+                }
                 $arr[$k]['equ_no']       = $v[0];
                 $arr[$k]['equ_oil_no']   = $v[1];
                 $arr[$k]['equ_oil_name'] = $v[2];
                 $arr[$k]['working_hour'] = $v[3];
-                $arr[$k]['start_time']   = strtotime($v[4]);
+                $arr[$k]['start_time']   = strtotime(rtrim(preg_replace('/\"年\"|\"月\"|\"日\"/', '/', $v[4]), '/'));
             }
         }
-        $workHour = new WorkHour();
-        $result   = $workHour->saveAll($arr);
+        $result            = $workHourModel->saveAll($arr);
+        $infoWarningModel  = new InfoWarning();
+        $infoWarningIdList = $infoWarningModel::field('create_time,update_time', true)->select();
+        $infoWarningIdList = collection($infoWarningIdList)->toArray();
+        $oilStandardList   = OilStandard::field('equ_no,equ_oil_no,first_period,period')->select();
+        $equNos            = $this->listMoveToArray($arr, 'equ_no');
+        $equOilNo          = $this->listMoveToArray($arr, 'equ_oil_no');
+        foreach ($infoWarningIdList as $kk => $vv) {
+            if (in_array($vv['equ_no'], $equNos) && in_array($vv['equ_oil_no'], $equOilNo)) {
+                $infoWarningIdList[$kk]['how_long'] = $this->howLong($result, $infoWarningIdList[$kk]);
+                $infoWarningIdList[$kk]['status']   = $this->getStatus($oilStandardList, $infoWarningIdList[$kk]);
+            }
+        }
+        $infoResult = $infoWarningModel->saveAll($infoWarningIdList);
         if (!$result) {
             throw new DocumentException([
                 'msg' => '上传运行时间文件失败，请检查excel文档'
@@ -187,32 +205,39 @@ class ExcelHandle {
     }
 
 
-    public static function infoWarning($excel_array) {
+    public function infoWarning($excel_array) {
         $equipmentEquNoList = Equipment::field('equ_no')->select();
-        $equNoArr           = self::listMoveToArray($equipmentEquNoList, 'equ_no');
+        $equNoArr           = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
+        $infoWarningModel   = new InfoWarning();
+        $infoWarningIdList  = $infoWarningModel::field('id,del_warning_time')->select();
+        $ids                = $this->listMoveToArray($infoWarningIdList, 'id');
+        $delWarningTimes    = $this->listMoveToArray($infoWarningIdList, 'del_warning_time');
         $workHourList       = WorkHour::all();
         $oilStandardList    = OilStandard::field('equ_no,equ_oil_no,first_period,period')->select();
         $arr                = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
+                $timeStr = strtotime(rtrim(preg_replace('/\"年\"|\"月\"|\"日\"/', '/', $v[4]), '/'));
+                if (in_array($timeStr, $delWarningTimes)) {
+                    $arr[$k]['id'] = $ids[$k];
+                }
                 $arr[$k]['equ_no']           = $v[0];
                 $arr[$k]['equ_oil_no']       = $v[1];
                 $arr[$k]['equ_name']         = $v[2];
                 $arr[$k]['equ_oil_name']     = $v[3];
-                $arr[$k]['del_warning_time'] = strtotime($v[4]);
+                $arr[$k]['del_warning_time'] = $timeStr;
                 $arr[$k]['is_first_period']  = preg_match('/是/', $v[5]) ? 1 : 0;
                 $arr[$k]['warning_type']     = preg_match('/润滑/', $v[6]) ? 1 : 0;
                 $arr[$k]['postpone']         = empty($v[7]) ? null : $v[7];
-                $arr[$k]['how_long']         = self::howLong($workHourList, $arr[$k]);
-                $arr[$k]['status']           = self::status($oilStandardList, $arr[$k]);
+                $arr[$k]['how_long']         = $this->howLong($workHourList, $arr[$k]);
+                $arr[$k]['status']           = $this->getStatus($oilStandardList, $arr[$k]);
                 $arr[$k]['postpone_reason']  = empty($v[8]) ? null : $v[8];
                 $arr[$k]['member']           = empty($v[9]) ? null : $v[9];
                 $arr[$k]['oil_no']           = empty($v[10]) ? null : $v[10];
                 $arr[$k]['quantity']         = empty($v[11]) ? null : $v[11];
             }
         }
-        $infoWarningModel = new InfoWarning();
-        $result           = $infoWarningModel->saveAll($arr);
+        $result = $infoWarningModel->saveAll($arr);
         if (!$result) {
             throw new DocumentException([
                 'msg' => '文档上传失败，请检查excel数据'
@@ -224,7 +249,7 @@ class ExcelHandle {
      *
      */
     //$equNo, $equOilNo, $delWarningTime
-    public static function howLong($workHourList, $arr) {
+    private function howLong($workHourList, $arr) {
         $howLong = 0;
         foreach ($workHourList as $k => $v) {
             if ($arr['equ_no'] == $v['equ_no'] && $arr['equ_oil_no'] == $v['equ_oil_no']) {
@@ -237,7 +262,7 @@ class ExcelHandle {
     }
 
     //$equNo, $equOilNo, $howLong, $isFirstPeriod,$warningType,$postpone
-    public static function status($oilStandardList, $arr) {
+    private function getStatus($oilStandardList, $arr) {
         $status = 0;
         foreach ($oilStandardList as $k => $v) {
             if ($v['equ_no'] == $arr['equ_no'] && $v['equ_oil_no'] == $arr['equ_oil_no']) {
