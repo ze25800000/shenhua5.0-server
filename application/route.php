@@ -65,7 +65,7 @@ Route::get('oiling/warning/getwarning', 'oiling/api.WarningInfo/getWarningMessag
 //获取对应设备编号的设备标准
 Route::get('oiling/standard/:equ_no', 'oiling/api.Standard/getStandardByEquNo');
 //通过通过设备id获取设备详情数据
-Route::get('oiling/equ/detail', 'oiling/api.detail/getEquipmentDetailByNo');
+Route::get('oiling/equ/detail/:equ_key_no', 'oiling/api.detail/getEquipmentDetailByNo');
 
 
 //上传基础数据并保存excel到数据库

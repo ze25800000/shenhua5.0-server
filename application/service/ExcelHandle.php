@@ -182,7 +182,7 @@ class ExcelHandle {
         $result            = $workHourModel->saveAll($arr);
         $infoWarningModel  = new InfoWarning();
         $infoWarningIdList = $infoWarningModel::field('create_time,update_time', true)->select();
-        $infoWarningIdList = collection($infoWarningIdList)->toArray();
+        $infoWarningIdList = collection($infoWarningIdList)->visible(['equ_key_no','del_warning_time','is_first_period','warning_type','postpone','how_long'])->toArray();
         $oilStandardList   = OilStandard::field('equ_key_no,first_period,period')->select();
         $equKeyNo          = $this->listMoveToArray($arr, 'equ_key_no');
         foreach ($infoWarningIdList as $kk => $vv) {
@@ -228,9 +228,9 @@ class ExcelHandle {
                 $arr[$k]['how_long']         = $this->howLong($workHourList, $arr[$k]);
                 $arr[$k]['status']           = $this->getStatus($oilStandardList, $arr[$k]);
                 $arr[$k]['postpone_reason']  = empty($v[8]) ? null : $v[8];
-                $arr[$k]['member']           = empty($v[9]) ? null : $v[9];
-                $arr[$k]['oil_no']           = empty($v[10]) ? null : $v[10];
-                $arr[$k]['quantity']         = empty($v[11]) ? null : $v[11];
+                $arr[$k]['user_id']          = session('user_id');
+                $arr[$k]['oil_no']           = empty($v[9]) ? null : $v[9];
+                $arr[$k]['quantity']         = empty($v[10]) ? null : $v[10];
             }
         }
         $result = $infoWarningModel->saveAll($arr);

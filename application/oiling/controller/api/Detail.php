@@ -9,13 +9,20 @@
 namespace app\oiling\controller\api;
 
 
-use app\model\Equipment;
+use app\lib\exception\DocumentException;
+use app\model\OilStandard;
 use app\service\BaseController;
-use app\validate\IDMustBePositiveInt;
+use app\validate\EquipmentKeyNoValidate;
 
 class Detail extends BaseController {
-    public function getEquipmentDetailByNo() {
-        (new IDMustBePositiveInt())->goCheck();
-        $EquModel = new Equipment();
+    public function getEquipmentDetailByNo($equ_key_no) {
+        (new EquipmentKeyNoValidate())->goCheck();
+        $oilStandard = OilStandard::with(['infoWarningDetail.user','oilAnalysisList','timeList'])->where('equ_key_no', '=', $equ_key_no)->find();
+        if (!$oilStandard) {
+            throw new DocumentException([
+                'msg' => '获得设备详细信息失败'
+            ]);
+        }
+        return $this->ajaxReturn('获得设备详细信息成功', 0, $oilStandard);
     }
 }

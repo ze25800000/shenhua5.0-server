@@ -21,6 +21,7 @@ class Index extends BaseController {
             if ($info) {
                 if ($info->password === md5($password)) {
                     session('userName', $info->name);
+                    session('user_id', $info->id);
                     session('userScope', $info->scope);
                     throw new SuccessMessage([
                         'msg'       => '成功',

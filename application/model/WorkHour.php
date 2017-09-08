@@ -10,5 +10,5 @@ namespace app\model;
 
 
 class WorkHour extends BaseModel {
-
+    protected $visible=['start_time','working_hour'];
 }
