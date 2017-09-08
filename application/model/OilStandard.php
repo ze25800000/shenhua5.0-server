@@ -17,4 +17,18 @@ class OilStandard extends BaseModel {
     public function timeList() {
         return $this->hasMany('WorkHour', 'equ_key_no', 'equ_key_no');
     }
+
+    public static function getEquipmentByKeyNo($no) {
+        return self::with([
+            'infoWarningDetail' => function ($query) {
+                $query->with(['user'])->order('del_warning_time', 'desc');
+            },
+            'oilAnalysisList'   => function ($query) {
+                $query->order('sampling_time', 'desc');
+            },
+            'timeList'          => function ($query) {
+                $query->order('start_time', 'desc');
+            }
+        ])->where('equ_key_no', '=', $no)->find();
+    }
 }

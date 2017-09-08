@@ -17,7 +17,7 @@ use app\validate\EquipmentKeyNoValidate;
 class Detail extends BaseController {
     public function getEquipmentDetailByNo($equ_key_no) {
         (new EquipmentKeyNoValidate())->goCheck();
-        $oilStandard = OilStandard::with(['infoWarningDetail.user','oilAnalysisList','timeList'])->where('equ_key_no', '=', $equ_key_no)->find();
+        $oilStandard = OilStandard::getEquipmentByKeyNo($equ_key_no);
         if (!$oilStandard) {
             throw new DocumentException([
                 'msg' => '获得设备详细信息失败'
