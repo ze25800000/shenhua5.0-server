@@ -49,13 +49,6 @@ class ExcelHandle {
         return $excel_array;
     }
 
-    private function listMoveToArray($arr, $str) {
-        $result = [];
-        foreach ($arr as $k => $v) {
-            array_push($result, $v[$str]);
-        }
-        return $result;
-    }
 
     public function oilStandard($excel_array) {
         $equipmentEquNoList = Equipment::field('equ_no')->select();
@@ -70,7 +63,7 @@ class ExcelHandle {
                 }
                 $arr[$k]['equ_no']       = $v[0];
                 $arr[$k]['equ_oil_no']   = $v[1];
-                $arr[$k]['equ_key_no']   = $v[0] . $v[1];
+                $arr[$k]['equ_key_no']   = $v[0] . config('salt') . $v[1];
                 $arr[$k]['equ_name']     = $v[2];
                 $arr[$k]['equ_oil_name'] = $v[3];
                 $arr[$k]['oil_no']       = $v[4];
@@ -105,7 +98,7 @@ class ExcelHandle {
                 }
                 $arr[$k]['equ_no']        = $v[0];
                 $arr[$k]['equ_oil_no']    = $v[1];
-                $arr[$k]['equ_key_no']    = $v[0] . $v[1];
+                $arr[$k]['equ_key_no']    = $v[0] . config('salt') . $v[1];
                 $arr[$k]['oil_no']        = $v[2];
                 $arr[$k]['oil_name']      = $v[3];
                 $arr[$k]['sampling_time'] = $v[4];
@@ -175,26 +168,25 @@ class ExcelHandle {
         $arr               = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
-                if (!empty($ids) && !empty($ids) && in_array(strtotime($v[4]), $startTimes)) {
+                if (!empty($ids) && !empty($ids[$k]) && in_array($this->getTimestamp($v[4]), $startTimes)) {
                     $arr[$k]['id'] = $ids[$k];
                 }
                 $arr[$k]['equ_no']       = $v[0];
                 $arr[$k]['equ_oil_no']   = $v[1];
-                $arr[$k]['equ_key_no']   = $v[0] . $v[1];
+                $arr[$k]['equ_key_no']   = $v[0] . config('salt') . $v[1];
                 $arr[$k]['equ_oil_name'] = $v[2];
                 $arr[$k]['working_hour'] = $v[3];
-                $arr[$k]['start_time']   = strtotime(rtrim(preg_replace('/\"年\"|\"月\"|\"日\"/', '/', $v[4]), '/'));
+                $arr[$k]['start_time']   = $this->getTimestamp($v[4]);
             }
         }
         $result            = $workHourModel->saveAll($arr);
         $infoWarningModel  = new InfoWarning();
         $infoWarningIdList = $infoWarningModel::field('create_time,update_time', true)->select();
         $infoWarningIdList = collection($infoWarningIdList)->toArray();
-        $oilStandardList   = OilStandard::field('equ_no,equ_oil_no,first_period,period')->select();
-        $equNos            = $this->listMoveToArray($arr, 'equ_no');
-        $equOilNo          = $this->listMoveToArray($arr, 'equ_oil_no');
+        $oilStandardList   = OilStandard::field('equ_key_no,first_period,period')->select();
+        $equKeyNo          = $this->listMoveToArray($arr, 'equ_key_no');
         foreach ($infoWarningIdList as $kk => $vv) {
-            if (in_array($vv['equ_no'], $equNos) && in_array($vv['equ_oil_no'], $equOilNo)) {
+            if (in_array($vv['equ_key_no'], $equKeyNo)) {
                 $infoWarningIdList[$kk]['how_long'] = $this->howLong($result, $infoWarningIdList[$kk]);
                 $infoWarningIdList[$kk]['status']   = $this->getStatus($oilStandardList, $infoWarningIdList[$kk]);
             }
@@ -217,20 +209,19 @@ class ExcelHandle {
         $ids                = $this->listMoveToArray($infoWarningIdList, 'id');
         $delWarningTimes    = $this->listMoveToArray($infoWarningIdList, 'del_warning_time');
         $workHourList       = WorkHour::all();
-        $oilStandardList    = OilStandard::field('equ_no,equ_oil_no,first_period,period')->select();
+        $oilStandardList    = OilStandard::field('equ_key_no,first_period,period')->select();
         $arr                = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
-                $timeStr = strtotime(rtrim(preg_replace('/\"年\"|\"月\"|\"日\"/', '/', $v[4]), '/'));
-                if (in_array($timeStr, $delWarningTimes)) {
+                if (!empty($ids) && !empty($ids[$k]) && in_array($this->getTimestamp($v[4]), $delWarningTimes)) {
                     $arr[$k]['id'] = $ids[$k];
                 }
                 $arr[$k]['equ_no']           = $v[0];
                 $arr[$k]['equ_oil_no']       = $v[1];
-                $arr[$k]['equ_key_no']       = $v[0] . $v[1];
+                $arr[$k]['equ_key_no']       = $v[0] . config('salt') . $v[1];
                 $arr[$k]['equ_name']         = $v[2];
                 $arr[$k]['equ_oil_name']     = $v[3];
-                $arr[$k]['del_warning_time'] = $timeStr;
+                $arr[$k]['del_warning_time'] = $this->getTimestamp($v[4]);
                 $arr[$k]['is_first_period']  = preg_match('/是/', $v[5]) ? 1 : 0;
                 $arr[$k]['warning_type']     = preg_match('/润滑/', $v[6]) ? 1 : 0;
                 $arr[$k]['postpone']         = empty($v[7]) ? null : $v[7];
@@ -257,7 +248,7 @@ class ExcelHandle {
     private function howLong($workHourList, $arr) {
         $howLong = 0;
         foreach ($workHourList as $k => $v) {
-            if ($arr['equ_no'] == $v['equ_no'] && $arr['equ_oil_no'] == $v['equ_oil_no']) {
+            if ($arr['equ_key_no'] == $v['equ_key_no']) {
                 if ($v['start_time'] > $arr['del_warning_time']) {
                     $howLong += $v['working_hour'];
                 }
@@ -270,7 +261,7 @@ class ExcelHandle {
     private function getStatus($oilStandardList, $arr) {
         $status = 0;
         foreach ($oilStandardList as $k => $v) {
-            if ($v['equ_no'] == $arr['equ_no'] && $v['equ_oil_no'] == $arr['equ_oil_no']) {
+            if ($arr['equ_key_no'] == $v['equ_key_no']) {
                 //是否处于首保周期equ_oil_no
                 if ($arr['is_first_period']) {
                     //如果消警类型为延期，让保养周期和延期时长相加
@@ -306,4 +297,18 @@ class ExcelHandle {
         }
         return $status;
     }
+
+    private function listMoveToArray($arr, $str) {
+        $result = [];
+        foreach ($arr as $k => $v) {
+            array_push($result, $v[$str]);
+        }
+        return $result;
+    }
+
+    private function getTimestamp($time) {
+        return strtotime(rtrim(preg_replace('/\"年\"|\"月\"|\"日\"/', '/', $time), '/'));
+
+    }
+
 }
