@@ -165,8 +165,6 @@ class ExcelHandle {
         $equNoArr          = $this->listMoveToArray($equipmentModel, 'equ_no');
         $workHourModel     = new WorkHour();
         $workHourModelList = $workHourModel::field('id,equ_key_no,start_time')->select();
-        $infoWarningModel  = new InfoWarning();
-        $infoWarningList   = $infoWarningModel::select();
         $arr               = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
@@ -176,26 +174,25 @@ class ExcelHandle {
                 $arr[$k]['equ_oil_name'] = $v[2];
                 $arr[$k]['working_hour'] = $v[3];
                 $arr[$k]['start_time']   = $this->getTimestamp($v[4]);
-                $arr[$k]['is_operate']   = $this->isOperate($infoWarningList, $arr[$k]);
-                $id                      = $this->isIdExist($workHourModelList, 'start_time', $arr[$k]['equ_key_no'], $this->getTimestamp($v[4]));
-                if ($id) {
-                    $arr[$k]['id'] = $id;
+                $item                    = $workHourModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and start_time={$arr[$k]['start_time']}")->find();
+                if ($item) {
+                    $arr[$k]['id'] = $item->id;
                 }
             }
         }
-        $result = $workHourModel->saveAll($arr);
-        if ($infoWarningList) {
-            $infoWarningList = collection($infoWarningList)->visible(['id', 'equ_key_no', 'del_warning_time', 'is_first_period', 'warning_type', 'postpone', 'how_long'])->toArray();
-            $oilStandardList = OilStandard::field('equ_key_no,first_period,period')->select();
-            $equKeyNo        = $this->listMoveToArray($arr, 'equ_key_no');
-            foreach ($infoWarningList as $kk => $vv) {
-                if (in_array($vv['equ_key_no'], $equKeyNo)) {
-                    $infoWarningList[$kk]['how_long'] = $this->howLong($result, $infoWarningList[$kk]);
-                    $infoWarningList[$kk]['status']   = $this->getStatus($oilStandardList, $infoWarningList[$kk]);
-                }
-            }
-            $infoResult = $infoWarningModel->saveAll($infoWarningList);
+        $result           = $workHourModel->saveAll($arr);
+        $equKeyNo         = $this->listMoveToArray($arr, 'equ_key_no');
+        $infoWarningModel = new InfoWarning();
+        for ($i = 0; $i < count($equKeyNo); $i++) {
+            $oilStandardItem = OilStandard::field('equ_key_no,first_period,period')->where("equ_key_no='{$equKeyNo[$i]}'")->find();
+            $infoWarnItem    = $infoWarningModel->where("equ_key_no='{$equKeyNo[$i]}'")->order("del_warning_time DESC")->limit(1)->find();
+            $infoWarningModel->save([
+                'how_long' => $this->howLong($equKeyNo[$i]),
+                'status'   => $this->getStatus($oilStandardItem, $infoWarnItem)
+            ], ['equ_key_no' => $infoWarnItem['equ_key_no']]);
         }
+
+
         if (!$result) {
             throw new DocumentException([
                 'msg' => '上传运行时间文件失败，请检查excel文档'
@@ -210,16 +207,11 @@ class ExcelHandle {
         $equNoArr           = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
         $infoWarningModel   = new InfoWarning();
         $infoWarningIdList  = $infoWarningModel::field('id,del_warning_time')->select();
-        $ids                = $this->listMoveToArray($infoWarningIdList, 'id');
-        $delWarningTimes    = $this->listMoveToArray($infoWarningIdList, 'del_warning_time');
         $workHourList       = WorkHour::all();
         $oilStandardList    = OilStandard::field('equ_key_no,first_period,period')->select();
         $arr                = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
-                if (!empty($ids) && !empty($ids[$k]) && in_array($this->getTimestamp($v[4]), $delWarningTimes)) {
-                    $arr[$k]['id'] = $ids[$k];
-                }
                 $arr[$k]['equ_no']           = $v[0];
                 $arr[$k]['equ_oil_no']       = $v[1];
                 $arr[$k]['equ_key_no']       = $v[0] . config('salt') . $v[1];
@@ -249,53 +241,43 @@ class ExcelHandle {
      *
      */
     //$equNo, $equOilNo, $delWarningTime
-    private function howLong($workHourList, $arr) {
-        $howLong = 0;
-        foreach ($workHourList as $k => $v) {
-            if ($arr['equ_key_no'] == $v['equ_key_no']) {
-                if ($v['start_time'] > $arr['del_warning_time']) {
-                    $howLong += $v['working_hour'];
-                }
-            }
-        }
-        return $howLong;
+    private function howLong($equKeyNo) {
+        $sql     = "SELECT SUM(working_hour) AS how_long FROM work_hour WHERE equ_key_no={$equKeyNo} and start_time>(SELECT MAX(del_warning_time) FROM info_warning WHERE equ_key_no={$equKeyNo})";
+        $howLong = WorkHour::query($sql);
+        return $howLong[0]['how_long'];
     }
 
     //$equNo, $equOilNo, $howLong, $isFirstPeriod,$warningType,$postpone
-    private function getStatus($oilStandardList, $arr) {
-        foreach ($oilStandardList as $k => $v) {
-            if ($arr['equ_key_no'] == $v['equ_key_no']) {
-                //是否处于首保周期equ_oil_no
-                if ($arr['is_first_period']) {
-                    //如果消警类型为延期，让保养周期和延期时长相加
-                    $duration = $arr['warning_type'] ? $v['first_period'] : $v['first_period'] + $arr['postpone'];
-                    if ($arr['how_long'] < $duration) {
-                        if ($duration - $arr['how_long'] > 300) {
-                            //正常
-                            return 1;
-                        } else {
-                            //临近
-                            return 2;
-                        }
-                    } else {
-                        //超期
-                        return 3;
-                    }
+    private function getStatus($item, $arr) {
+        //是否处于首保周期equ_oil_no
+        if ($arr['is_first_period']) {
+            //如果消警类型为延期，让保养周期和延期时长相加
+            $duration = $arr['warning_type'] ? $item['first_period'] : $item['first_period'] + $arr['postpone'];
+            if ($arr['how_long'] < $duration) {
+                if ($duration - $arr['how_long'] > 300) {
+                    //正常
+                    return 1;
                 } else {
-                    $duration = $arr['warning_type'] ? $v['period'] : $v['period'] + $arr['postpone'];
-                    if ($arr['how_long'] < $duration) {
-                        if ($duration - $arr['how_long'] > 300) {
-                            //正常
-                            return 1;
-                        } else {
-                            //临近
-                            return 2;
-                        }
-                    } else {
-                        //超期
-                        return 3;
-                    }
+                    //临近
+                    return 2;
                 }
+            } else {
+                //超期
+                return 3;
+            }
+        } else {
+            $duration = $arr['warning_type'] ? $item['period'] : $item['period'] + $arr['postpone'];
+            if ($arr['how_long'] < $duration) {
+                if ($duration - $arr['how_long'] > 300) {
+                    //正常
+                    return 1;
+                } else {
+                    //临近
+                    return 2;
+                }
+            } else {
+                //超期
+                return 3;
             }
         }
     }
@@ -305,7 +287,7 @@ class ExcelHandle {
         foreach ($arr as $k => $v) {
             array_push($result, $v[$str]);
         }
-        return $result;
+        return array_unique($result);
     }
 
     private function getTimestamp($time) {
@@ -313,27 +295,5 @@ class ExcelHandle {
 
     }
 
-    private function isIdExist($list = [], $timeType, $equKeyNo, $timestamp = 0) {
-        if (!empty($list)) {
-            foreach ($list as $k => $v) {
-                if ($v[$timeType] == $timestamp && $v['equ_key_no'] == $equKeyNo) {
-                    return $v['id'];
-                }
-            }
-        } else {
-            return null;
-        }
-    }
 
-    private function isOperate($list, $arr = []) {
-        foreach ($list as $k => $v) {
-            if ($v['equ_key_no'] == $arr['equ_key_no']) {
-                if ($arr['start_time'] > $v['del_warning_time']) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        }
-    }
 }
