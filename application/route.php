@@ -68,6 +68,8 @@ Route::get('oiling/standard/:equ_no', 'oiling/api.Standard/getStandardByEquNo');
 Route::get('oiling/equ/detail/:equ_key_no', 'oiling/api.detail/getEquipmentDetailByNo');
 //润滑提示与消警提示列表页
 Route::get('oiling/infolist/getlist/:page', 'oiling/api.WarningInfo/getInfoList');
+//搜索设备
+Route::get('oiling/equ/search/:keyword', 'oiling/api.standard/getEquipmentDetailBySearch');
 
 
 //上传基础数据并保存excel到数据库

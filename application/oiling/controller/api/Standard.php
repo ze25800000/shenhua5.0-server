@@ -11,8 +11,10 @@ namespace app\oiling\controller\api;
 
 use app\lib\exception\DocumentException;
 use app\model\Equipment;
+use app\model\OilStandard;
 use app\service\BaseController;
 use app\validate\EquipmentNoValidate;
+use app\validate\KeywordMustBeHanZiValidate;
 
 class Standard extends BaseController {
     public function getStandardByEquNo($equ_no) {
@@ -27,4 +29,14 @@ class Standard extends BaseController {
         return $this->ajaxReturn('获取设备列表信息成功', 0, $result);
     }
 
+    public function getEquipmentDetailBySearch($keyword) {
+        (new KeywordMustBeHanZiValidate())->goCheck();
+        $result = OilStandard::where("equ_oil_name like '%{$keyword}%'")->select();
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '没有查询结果'
+            ]);
+        }
+        return $this->ajaxReturn('查询成功', 0, $result);
+    }
 }
