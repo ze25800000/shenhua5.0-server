@@ -53,14 +53,10 @@ class ExcelHandle {
     public function oilStandard($excel_array) {
         $equipmentEquNoList = Equipment::field('equ_no')->select();
         $equNoArr           = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
-        $oilStandardIdList  = OilStandard::field('id')->select();
-        $ids                = $this->listMoveToArray($oilStandardIdList, 'id');
+        $oilStandardModel   = new OilStandard();
         $arr                = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
-                if (!empty($ids) && !empty($ids[$k])) {
-                    $arr[$k]['id'] = $ids[$k];
-                }
                 $arr[$k]['equ_no']       = $v[0];
                 $arr[$k]['equ_oil_no']   = $v[1];
                 $arr[$k]['equ_key_no']   = $v[0] . config('salt') . $v[1];
@@ -72,6 +68,10 @@ class ExcelHandle {
                 $arr[$k]['first_period'] = $v[7];
                 $arr[$k]['period']       = $v[8];
                 $arr[$k]['interval']     = $v[9];
+                $item                    = $oilStandardModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']}")->find();
+                if ($item) {
+                    $arr[$k]['id'] = $item->id;
+                }
             }
         }
         $OilStandard = new OilStandard();
@@ -88,15 +88,9 @@ class ExcelHandle {
         $equipmentEquNoList = Equipment::field('equ_no')->select();
         $equNoArr           = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
         $oilAnalysisModel   = new OilAnalysis();
-        $oilAnalysisIdList  = $oilAnalysisModel::field('id')->select();
-        $ids                = $this->listMoveToArray($oilAnalysisIdList, 'id');
-        $simpleTimes        = $this->listMoveToArray($oilAnalysisIdList, 'sampling_time');
         $arr                = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
-                if (!empty($ids) && !empty($ids[$k]) && in_array($this->getTimestamp($v[5]), $simpleTimes)) {
-                    $arr[$k]['id'] = $ids[$k];
-                }
                 $arr[$k]['equ_no']        = $v[0];
                 $arr[$k]['equ_oil_no']    = $v[1];
                 $arr[$k]['equ_key_no']    = $v[0] . config('salt') . $v[1];
@@ -124,6 +118,10 @@ class ExcelHandle {
                 $arr[$k]['status']        = $v[23];
                 $arr[$k]['advise']        = $v[24];
                 $arr[$k]['result']        = $v[25];
+                $item                     = $oilAnalysisModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and sampling_time={$arr[$k]['sampling_time']}")->find();
+                if ($item) {
+                    $arr[$k]['id'] = $item->id;
+                }
             }
         }
         $result = $oilAnalysisModel->saveAll($arr);
@@ -136,19 +134,18 @@ class ExcelHandle {
     }
 
     public function oilDetail($excel_array) {
-        $oilDetailModel  = new OilDetail();
-        $oilDetailIdList = $oilDetailModel::field('id')->select();
-        $ids             = $this->listMoveToArray($oilDetailIdList, 'id');
-        $arr             = [];
+        $oilDetailModel = new OilDetail();
+        $arr            = [];
         foreach ($excel_array as $k => $v) {
-            if (!empty($ids) && !empty($ids[$k])) {
-                $arr[$k]['id'] = $ids[$k];
-            }
             $arr[$k]['oil_no']   = $v[0];
             $arr[$k]['oil_name'] = $v[1];
             $arr[$k]['detail']   = $v[2];
             $arr[$k]['unit']     = $v[3];
             $arr[$k]['price']    = $v[4];
+            $item                = $oilDetailModel->field('id')->where("oil_no={$arr[$k]['oil_no']}")->find();
+            if ($item) {
+                $arr[$k]['id'] = $item->id;
+            }
         }
         $result = $oilDetailModel->saveAll($arr);
         if (!$result) {
@@ -209,8 +206,7 @@ class ExcelHandle {
     }
 
 
-    public
-    function infoWarning($excel_array) {
+    public function infoWarning($excel_array) {
         $equipmentEquNoList = Equipment::field('equ_no')->select();
         $equNoArr           = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
         $infoWarningModel   = new InfoWarning();
@@ -250,30 +246,30 @@ class ExcelHandle {
     /**计算距离上次消警的总时长
      *
      */
-    private
-    function howLong($infoWarnTempArr) {
+    private function howLong($infoWarnTempArr) {
         $infoWarnList = InfoWarning::where("equ_key_no='{$infoWarnTempArr['equ_key_no']}'")->select();
-        if (empty($infoWarnList)) {
-            $howLong  = 0;
-            $workHour = WorkHour::where("equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>{$infoWarnTempArr['del_warning_time']}")->select();
-            foreach ($workHour as $k => $v) {
-                $howLong += $v['working_hour'];
-            }
-            return $howLong;
-        } else {
-            $sql     = "SELECT SUM(working_hour) AS how_long FROM work_hour WHERE equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>(SELECT MAX(del_warning_time) FROM info_warning WHERE equ_key_no={$infoWarnTempArr['equ_key_no']})";
-            $howLong = WorkHour::query($sql);
-            if ($howLong) {
-                return $howLong[0]['how_long'];
+        if (!empty($infoWarnTempArr)) {
+            if (empty($infoWarnList)) {
+                $howLong  = 0;
+                $workHour = WorkHour::where("equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>{$infoWarnTempArr['del_warning_time']}")->select();
+                foreach ($workHour as $k => $v) {
+                    $howLong += $v['working_hour'];
+                }
+                return $howLong;
             } else {
-                return 0;
+                $sql     = "SELECT SUM(working_hour) AS how_long FROM work_hour WHERE equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>(SELECT MAX(del_warning_time) FROM info_warning WHERE equ_key_no={$infoWarnTempArr['equ_key_no']})";
+                $howLong = WorkHour::query($sql);
+                if ($howLong[0]['how_long']) {
+                    return $howLong[0]['how_long'];
+                } else {
+                    return 0;
+                }
             }
         }
     }
 
-    //$equNo, $equOilNo, $howLong, $isFirstPeriod,$warningType,$postpone
-    private
-    function getStatus($infoWarn, $howLong) {
+//$equNo, $equOilNo, $howLong, $isFirstPeriod,$warningType,$postpone
+    private function getStatus($infoWarn, $howLong) {
         $oilStandardItem = OilStandard::field('first_period,period')->where("equ_key_no='{$infoWarn['equ_key_no']}'")->find();
         //是否处于首保周期
         if ($infoWarn['is_first_period']) {
@@ -308,8 +304,7 @@ class ExcelHandle {
         }
     }
 
-    private
-    function listMoveToArray($arr, $str) {
+    private function listMoveToArray($arr, $str) {
         $result = [];
         foreach ($arr as $k => $v) {
             array_push($result, $v[$str]);
@@ -317,9 +312,67 @@ class ExcelHandle {
         return array_unique($result);
     }
 
-    private
-    function getTimestamp($time) {
+    private function getTimestamp($time) {
         return strtotime(rtrim(preg_replace('/\"年\"|\"月\"|\"日\"/', '/', $time), '/'));
 
+    }
+
+    /**
+     * $data = array(
+     * array(NULL, 2010, 2011, 2012),
+     * array('Q1', 12, 15, 21),
+     * array('Q2', 56, 73, 86),
+     * array('Q3', 52, 61, 69),
+     * array('Q4', 30, 32, 0),
+     * );
+     */
+    public function downloadExcel($data, $type = 'test.xls') {
+        ini_set('max_execution_time', '0');
+        vendor('PHPExcel');
+        $filename = str_replace('.xls', '', $type) . '.xls';
+        $phpexcel = new \PHPExcel();
+        $data = $this->dataConvert($data, $type);
+        $phpexcel->getProperties()
+            ->setCreator(session('userName'))
+            ->setLastModifiedBy(session('userName'))
+            ->setTitle("Office 2007 XLSX Test Document")
+            ->setSubject("Office 2007 XLSX Test Document")
+            ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+            ->setKeywords("office 2007 openxml php")
+            ->setCategory("Test result file");
+        $phpexcel->getActiveSheet()->fromArray($data);
+        $phpexcel->getActiveSheet()->setTitle('Sheet1');
+        $phpexcel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.ms-excel');
+        header("Content-Disposition: attachment;filename=$filename");
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0 PHPExcel_IOFactory
+        $objwriter = \PHPExcel_IOFactory::createWriter($phpexcel, 'Excel5');
+        $objwriter->save('php://output');
+        exit;
+    }
+
+
+    private function dataConvert($data, $type) {
+        if (!empty($data) && is_array($data)) {
+            switch ($type) {
+                case 'infowarning':
+                    $tableHeader = [['设备编号', '润滑点编号', '润滑点名称', '上次消警时间', '消警类型', '运行时长', '延期时长', '当前状态', '是否首保']];
+                    foreach ($data as $k => &$v) {
+                        $v['del_warning_time'] = date('Y年m月d日', $v['del_warning_time']);
+                        $v['warning_type']     = $v['warning_type'] ? '润滑' : '延期';
+                        $v['status']           = ($v['status'] == 1) ? '正常' : (($v['status'] == 2) ? '延期' : '超期');
+                        $v['is_first_period']  = $v['is_first_period'] ? '是' : '否';
+                        $v['postpone']         = empty($v['postpone']) ? '' : $v['postpone'];
+                        array_push($tableHeader, $data[$k]);
+                    }
+                    break;
+            }
+        }
+        return $tableHeader;
     }
 }
