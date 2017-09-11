@@ -24,7 +24,7 @@ h1{ float:left; margin:14px 0 0 24px; width:360px; height:54px; background:url(.
 #bd .wrap{ padding-left:187px; padding-bottom:6px; padding-right:6px; background:url(../images/centerbottombg.png) repeat-x left bottom;}
 
 /*左侧栏导航*/
-.sidebar{ height:100%; float:left; margin-left:-181px; width:175px; overflow-y:auto;}
+.sidebar{ height:100%; float:left; margin-left:-181px; width:175px; overflow:hidden;}
 .sidebar h2{  background:url(../images/lefttopbg.png) repeat-x; border-radius:2px 2px 0 0; }
 .sidebar h2 p{ margin-left:15px;padding-left:25px; line-height:35px;color:#fff; font-size:14px; font-weight:bold; background:url(../images/icon0.png) no-repeat left center;}
 

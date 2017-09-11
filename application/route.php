@@ -22,7 +22,10 @@ Route::get('logout', 'oiling/index/logout');
 Route::get('', 'oiling/index/index');
 //警告页面
 Route::get('oiling/warning', 'oiling/Manager/warning');
-
+//设备润滑标准
+Route::get('oiling/standard', 'oiling/Manager/standard');
+//润滑提示与记录
+Route::get('oiling/info', 'oiling/Manager/info');
 
 //系统管理
 Route::get('manager/document', 'oiling/manager/oilDocumentManager');

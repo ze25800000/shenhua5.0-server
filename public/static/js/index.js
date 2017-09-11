@@ -43,6 +43,6 @@ $('.exitDialog input[type=button]').click(function(e) {
     $('.exitDialog').Dialog('close');
 	
 	if($(this).hasClass('ok')){
-		window.location.href = "/logout"	;
+		window.location.href = "login.html"	;
 	}
 });

@@ -25,9 +25,16 @@ class Manager extends BaseController {
     }
 
     public function standard() {
-
+        $account        = session('account');
+        $this->assign([
+            'account'        => $account,
+        ]);
+        return $this->fetch();
     }
 
+    public function info() {
+        return $this->fetch();
+    }
     public function uploadExcel() {
         $objExcelHandle = new ExcelHandle();
         $excel_array    = $objExcelHandle->excelToArray();
