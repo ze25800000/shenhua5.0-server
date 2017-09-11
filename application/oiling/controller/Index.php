@@ -1,6 +1,6 @@
 <?php
 
-namespace app\user\controller;
+namespace app\oiling\controller;
 
 
 use app\lib\exception\SuccessMessage;
@@ -21,6 +21,7 @@ class Index extends BaseController {
             if ($info) {
                 if ($info->password === md5($password)) {
                     session('userName', $info->name);
+                    session('account', $info->account);
                     session('user_id', $info->id);
                     session('userScope', $info->scope);
                     throw new SuccessMessage([
@@ -56,8 +57,12 @@ class Index extends BaseController {
     public function index() {
         $userName  = session('userName');
         $userScope = session('userScope');
-        $this->assign('userScope', $userScope);
-        $this->assign('userName', $userName);
+        $account   = session('account');
+        $this->assign([
+            'userScope' => $userScope,
+            'userName'  => $userName,
+            'account'   => $account
+        ]);
         return $this->fetch();
     }
 }

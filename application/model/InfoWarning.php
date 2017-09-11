@@ -19,7 +19,7 @@ class InfoWarning extends BaseModel {
 
     public static function getWarningMessage() {
         $result     = self::where('status', '>=', '2')->select();
-        $collection = collection($result)->visible(['equ_oil_name', 'status', 'how_long', 'del_warning_time', '']);
+        $collection = collection($result)->visible(['equ_name', 'equ_oil_name', 'status', 'how_long', 'del_warning_time', '']);
         return $collection;
     }
 

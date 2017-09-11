@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>设备管理系统-登录页</title>
+    <link href="__CSS__/login.css" rel="stylesheet" type="text/css"/>
+    <script src="__JS__/jquery-1.7.2.min.js"></script>
+    <script src="__JS__/common.js"></script>
+</head>
+
+<body>
+
+<div class="login_a">
+    <div class="login_a1"><img src="__IMG__/login-1.png" width="680" height="76"/></div>
+</div>
+<div class="login_b">
+    <div class="login_b1">
+        <div class="login_b1a">
+            <div class="login_b1b"><img src="__IMG__/login-2.png" width="516" height="160"/></div>
+        </div>
+        <div class="login_b2">
+            <div class="login_b2a">
+                <div class="login_b2b">设备管理系统登录窗口</div>
+                <div class="login_b2c">
+                    <div class="login_b2ca">
+                        <span class="login_b2ca1">用户名：</span>
+                        <span class="login_b2ca2">
+                            <input name="" type="text" id="username"/>
+                            <div class="error-tips" style="color:red;font-size: 12px"></div>
+                        </span>
+                    </div>
+                    <div class="login_b2ca">
+                        <span class="login_b2ca1">密　码：</span>
+                        <span class="login_b2ca2">
+                            <input name="" type="password" id="pwd"/>
+                            <div class="error-tips" style="color:red;font-size: 12px"></div>
+                        </span>
+                    </div>
+                    <div class="login_b2ca" style=" height:44px;">
+
+                        <span class="login_b2ca1"></span>
+                        <span class="login_b2ca3">
+                            <input id="login"
+                                   type="button"
+                                   value="确认登录"
+                                   class="input_out"
+                                   onmousemove="this.className='input_move'"
+                                   onmouseout="this.className='input_out'"/>
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="logo_foot">版权所有：赵奇创新工作室 　技术支持：<a href="#">非同科技</a></div>
+</body>
+<script>
+    $(function () {
+        $(document).on('click', '#login', function () {
+            var $userName = $('#username'),
+                $pwd = $('#pwd');
+            if (!$userName.val()) {
+                $userName.next().show().text('请输入用户名');
+                return;
+            }
+            if (!$pwd.val()) {
+                $pwd.next().show().text('请输入密码');
+                return;
+            }
+            var params = {
+                url: 'login',
+                type: 'post',
+                data: {userName: $userName.val(), pwd: $pwd.val()},
+                sCallback: function (data) {
+                    console.log(data);
+                    if (data.errcode === 0) {
+                        location.href = "/";
+                    } else if (data.errcode === 1) {
+                        $userName.next().show().text(data.msg);
+                    } else if (data.errcode === 2) {
+                        $pwd.next().show().text(data.msg);
+                    }
+                },
+                eCallback: function (data) {
+                    console.log(data);
+                }
+            };
+            window.base.getData(params);
+        });
+        $(document).on('focus', 'input', function () {
+            $('.error-tips').hide();
+        });
+        $(document).on('keydown', 'input', function (e) {
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            if (e && e.keyCode == 13) {
+                $('#login').trigger('click');
+            }
+        });
+    });
+</script>
+</html>
