@@ -115,9 +115,9 @@
     <div class="sbrh_nav">
         <ul>
             <li><a href="standard">设备润滑标准</a></li>
-            <li><a href="#">润滑提示与记录</a></li>
-            <li><a href="#">油脂化验指标分析</a></li>
-            <li><a href="#">润滑保养成本管理</a></li>
+            <li><a href="info">润滑提示与记录</a></li>
+            <li><a href="analysis">油脂化验指标分析</a></li>
+            <li><a href="oildetail">润滑保养成本管理</a></li>
         </ul>
     </div>
 
@@ -133,19 +133,5 @@
     </div>
 </div>
 </div>
-<div class="exitDialog">
-    <div class="dialog-content">
-        <div class="ui-dialog-icon"></div>
-        <div class="ui-dialog-text">
-            <p class="dialog-content">你确定要退出系统？</p>
-            <p class="tips">如果是请点击“确定”，否则点“取消”</p>
-
-            <div class="buttons">
-                <input type="button" class="button long2 ok" value="确定"/>
-                <input type="button" class="button long2 normal" value="取消"/>
-            </div>
-        </div>
-
-    </div>
-</div>
+<?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
 <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>

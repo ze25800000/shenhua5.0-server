@@ -23,9 +23,14 @@ Route::get('', 'oiling/index/index');
 //警告页面
 Route::get('oiling/warning', 'oiling/Manager/warning');
 //设备润滑标准
+Route::get('oiling/standard/:equ_no', 'oiling/api.Standard/getStandardByEquNo', [], ['equ_no' => '\d+']);
 Route::get('oiling/standard', 'oiling/Manager/standard');
 //润滑提示与记录
 Route::get('oiling/info', 'oiling/Manager/info');
+//油脂分析
+Route::get('oiling/analysis', 'oiling/Manager/analysis');
+//设备成本管理
+Route::get('oiling/oildetail', 'oiling/Manager/oildetail');
 
 //系统管理
 Route::get('manager/document', 'oiling/manager/oilDocumentManager');
@@ -43,7 +48,6 @@ Route::delete('user/delete', 'oiling/manager/deleteUserById');
 Route::get('document/equipment/getlist', 'oiling/manager/getEquipmentList');
 Route::post('document/equipment/add', 'oiling/manager/addEquipment');
 //Route::post('document/equipment/edit/:id', 'oiling/manager/editEquipmentByNo');
-Route::delete('document/equipment/del/:equ_no', 'oiling/manager/deleteEquipmentByNo');
 
 //操作润滑标准
 Route::get('document/oilstandard/getlist', 'oiling/manager/getOilStandardList');
@@ -64,7 +68,6 @@ Route::delete('document/oildetail/del/:id', 'oiling/manager/delOilDetailItemById
 //报警页面获取报警信息
 Route::get('oiling/warning/getlist', 'oiling/api.WarningInfo/getWarningMessage');
 //获取对应设备编号的设备标准
-Route::get('oiling/standard/:equ_no', 'oiling/api.Standard/getStandardByEquNo');
 //通过通过设备id获取设备详情数据
 Route::get('oiling/equ/detail/:equ_key_no', 'oiling/api.detail/getEquipmentDetailByNo');
 //润滑提示与消警提示列表页

@@ -3,21 +3,30 @@
 namespace app\oiling\controller;
 
 
+use app\model\Equipment;
 use app\model\InfoWarning;
 use app\service\BaseController;
 use app\service\ExcelHandle;
 
 class Manager extends BaseController {
+    public $userName;
+    public $userScope;
+    public $account;
+
+    public function __construct() {
+        parent::__construct();
+        $this->userName  = session('userName');
+        $this->userScope = session('userScope');
+        $this->account   = session('account');
+    }
+
     public function warning() {
         $WarningMessage = InfoWarning::getWarningMessage();
         $count          = count($WarningMessage);
-        $userName       = session('userName');
-        $userScope      = session('userScope');
-        $account        = session('account');
         $this->assign([
-            'userScope'      => $userScope,
-            'userName'       => $userName,
-            'account'        => $account,
+            'userScope'      => $this->userScope,
+            'userName'       => $this->userName,
+            'account'        => $this->account,
             'warningMessage' => $WarningMessage ? $WarningMessage : 0,
             'count'          => $count
         ]);
@@ -25,16 +34,36 @@ class Manager extends BaseController {
     }
 
     public function standard() {
-        $account        = session('account');
+        $list = Equipment::select();
         $this->assign([
-            'account'        => $account,
+            'scope'   => $this->userScope,
+            'account' => $this->account,
+            'list'    => $list
         ]);
         return $this->fetch();
     }
 
     public function info() {
+        $this->assign([
+            'account' => $this->account,
+        ]);
         return $this->fetch();
     }
+
+    public function analysis() {
+        $this->assign([
+            'account' => $this->account,
+        ]);
+        return $this->fetch();
+    }
+
+    public function oildetail() {
+        $this->assign([
+            'account' => $this->account,
+        ]);
+        return $this->fetch();
+    }
+
     public function uploadExcel() {
         $objExcelHandle = new ExcelHandle();
         $excel_array    = $objExcelHandle->excelToArray();
