@@ -3,8 +3,10 @@
 namespace app\oiling\controller;
 
 
+use app\lib\exception\DocumentException;
 use app\model\Equipment;
 use app\model\InfoWarning;
+use app\model\OilStandard;
 use app\service\BaseController;
 use app\service\ExcelHandle;
 
@@ -60,6 +62,20 @@ class Manager extends BaseController {
     public function oildetail() {
         $this->assign([
             'account' => $this->account,
+        ]);
+        return $this->fetch();
+    }
+
+    public function equdetail($equ_key_no) {
+        $result = OilStandard::getEquipmentByKeyNo($equ_key_no);
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '获取详细数据失败'
+            ]);
+        }
+        $this->assign([
+            'account' => $this->account,
+            'detail'  => $result
         ]);
         return $this->fetch();
     }

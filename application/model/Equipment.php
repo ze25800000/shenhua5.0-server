@@ -16,6 +16,15 @@ class Equipment extends BaseModel {
     }
 
     public function statusInfo() {
-        return $this->hasMany('InfoWarning','');
+        return $this->hasMany('InfoWarning', '');
+    }
+
+    public static function getStandardByEquNo($equ_no) {
+        $result = self::with([
+            'oilStandardList' => function ($query) {
+                $query->order('equ_oil_no asc');
+            }
+        ])->where('equ_no', '=', $equ_no)->find();
+        return $result;
     }
 }

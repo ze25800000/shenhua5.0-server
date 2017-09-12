@@ -22,9 +22,14 @@ Route::get('logout', 'oiling/index/logout');
 Route::get('', 'oiling/index/index');
 //警告页面
 Route::get('oiling/warning', 'oiling/Manager/warning');
+
 //设备润滑标准
 Route::get('oiling/standard/:equ_no', 'oiling/api.Standard/getStandardByEquNo', [], ['equ_no' => '\d+']);
+Route::delete('oiling/standard/del/:id', 'oiling/api.standard/deleteOilStandardItemById');
+Route::post('oiling/standard/add', 'oiling/api.standard/addEquipment');
+Route::delete('oiling/oilstandard/del/:id', 'oiling/manager/delOilStandardItemById');
 Route::get('oiling/standard', 'oiling/Manager/standard');
+
 //润滑提示与记录
 Route::get('oiling/info', 'oiling/Manager/info');
 //油脂分析
@@ -32,9 +37,13 @@ Route::get('oiling/analysis', 'oiling/Manager/analysis');
 //设备成本管理
 Route::get('oiling/oildetail', 'oiling/Manager/oildetail');
 
+//润滑点详情页
+Route::get('oiling/equdetail/:equ_key_no', 'oiling/Manager/equdetail', [], ['equ_key_no' => '\d+']);
+
+
 //系统管理
-Route::get('manager/document', 'oiling/manager/oilDocumentManager');
-Route::get('manager/member', 'oiling/manager/member');
+/*Route::get('manager/document', 'oiling/manager/oilDocumentManager');
+Route::get('manager/member', 'oiling/manager/member');*/
 
 
 //用户信息管理

@@ -14,7 +14,7 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,&nbsp;{$account}</div>
+                <div class="welcome ue-clear">欢迎您,&nbsp;*{$account}</div>
             </div>
             <div class="toolbar ue-clear">
                 <a href="/" class="home-btn">首页</a>
@@ -27,19 +27,19 @@
             <div class="sidebar">
                 <h2 class="sidebar-header"><p>功能导航</p></h2>
                 <ul class="nav">
-                    <li class="nav-standard current">
+                    <li class="office current">
                         <div class="nav-header"><a href="standard" class="ue-clear"><span>设备润滑标准</span><i
                                 class="icon"></i></a></div>
                     </li>
-                    <li class="nav-info">
+                    <li class="gongwen">
                         <div class="nav-header"><a href="info" class="ue-clear"><span>润滑提示与记录</span><i
                                 class="icon"></i></a></div>
                     </li>
-                    <li class="nav-analysis">
+                    <li class="nav-info">
                         <div class="nav-header"><a href="analysis" class="ue-clear"><span>油脂化验指标分析</span><i
                                 class="icon"></i></a></div>
                     </li>
-                    <li class="nav-oildetail">
+                    <li class="konwledge">
                         <div class="nav-header"><a href="oildetail" class="ue-clear"><span>润滑保养成本管理</span><i
                                 class="icon"></i></a></div>
                     </li>
@@ -58,75 +58,122 @@
                     <div class="query">
                         <div class="rhbza">
                             <ul id="equipments">
-                                {foreach $list as $v}
-                                <li class="equ-item" data-equ_no="{$v.equ_no}">
-                                    <a href="javascript:;">
-                                        <h2>{$v.equ_name}</h2>
-                                        <p>编号：{$v.equ_no}</p>
-                                    </a>
+
+                                *{foreach $list as $v}
+                                <li class="equ-item" data-equ_no="*{$v.equ_no}">
+                                    <div class="rhbza1">
+                                        <p>编号：*{$v.equ_no}</p>
+                                        <h2>*{$v.equ_name}</h2>
+                                        *{if condition="$scope===36"}
+                                        <p><a class="btn1" href="javascript:;">修改</a> | <a class="equ-del"
+                                                                                           data-id="*{$v.id}"
+                                                                                           href="javascript:;">删除</a>
+                                        </p>
+                                        *{/if}
+                                    </div>
                                 </li>
-                                {/foreach}
-                                {if condition="$scope===36"}
-                                <li><a href="#" style=" font-size:36px">+</a></li>
-                                {/if}
+                                *{/foreach}
+                                *{if condition="$scope===36"}
+                                <li class="rhbza2"><a class=" add-equ" href="javascript:;"
+                                                      style=" font-size:36px">+</a></li>
+                                *{/if}
                             </ul>
+
                             <div class="clear"></div>
                         </div>
                         <div class="clear"></div>
                     </div>
                 </div>
                 <div class="equ_tab equ_sta_list">
-                    <div class="title">
-                        <h2>设备润滑标准 &gt; 一号破碎站设备润滑点</h2>
-                        <a href="设备润滑标准-1.html" class="more">返回</a>
-                    </div>
-                    <div class="query">
-                        <div class="query-conditions ue-clear">
-                            <div class="conditions staff ue-clear">
-                                <input type="text" placeholder="请输入要查询的内容"/>
-                                <div class="query-btn ue-clear" style=" padding:0 0 0 20px;">
-                                    <a href="#" class="confirm">搜 索</a></div>
+                    <script type="text/html" id="equStaListTemp">
+                        <div class="title">
+                            <h2>设备润滑标准 &gt; ${equ_name}</h2>
+                            <a href="standard" class="more">返回</a>
+                        </div>
+                        <div class="query">
+                            <div class="query-conditions ue-clear">
+                                <div class="conditions staff ue-clear">
+                                    <input type="text" placeholder="请输入要查询的内容"/>
+                                    <div class="query-btn ue-clear" style=" padding:0 0 0 20px;">
+                                        <a href="#" class="confirm">搜 索</a></div>
+                                </div>
                             </div>
                         </div>
+
+                        <div class="table-box">·
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th class="num">编号</th>
+                                    <th class="time">润滑点（全称）</th>
+                                    <th class="process">物料编码</th>
+                                    <th class="process">用量</th>
+                                    <th class="process">单位</th>
+                                    <th class="process">更换最长周期</th>
+                                    <th class="process">首保周期</th>
+                                    <th class="process">油脂采样间隔</th>
+                                    <th class="operate">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{each oil_standard_list}}
+                                <tr>
+                                    <td class="num">${$value.equ_oil_no}</td>
+                                    <td class="time"><a href="equdetail/${$value.equ_key_no}" target="_blank">${$value.equ_oil_name}</a>
+                                    </td>
+                                    <td class="process">${$value.oil_no}</td>
+                                    <td class="process">${$value.quantity}</td>
+                                    <td class="process">${$value.unit}</td>
+                                    <td class="process">${$value.period}</td>
+                                    <td class="process">${$value.first_period}</td>
+                                    <td class="process">${$value.interval}</td>
+                                    <td class="operate table-operate">
+                                        <a href="javascript:;" class="edit">编辑</a>
+                                        <a href="javascript:;" class="del btn2" data-id="${$value.id}">删除</a>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination ue-clear"></div>
+                    </script>
+                </div>
+                <div class="tanchuang">
+                    <div class="hint">
+                        <div class="hint-in1">
+                            <div class="hint1"></div>
+                            <div class="hint2">设备润滑修改窗口</div>
+                            <div class="hint3"></div>
+                        </div>
+                        <div class="hint-in2">
+                            <div class="hint-in2a">
+                                <span class="hint-in2a1">编号：</span>
+                                <span class="hint-in2a2"><input name="" type="text" class="equ_no_val"></span>
+
+                            </div>
+                            <div class="hint-in2a">
+                                <span class="hint-in2a1">名称：</span>
+                                <span class="hint-in2a2"><input name="" type="text" class="equ_name_val"></span>
+
+                            </div>
+
+                        </div>
+                        <a class="hint-in3 confirm" href="#">确定</a>
                     </div>
 
-                    <div class="table-box">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th class="num">编号</th>
-                                <th class="time">润滑点（全称）</th>
-                                <th class="process">物料编码</th>
-                                <th class="process">用量</th>
-                                <th class="process">单位</th>
-                                <th class="process">更换最长周期</th>
-                                <th class="process">油脂采样间隔</th>
-                                <th class="operate">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td class="num">1</td>
-                                <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                                <td class="process">1077231</td>
-                                <td class="process">100</td>
-                                <td class="process">500</td>
-                                <td class="process">3500</td>
-                                <td class="process">500</td>
-                                <td class="operate table-operate">
-                                    <a href="#" class="check">查看</a>
-                                    <a href="#" class="edit">编辑</a>
-                                    <a href="#" class="del">删除</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div class="hintl">
+                        <div class="hintl-in1">
+                            <div class="hintl1"></div>
+                            <div class="hintl2">设备润滑删除窗口</div>
+                            <div class="hint3"></div>
+                        </div>
+                        <div class="hintl-in2">是否删除该设备润滑标准？</div>
+                        <a class="hintl-in3 confirm-del" href="javascript:;">是</a>
+                        <a class="hintl-in4" href="javascript:;">否</a>
                     </div>
-                    <div class="pagination ue-clear"></div>
                 </div>
-                <div class="equ_tab equ_detail">
 
-                </div>
             </div>
         </div>
     </div>
@@ -141,18 +188,85 @@
         </div>
     </div>
 </div>
-
 <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
 <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
 <script>
+    //根据设备编号获取设备润滑标准列表
+    var sflag = true;
     $('#equipments').on('click', '.equ-item', function () {
         var equ_no = $(this).data('equ_no'),
             params = {
                 url: 'oiling/standard/' + equ_no,
                 sCallback: function (list) {
-
+                    $('.equ_tab').removeClass('active');
+                    $('.equ_sta_list').addClass('active');
+                    if (sflag) {
+                        $('#equStaListTemp').tmpl(list.data).appendTo('.equ_sta_list');
+                    }
+                    sflag = false;
                 }
             };
         window.base.getData(params);
     });
+    //添加新设备
+    $(document).on('click', '.add-equ', function (e) {
+        $('.hint2').html('添加新设备');
+        $(".hint").css({"display": "block"});
+        $(".box").css({"display": "block"});
+        $('.confirm').click(function () {
+            var equNoVal = $('.equ_no_val').val(),
+                equNameVal = $('.equ_name_val').val(),
+                params = {
+                    url: 'oiling/standard/add?XDEBUG_SESSION_START=19426',
+                    type: 'post',
+                    data: {
+                        'equ_no': equNoVal,
+                        'equ_name': equNameVal
+                    },
+                    sCallback: function (data) {
+                        console.log(data);
+                        location.reload();
+                    },
+                    eCallback: function (err) {
+                        if (err.errcode == 1) {
+                            alert(err.msg);
+                        }
+                    }
+                };
+            window.base.getData(params);
+        });
+    });
+
+    //删除设备
+    $('.equ-del').on('click', function (event) {
+        event.stopPropagation();
+        $(".hintl").show();
+        $(".box").show();
+    });
+
+    //删除设备润滑标准条目
+    $(document).on('click', '.del', function (e) {
+        $(".hintl").show();
+        $(".box").show();
+        var id = $(this).data('id'),
+            _this = $(this);
+        $('.confirm-del').click(function (e) {
+            e.stopPropagation();
+            var params = {
+                url: 'oiling/standard/del/' + id,
+                type: 'delete',
+                sCallback: function (data) {
+                    if (!data.errcode) {
+                        _this.parent().parent().remove();
+                    }
+                },
+                eCallback: function (err) {
+                    console.log(err);
+                }
+            };
+            window.base.getData(params);
+        });
+    });
+
+
 </script>
