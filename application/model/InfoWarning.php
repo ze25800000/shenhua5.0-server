@@ -23,9 +23,9 @@ class InfoWarning extends BaseModel {
         return $collection;
     }
 
-    public static function getInfoList($page) {
+    public static function getInfoList($page = 1) {
         $result = self::order('status desc,how_long desc,del_warning_time desc,equ_key_no desc')
-            ->limit(10)
+            ->limit(15)
             ->page($page)
             ->select();
         return $result;

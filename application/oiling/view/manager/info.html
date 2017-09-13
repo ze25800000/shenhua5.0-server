@@ -54,6 +54,50 @@
                         </form>
                     </div>
                 </div>
+                <div class="table-box">
+                    <div class="scroll-box" style="overflow: hidden;overflow-y: a">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="num">
+                                    选择
+                                </th>
+                                <th class="time">润滑点（全称）</th>
+                                <th class="process">上次消警时间</th>
+                                <th class="process">消警类型</th>
+                                <th class="process">运行时长</th>
+                                <th class="process">延期时长</th>
+                                <th class="process">当前状态</th>
+                                <th class="process">是否首保</th>
+                                <th class="operate">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="infoTbody">
+                            <script type="text/html" id="infoTemp">
+                                {{each data}}
+                                <tr>
+                                    <td class="num">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="process">${$value.equ_oil_name}</td>
+                                    <td class="time">${$value.del_warning_time}</td>
+                                    <td class="process">${$value.warning_type}</td>
+                                    <td class="process">${$value.how_long}</td>
+                                    <td class="process">${$value.postpone}</td>
+                                    <td class="process">${$value.status}</td>
+                                    <td class="process">${$value.is_first_period}</td>
+                                    <td class="operate table-operate">
+                                        <a href="#" class="check">润滑</a>
+                                        <a href="#" class="edit">延期</a>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </script>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -71,3 +115,30 @@
 
 <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
 <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
+<script src="__JS__/data.js"></script>
+<script>
+    $(function () {
+        $(document).ready(function () {
+            var params = {
+                url: 'oiling/info/getlist/1',
+                sCallback: function (data) {
+                    console.log(data);
+                    var list = data.data;
+                    for (var i = 0; i < list.length; i++) {
+                        var time = new Date(data.data[i]['del_warning_time'] * 1000);
+
+                        data.data[i]['del_warning_time'] = formatDate(time, 'yyyy年MM月dd日');
+                        data.data[i]['is_first_period'] = data.data[i]['is_first_period'] ? '是' : '否';
+                        data.data[i]['postpone'] = data.data[i]['postpone'] ? data.data[i]['postpone'] : 0;
+                        data.data[i]['status'] = data.data[i]['status'] === 3 ? '超期' : (data.data[i]['status'] === 2 ? '延期' : '正常');
+                        data.data[i]['warning_type'] = data.data[i]['warning_type'] ? '润滑' : '延期';
+                    }
+                    $('#infoTemp').tmpl(data).appendTo('#infoTbody');
+                    $("tbody").find("tr:odd").css("backgroundColor", "#eff6fa");
+                }
+            };
+            window.base.getData(params);
+        })
+
+    });
+</script>

@@ -25,14 +25,19 @@ Route::get('oiling/warning', 'oiling/Manager/warning');
 
 //设备润滑标准
 Route::delete('oiling/equipment/del/:id', 'oiling/api.standard/delEquipmentById');
-Route::get('oiling/standard/:equ_no', 'oiling/api.Standard/getStandardByEquNo', [], ['equ_no' => '\d+']);
-Route::post('oiling/standard/edititem/:id', 'oiling/api.Standard/editOilStandardDetailById');
-Route::delete('oiling/standard/del/:id', 'oiling/api.standard/deleteOilStandardItemById');
-Route::post('oiling/standard/add', 'oiling/api.standard/addEquipment');
-Route::get('oiling/standard', 'oiling/Manager/standard');
+Route::group('oiling/standard', function () {
+    Route::get(':equ_no', 'oiling/api.Standard/getStandardByEquNo', [], ['equ_no' => '\d+']);
+    Route::post('edititem/:id', 'oiling/api.Standard/editOilStandardDetailById');
+    Route::delete('del/:id', 'oiling/api.standard/deleteOilStandardItemById');
+    Route::post('add', 'oiling/api.standard/addEquipment');
+    Route::get('', 'oiling/Manager/standard');
+});
 
 //润滑提示与记录
-Route::get('oiling/info', 'oiling/Manager/info');
+Route::group('oiling/info', function () {
+    Route::get('getlist/:page', 'oiling/api.WarningInfo/getInfoList');
+    Route::get('', 'oiling/manager/info');
+});
 //油脂分析
 Route::get('oiling/analysis', 'oiling/Manager/analysis');
 //设备成本管理
