@@ -500,7 +500,17 @@ form {
     height: 20px;
     position: relative;
 }
-
+.info form {
+    width: 570px;
+}
+.info select {
+    height: 28px;
+    position: absolute;
+    left: 200px;
+    top: 3px;
+    border-radius: 3px;
+    border:1px solid #e6e6e6;
+}
 form span:first-child {
     padding-left: 30px;
 }
@@ -521,7 +531,7 @@ form span:first-child {
     display: inline-block;
     *display: inline;
     *zoom: 1;
-    right: 2px;
+    right: -82px;
     top: 2px;
 }
 

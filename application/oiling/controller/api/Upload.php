@@ -26,6 +26,13 @@ class Upload extends BaseController {
                 break;
             case 'oildetail':
                 $result = $objExcelHandle->oilDetail($excel_array);
+                break;
+            case 'workhour':
+                $result = $objExcelHandle->workHour($excel_array);
+                break;
+            case 'infowarning':
+                $result = $objExcelHandle->infoWarning($excel_array);
+                break;
         }
         if ($result) {
             return $this->ajaxReturn('信息录入成功');

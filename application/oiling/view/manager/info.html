@@ -5,7 +5,7 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,&nbsp;{$account}</div>
+                <div class="welcome ue-clear">欢迎您,&nbsp;*{$account}</div>
             </div>
             <div class="toolbar ue-clear">
                 <a href="/" class="home-btn">首页</a>
@@ -37,8 +37,23 @@
                 </ul>
             </div>
             <div class="content">
-
-
+                <div class="title">
+                    <h2>润滑提示与记录</h2>
+                    <div class="uploader orange info">
+                        <form>
+                            <span>批量上传运行时间或消警记录：</span>
+                            <select name="">
+                                <option value="exceltype=workhour">运行时间</option>
+                                <option value="exceltype=infowarning">消警记录</option>
+                            </select>
+                            <a href="javascript:;" class="a-upload">
+                                <input type="file" name="excel" id=""><span class="showFileName">点击这里上传文件</span>
+                            </a>
+                            <input type="button" name="file" data-param="exceltype=oilstandard"
+                                   class="button upload" value="上传"/>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
