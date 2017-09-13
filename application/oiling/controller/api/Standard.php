@@ -35,21 +35,6 @@ class Standard extends BaseController {
         return $this->ajaxReturn('获取设备列表信息成功', 0, $result);
     }
 
-    /**搜索功能
-     * @param $keyword
-     * @return \think\response\Json
-     * @throws DocumentException
-     */
-    public function getEquipmentDetailBySearch($keyword) {
-        (new KeywordMustBeHanZiValidate())->goCheck();
-        $result = OilStandard::where("equ_oil_name like '%{$keyword}%'")->select();
-        if (!$result) {
-            throw new DocumentException([
-                'msg' => '没有查询结果'
-            ]);
-        }
-        return $this->ajaxReturn('查询成功', 0, $result);
-    }
 
     /**删除设备润滑标准条目
      * @param $id
@@ -95,14 +80,31 @@ class Standard extends BaseController {
      * @return \think\response\Json
      * @throws DocumentException
      */
-    public function delOilStandardItemById($id) {
+    public function delEquipmentById($id) {
         (new IDMustBePositiveInt())->goCheck();
-        $result = OilStandard::where('id', '=', $id)->delete();
+        $result = Equipment::where('id', '=', $id)->delete();
         if (!$result) {
             throw new DocumentException([
                 'msg' => '删除失败'
             ]);
         }
         return $this->ajaxReturn('删除成功');
+    }
+
+    /**编辑润滑标准
+     * @param $id
+     * @return \think\response\Json
+     * @throws DocumentException
+     */
+    public function editOilStandardDetailById($id) {
+        (new IDMustBePositiveInt())->goCheck();
+        $OilStandard = OilStandard::get($id);
+        $result      = $OilStandard->save(input('post.'));
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '修改详细信息失败'
+            ]);
+        }
+        return $this->ajaxReturn('修改详细信息成功');
     }
 }

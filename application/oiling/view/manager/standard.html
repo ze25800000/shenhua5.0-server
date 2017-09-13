@@ -49,10 +49,16 @@
                 <div class="equ_tab equipment active">
                     <div class="title">
                         <h2>设备润滑标准</h2>
-                        <div class="uploader orange"><span>批量上传设备润滑标准：</span>
-                            <input type="text" class="filename" readonly/>
-                            <input type="button" name="file" class="button" value="上传"/>
-                            <input type="file" size="30"/>
+                        <div class="uploader orange">
+                            <form>
+                                <span>批量上传设备润滑标准：</span>
+                                <!--<input type="text" class="filename" readonly/>-->
+                                <a href="javascript:;" class="a-upload">
+                                    <input type="file" name="excel" id=""><span class="showFileName">点击这里上传文件</span>
+                                </a>
+                                <input type="button" name="file" data-param="exceltype=oilstandard"
+                                       class="button upload" value="上传"/>
+                            </form>
                         </div>
                     </div>
                     <div class="query">
@@ -65,9 +71,9 @@
                                         <p>编号：*{$v.equ_no}</p>
                                         <h2>*{$v.equ_name}</h2>
                                         *{if condition="$scope===36"}
-                                        <p><a class="btn1" href="javascript:;">修改</a> | <a class="equ-del"
-                                                                                           data-id="*{$v.id}"
-                                                                                           href="javascript:;">删除</a>
+                                        <p><a class="equ-del"
+                                              data-id="*{$v.id}"
+                                              href="javascript:;">删除</a>
                                         </p>
                                         *{/if}
                                     </div>
@@ -93,9 +99,9 @@
                         <div class="query">
                             <div class="query-conditions ue-clear">
                                 <div class="conditions staff ue-clear">
-                                    <input type="text" placeholder="请输入要查询的内容"/>
-                                    <div class="query-btn ue-clear" style=" padding:0 0 0 20px;">
-                                        <a href="#" class="confirm">搜 索</a></div>
+                                    <input class="search" type="text" placeholder="请输入要查询的内容"/>
+                                    <div class="search-result">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -112,25 +118,42 @@
                                     <th class="process">更换最长周期</th>
                                     <th class="process">首保周期</th>
                                     <th class="process">油脂采样间隔</th>
+                                    *{if condition="$scope===36"}
                                     <th class="operate">操作</th>
+                                    *{/if}
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {{each oil_standard_list}}
                                 <tr>
                                     <td class="num">${$value.equ_oil_no}</td>
-                                    <td class="time"><a href="equdetail/${$value.equ_key_no}" target="_blank">${$value.equ_oil_name}</a>
+                                    <td class="time edit-item" data-id="${$value.id}" data-key="equ_oil_name">
+                                        ${$value.equ_oil_name}
                                     </td>
-                                    <td class="process">${$value.oil_no}</td>
-                                    <td class="process">${$value.quantity}</td>
-                                    <td class="process">${$value.unit}</td>
-                                    <td class="process">${$value.period}</td>
-                                    <td class="process">${$value.first_period}</td>
-                                    <td class="process">${$value.interval}</td>
+                                    <td class="process edit-item" data-id="${$value.id}" data-key="oil_no">
+                                        ${$value.oil_no}
+                                    </td>
+                                    <td class="process edit-item" data-id="${$value.id}" data-key="quantity">
+                                        ${$value.quantity}
+                                    </td>
+                                    <td class="process edit-item" data-id="${$value.id}" data-key="unit">
+                                        ${$value.unit}
+                                    </td>
+                                    <td class="process edit-item" data-id="${$value.id}" data-key="period">
+                                        ${$value.period}
+                                    </td>
+                                    <td class="process edit-item" data-id="${$value.id}" data-key="first_period">
+                                        ${$value.first_period}
+                                    </td>
+                                    <td class="process edit-item" data-id="${$value.id}" data-key="interval">
+                                        ${$value.interval}
+                                    </td>
+                                    *{if condition="$scope===36"}
                                     <td class="operate table-operate">
-                                        <a href="javascript:;" class="edit">编辑</a>
+                                        <a href="equdetail/${$value.equ_key_no}" class="check" target="_blank">查看</a>
                                         <a href="javascript:;" class="del btn2" data-id="${$value.id}">删除</a>
                                     </td>
+                                    *{/if}
                                 </tr>
                                 {{/each}}
                                 </tbody>
@@ -191,6 +214,7 @@
 <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
 <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
 <script>
+
     //根据设备编号获取设备润滑标准列表
     var sflag = true;
     $('#equipments').on('click', '.equ-item', function () {
@@ -204,6 +228,7 @@
                         $('#equStaListTemp').tmpl(list.data).appendTo('.equ_sta_list');
                     }
                     sflag = false;
+                    $("tbody").find("tr:odd").css("backgroundColor", "#eff6fa");
                 }
             };
         window.base.getData(params);
@@ -242,6 +267,21 @@
         event.stopPropagation();
         $(".hintl").show();
         $(".box").show();
+        var id = $(this).data('id'),
+            _this = $(this);
+        $('.confirm-del').on('click', function (event) {
+            var params = {
+                url: 'oiling/equipment/del/' + id,
+                type: 'delete',
+                sCallback: function (data) {
+                    location.reload();
+                },
+                eCallback: function (err) {
+                    alert('删除失败')
+                }
+            };
+            window.base.getData(params);
+        });
     });
 
     //删除设备润滑标准条目
@@ -267,6 +307,64 @@
             window.base.getData(params);
         });
     });
+    //编辑润滑标准条目信息
+    $(document).on('dblclick', '.edit-item', function (e) {
+        var _this = $(this),
+            oldVal = _this.html(),
+            url = 'oiling/standard/edititem/';
+        oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
+        var long = oldVal.length * 12;
+        if (!/input/.test(oldVal)) {
+            _this.html('<input type="text" value="' + oldVal + '" style="width: ' + long + 'px">');
+        }
+        var input = _this.find('input');
+        input.select();
+        window.base.editItemByDblClick(_this, input, oldVal, url);
+    });
+    //上传excel
+    $(document).on('click', '.upload', function () {
+        console.log(new FormData($(this).parent()[0]))
+        var param = $(this).data('param');
+        var params = {
+            url: 'oiling/upload?' + param + '&XDEBUG_SESSION_START=14788',
+            data: new FormData($(this).parent()[0]),
+            sCallback: function (data) {
+                alert('上传成功');
+                window.location.reload();
+            },
+            eCallback: function (err) {
+                console.log(err);
+            }
+        };
+        window.base.uploadFile(params);
+    });
+    //搜索
+    $(document).on("keyup", '.search', function (e) {
+        var val = $(this).val(),
+            _this = $(this),
+            params = {
+                url: 'search/' + val,
+                sCallback: function (data) {
+                    if (data.errcode === 0) {
+                        var html = '',
+                            list = data.data;
+                        for (var i = 0; i < list.length; i++) {
+                            html += '<p><a target="_blank" href="equdetail/' + list[i].equ_key_no + '">' + list[i].equ_oil_name + '</a></p>'
+                        }
+                        $('.search-result').show().html(html);
+                    } else {
+                        $('.search-result').hide().html('')
+                    }
+                }
+            };
+        if (val) {
+            window.base.getData(params);
+        } else {
+            $('.search-result').hide().html('');
+        }
+        $(document).on('click', '.search-result p', function () {
+            var equKeyNo = $(this).data('equ_key_no');
 
-
+        })
+    });
 </script>

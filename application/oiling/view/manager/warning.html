@@ -4,7 +4,7 @@
         <div class="top-light"></div>
         <h1 class="logo"></h1>
         <div class="login-info ue-clear">
-            <div class="welcome ue-clear">欢迎您,&nbsp;{$account}</div>
+            <div class="welcome ue-clear">欢迎您,&nbsp;*{$account}</div>
         </div>
         <div class="toolbar ue-clear">
             <a href="/" class="home-btn">首页</a>
@@ -16,14 +16,14 @@
 
     <div class="sbrh_tu">
 
-        <div class="nav_menu" {if condition="$warningMessage===0"}style="background-color: #0572c1;"{/if}>
+        <div class="nav_menu" *{if condition="$warningMessage===0"}style="background-color: #0572c1;"*{/if}>
             <div class="nav">
                 <div class="list" id="navlist">
                     <ul id="navfouce">
                         <li>
                             <a href="#">
                                 <span><img src="__IMG__/jbt-1.png" width="50" height="50"></span>
-                                <span>{if condition="$warningMessage===0"}无设备报警{else/}警报：{$count}个设备需要润滑 &gt;&gt;{/if}</span>
+                                <span>*{if condition="$warningMessage===0"}无设备报警*{else/}警报：*{$count}个设备需要润滑 &gt;&gt;*{/if}</span>
                             </a>
                         </li>
 
@@ -33,12 +33,12 @@
                 <div class="box" id="navbox" style="height:0px;opacity:0;overflow:hidden;">
                     <div class="cont" style="display:none;">
                         <ul class="sublist clearfix">
-                            {foreach $warningMessage as $v}
+                            *{foreach $warningMessage as $v}
                             <li>
-                                <p><a href="#" {if condition="$v.status==3"} style="color: #ee6b0c;"{/if}>【{$v.equ_name}】{$v.equ_oil_name} 当前状态：{if condition="$v.status===2"}临近{else/}超期{/if}</a></p>
+                                <p><a href="#" *{if condition="$v.status==3"} style="color: #ee6b0c;"*{/if}>【*{$v.equ_name}】*{$v.equ_oil_name} 当前状态：*{if condition="$v.status===2"}临近*{else/}超期*{/if}</a></p>
 
                             </li>
-                            {/foreach}
+                            *{/foreach}
                             <div class="clear"></div>
                         </ul>
                     </div>

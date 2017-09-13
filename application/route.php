@@ -24,10 +24,11 @@ Route::get('', 'oiling/index/index');
 Route::get('oiling/warning', 'oiling/Manager/warning');
 
 //设备润滑标准
+Route::delete('oiling/equipment/del/:id', 'oiling/api.standard/delEquipmentById');
 Route::get('oiling/standard/:equ_no', 'oiling/api.Standard/getStandardByEquNo', [], ['equ_no' => '\d+']);
+Route::post('oiling/standard/edititem/:id', 'oiling/api.Standard/editOilStandardDetailById');
 Route::delete('oiling/standard/del/:id', 'oiling/api.standard/deleteOilStandardItemById');
 Route::post('oiling/standard/add', 'oiling/api.standard/addEquipment');
-Route::delete('oiling/oilstandard/del/:id', 'oiling/manager/delOilStandardItemById');
 Route::get('oiling/standard', 'oiling/Manager/standard');
 
 //润滑提示与记录
@@ -61,7 +62,6 @@ Route::post('document/equipment/add', 'oiling/manager/addEquipment');
 //操作润滑标准
 Route::get('document/oilstandard/getlist', 'oiling/manager/getOilStandardList');
 Route::delete('document/oilstandard/delete_equ/:equ_no', 'oiling/manager/deleteEquipmentByNo');
-Route::post('document/oilstandard/edititem/:id', 'oiling/manager/editOilStandardDetailById');
 Route::delete('document/oilstandard/del/:id', 'oiling/manager/delOilStandardItemById');
 
 //油液分析报告
@@ -81,12 +81,13 @@ Route::get('oiling/warning/getlist', 'oiling/api.WarningInfo/getWarningMessage')
 Route::get('oiling/equ/detail/:equ_key_no', 'oiling/api.detail/getEquipmentDetailByNo');
 //润滑提示与消警提示列表页
 Route::get('oiling/infolist/getlist/:page', 'oiling/api.WarningInfo/getInfoList');
-//搜索设备
-Route::get('oiling/equ/search/:keyword', 'oiling/api.standard/getEquipmentDetailBySearch');
 
+/*************************************公共功能**************************************/
+//搜索设备
+Route::get('search/:keyword', 'oiling/api.search/getEquipmentDetailByKeyWord');
 
 //上传基础数据并保存excel到数据库
-Route::post('document/oil/upload', 'user/manager/uploadExcel');
+Route::post('oiling/upload', 'oiling/api.Upload/uploadExcel');
 //上传运行时间和润滑提示与润滑记录
 Route::post('document/info/upload', 'oiling/manager/uploadExcel');
 //下载已经选中id的润滑提示记录

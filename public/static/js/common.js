@@ -93,7 +93,7 @@ window.base = {
             }
         });
         input.blur(function () {
-            editItem();
+            _this.html(oldVal);
         });
         input.keydown(function (e) {
             if (e.keyCode == 13) {
