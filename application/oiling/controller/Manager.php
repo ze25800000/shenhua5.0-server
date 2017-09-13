@@ -46,8 +46,10 @@ class Manager extends BaseController {
     }
 
     public function info() {
+        $infoList = InfoWarning::getInfoList();
         $this->assign([
-            'account' => $this->account,
+            'account'  => $this->account,
+            'infoList' => $infoList
         ]);
         return $this->fetch();
     }

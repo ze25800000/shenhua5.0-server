@@ -9,6 +9,8 @@
 namespace app\model;
 
 
+use app\service\ExcelHandle;
+
 class InfoWarning extends BaseModel {
 //    protected $visible = ['equ_key_no','del_warning_time','status','how_long','warning_type','postpone','postpone_reason','oil_no','quantity','user'];
     protected $hidden = ['create_time', 'update_time', 'equ_no', 'equ_oil_no'];
@@ -24,10 +26,19 @@ class InfoWarning extends BaseModel {
     }
 
     public static function getInfoList($page = 1) {
-        $result = self::order('status desc,how_long desc,del_warning_time desc,equ_key_no desc')
-            ->limit(15)
-            ->page($page)
-            ->select();
+        //获得equ_key_no组成的数组
+        $infoWarningModel = self::field('equ_key_no')->select();
+        $excel            = new ExcelHandle();
+        $equKeyNos        = $excel->listMoveToArray($infoWarningModel, 'equ_key_no');
+        $result           = [];
+        foreach ($equKeyNos as $v) {
+            $item = self::where('equ_key_no', '=', $v)->order('del_warning_time desc')->limit(1)->find();
+            array_push($result, $item);
+        }
+//        $result = self::order('equ_key_no asc,del_warning_time asc,status desc,how_long desc,equ_key_no desc')
+//            ->limit(15)
+//            ->page($page)
+//            ->select();
         return $result;
     }
 

@@ -36,6 +36,8 @@ Route::group('oiling/standard', function () {
 //润滑提示与记录
 Route::group('oiling/info', function () {
     Route::get('getlist/:page', 'oiling/api.WarningInfo/getInfoList');
+    //下载已经选中id的润滑提示记录
+    Route::get('download/:ids', 'oiling/api.WarningInfo/downLoadExcelByIds');
     Route::get('', 'oiling/manager/info');
 });
 //油脂分析
@@ -95,8 +97,7 @@ Route::get('search/:keyword', 'oiling/api.search/getEquipmentDetailByKeyWord');
 Route::post('oiling/upload', 'oiling/api.Upload/uploadExcel');
 //上传运行时间和润滑提示与润滑记录
 Route::post('document/info/upload', 'oiling/manager/uploadExcel');
-//下载已经选中id的润滑提示记录
-Route::get('document/info/download/:ids', 'oiling/api.WarningInfo/downLoadExcelByIds');
+
 
 
 

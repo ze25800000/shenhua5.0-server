@@ -304,7 +304,7 @@ class ExcelHandle {
         }
     }
 
-    private function listMoveToArray($arr, $str) {
+    public function listMoveToArray($arr, $str) {
         $result = [];
         foreach ($arr as $k => $v) {
             array_push($result, $v[$str]);
@@ -365,7 +365,7 @@ class ExcelHandle {
                     foreach ($data as $k => &$v) {
                         $v['del_warning_time'] = date('Y年m月d日', $v['del_warning_time']);
                         $v['warning_type']     = $v['warning_type'] ? '润滑' : '延期';
-                        $v['status']           = ($v['status'] == 1) ? '正常' : (($v['status'] == 2) ? '延期' : '超期');
+                        $v['status']           = ($v['status'] == 1) ? '正常' : (($v['status'] == 2) ? '临近' : '超期');
                         $v['is_first_period']  = $v['is_first_period'] ? '是' : '否';
                         $v['postpone']         = empty($v['postpone']) ? '' : $v['postpone'];
                         array_push($tableHeader, $data[$k]);
