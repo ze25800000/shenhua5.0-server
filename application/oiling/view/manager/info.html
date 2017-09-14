@@ -270,7 +270,7 @@
                     oilNo = $('.oilNo').val(),
                     delWarningTime = $('.oiling-time').val().replace(/^\s+|\s+$/gm, '');
                 var params = {
-                    url: 'oiling/info/lubricate?XDEBUG_SESSION_START=19741',
+                    url: 'oiling/info/lubricate',
                     type: 'post',
                     data: {
                         id: id,
@@ -285,8 +285,12 @@
                         quantity: quantity
                     },
                     sCallback: function (data) {
-                        console.log(data);
-                        //                        window.location.reload();
+                        window.location.reload();
+                    },
+                    eCallback: function (err) {
+                        if (err.errcode == 1) {
+                            alert(err.msg);
+                        }
                     }
                 };
                 window.base.getData(params);

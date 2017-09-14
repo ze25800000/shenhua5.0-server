@@ -37,7 +37,9 @@ Route::group('oiling/standard', function () {
 Route::group('oiling/info', function () {
     Route::get('getlist/:page', 'oiling/api.WarningInfo/getInfoList');
     //润滑功能的实现
-    Route::post('lubricate','oiling/api.WarningInfo/lubricate');
+    Route::post('lubricate', 'oiling/api.WarningInfo/lubricate');
+    //延期功能的实现
+    Route::post('postpone', 'oiling/api.WarningInfo/postpone');
     //必须加query：exceltype=workhour|infowarning
     Route::get('download/template', 'oiling/api.Download/downloadTemplate');
     //下载已经选中id的润滑提示记录

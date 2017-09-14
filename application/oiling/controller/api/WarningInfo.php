@@ -39,25 +39,32 @@ class WarningInfo extends BaseController {
         $posts['del_warning_time'] = Tools::getTimestamp($posts['del_warning_time']);
         $posts['equ_key_no']       = $posts['equ_no'] . config('salt') . $posts['equ_oil_no'];
         $infoWarningModel          = new InfoWarning();
-        $InfoWarningItem           = $infoWarningModel
+        $maxDelTime                = $infoWarningModel
+            ->where("equ_key_no={$posts['equ_key_no']}")
+            ->max('del_warning_time');
+        if ($maxDelTime > $posts['del_warning_time']) {
+            throw new DocumentException([
+                'msg' => "最近一次消警日期为：" . date('Y年m月d日', $maxDelTime) . "，请输入大于该时间的消警日期"
+            ]);
+        }
+        $InfoWarningItem   = $infoWarningModel
             ->where('equ_key_no', '=', $posts['equ_key_no'])
             ->where('del_warning_time', '=', $posts['del_warning_time'])
             ->find();
-        if ($InfoWarningItem) {
-            unset($posts['id']);
-            throw new DocumentException([
-                'msg' => '润滑操作失败，日期已经存在'
-            ]);
-        }
         $excelHandle       = new ExcelHandle();
         $posts['how_long'] = $excelHandle->howLong($posts);
         $posts['status']   = $excelHandle->getStatus($posts, $posts['how_long']);
-//        $result            = $infoWarningModel->save($posts);
-//        if (!$result) {
-//            throw new DocumentException([
-//                'msg' => '润滑操作失败'
-//            ]);
-//        }
+        if (!$InfoWarningItem) {
+            unset($posts['id']);
+            $result = $infoWarningModel->save($posts);
+        } else {
+            $result = $infoWarningModel->save($posts, ['id' => $posts['id']]);
+        }
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '润滑操作失败'
+            ]);
+        }
         return $this->ajaxReturn('润滑操作成功');
     }
 }
