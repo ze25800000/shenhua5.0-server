@@ -8,6 +8,7 @@ body {
     border: 1px solid #c1d3de;
     overflow: visible;
     height: 33px;
+    position: relative;
 }
 
 .title h2 {
@@ -407,14 +408,15 @@ table tr .operate a:hover {
 
 /*上传*/
 .uploader {
-    position: relative;
-    float: right;
+    position: absolute;
+    /*float: right;*/
     display: inline-block;
     overflow: hidden;
     cursor: default;
     padding: 0;
     margin: 0px;
-
+    right: 0px;
+    top: 0px;
 }
 
 .uploader input, .uploader span {
@@ -963,4 +965,20 @@ button {
 .check-download:hover {
     background-color: #ff6616;
 
+}
+
+.temp-btn-group {
+    float: right;
+}
+
+.temp-btn-group .excel-temp-btn {
+    display: inline-block;
+    margin-right: 10px;
+    width: 150px;
+    height: 20px;
+    background-color: #ed6316;
+    line-height: 20px;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 3px;
 }

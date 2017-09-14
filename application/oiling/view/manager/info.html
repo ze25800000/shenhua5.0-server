@@ -39,10 +39,23 @@
             <div class="content">
                 <div class="title">
                     <h2>润滑提示与记录</h2>
+                    <div class="temp-btn-group">
+                        下载模板：
+                        <a class="excel-temp-btn" href="info/download/template?exceltype=workhour">运行时间excel模板</a>
+                        <a class="excel-temp-btn" href="info/download/template?exceltype=warninginfo">消警记录excel模板</a>
+                    </div>
+                </div>
+                <div class="title">
+                    <div class="check-content">
+                        <span class="select-all">全选:</span>
+                        <input class="check-all" type="checkbox">
+                        <span class="check-info">下载选中的润滑提示记录</span>
+                        <a href="javascript:;" class="check-download">下载</a>
+                    </div>
                     <div class="uploader orange info">
                         <form>
                             <span>批量上传运行时间或消警记录：</span>
-                            <select name="">
+                            <select class="select-type">
                                 <option value="exceltype=workhour">运行时间</option>
                                 <option value="exceltype=infowarning">消警记录</option>
                             </select>
@@ -52,14 +65,6 @@
                             <input type="button" name="file" data-param="exceltype=oilstandard"
                                    class="button upload" value="上传"/>
                         </form>
-                    </div>
-                </div>
-                <div class="title">
-                    <div class="check-content">
-                        <span class="select-all">全选:</span>
-                        <input class="check-all" type="checkbox">
-                        <span class="check-info">下载选中的润滑提示记录</span>
-                        <a href="javascript:;" class="check-download">下载</a>
                     </div>
                 </div>
                 <div class="table-box">
@@ -86,7 +91,7 @@
                                 condition="$v.status==2"
                             /}#fffdcf*{/if};">
                             <td class="num">
-                                <input type="checkbox" data-id="*{$v.id}">
+                                <input type="checkbox" data-id="*{$v.id}" *{if condition="$v.status>=2" }checked*{/if}>
                             </td>
                             <td class="process">*{$v.equ_oil_name}</td>
                             <td class="time">*{$v.del_warning_time|date="Y年m月d",###}</td>
@@ -96,7 +101,8 @@
                             <td class="process">*{$v.postpone}</td>
                             <td class="process">*{$v.is_first_period?'是':'否'}</td>
                             <td class="operate table-operate">
-                                <a href="#" class="check">润滑</a>
+                                <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
+                                <a href="#" class="edit">润滑</a>
                                 <a href="#" class="edit">延期</a>
                             </td>
                             </tr>
@@ -133,8 +139,40 @@
                 }
             });
             var idsStr = ids.join(','),
-                url = 'info/download/' + idsStr + '?exceltype=infowarning&XDEBUG_SESSION_START=14346';
+                url = 'info/download/' + idsStr + '?exceltype=infowarning';
             window.location.href = url;
+        });
+        $('.check-all').click(function () {
+            if ($(this).attr('checked')) {
+                $('#infoTbody input').each(function (index, value) {
+                    $(value).attr('checked', true);
+                });
+            } else {
+                $('#infoTbody input').each(function (index, value) {
+                    $(value).attr('checked', false);
+                });
+            }
+        });
+        $('#infoTbody input').click(function () {
+            $('#infoTbody input').each(function (index, value) {
+                if (!$(value).attr('checked')) {
+                    $('.check-all').attr('checked', false);
+                    return false;
+                }
+                $('.check-all').attr('checked', true);
+            });
+        });
+        $('.upload').click(function (e) {
+            var exceltype = $('.select-type').val(),
+                params = {
+                    url: 'oiling/upload?' + exceltype,
+                    data: new FormData($(this).parent()[0]),
+                    sCallback: function (data) {
+                        alert('上传成功');
+                        window.location.reload();
+                    }
+                };
+            window.base.uploadFile(params);
         });
     });
 </script>

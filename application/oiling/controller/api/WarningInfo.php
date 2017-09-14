@@ -29,11 +29,4 @@ class WarningInfo extends BaseController {
         }
         return $this->ajaxReturn('获取润滑提示信息成功', 0, $info);
     }
-
-    public function downLoadExcelByIds($ids) {
-        (new IDCollection())->goCheck();
-        $result      = InfoWarning::getInfoListByIds($ids);
-        $excelHandle = new ExcelHandle();
-        $excelHandle->downloadExcel($result, input('get.exceltype'));
-    }
 }

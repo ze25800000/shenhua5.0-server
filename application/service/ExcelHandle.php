@@ -331,7 +331,6 @@ class ExcelHandle {
         vendor('PHPExcel');
         $filename = str_replace('.xls', '', $type) . '.xls';
         $phpexcel = new \PHPExcel();
-        $data = $this->dataConvert($data, $type);
         $phpexcel->getProperties()
             ->setCreator(session('userName'))
             ->setLastModifiedBy(session('userName'))
@@ -354,25 +353,5 @@ class ExcelHandle {
         $objwriter = \PHPExcel_IOFactory::createWriter($phpexcel, 'Excel5');
         $objwriter->save('php://output');
         exit;
-    }
-
-
-    private function dataConvert($data, $type) {
-        if (!empty($data) && is_array($data)) {
-            switch ($type) {
-                case 'infowarning':
-                    $tableHeader = [['设备编号', '润滑点编号', '润滑点名称', '上次消警时间', '消警类型', '运行时长', '延期时长', '当前状态', '是否首保']];
-                    foreach ($data as $k => &$v) {
-                        $v['del_warning_time'] = date('Y年m月d日', $v['del_warning_time']);
-                        $v['warning_type']     = $v['warning_type'] ? '润滑' : '延期';
-                        $v['status']           = ($v['status'] == 1) ? '正常' : (($v['status'] == 2) ? '临近' : '超期');
-                        $v['is_first_period']  = $v['is_first_period'] ? '是' : '否';
-                        $v['postpone']         = empty($v['postpone']) ? '' : $v['postpone'];
-                        array_push($tableHeader, $data[$k]);
-                    }
-                    break;
-            }
-        }
-        return $tableHeader;
     }
 }
