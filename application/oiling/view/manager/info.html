@@ -81,7 +81,7 @@
                                 <th class="process">运行时长</th>
                                 <th class="process">当前状态</th>
                                 <th class="process">延期时长</th>
-                                <th class="process">润滑截止日期</th>
+                                <th class="process">剩余时间</th>
                                 <th class="process">是否首保</th>
                                 <th class="operate">操作</th>
                             </tr>
@@ -100,7 +100,7 @@
                             <td class="process">*{$v.how_long}</td>
                             <td class="process">*{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
                             <td class="process">*{$v.postpone}</td>
-                            <td class="process">*{$v.postpone+100}</td>
+                            <td class="process">*{$v.deadline}</td>
                             <td class="process">*{$v.is_first_period?'是':'否'}</td>
                             <td class="operate table-operate">
                                 <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
@@ -271,7 +271,7 @@
         $('.upload').click(function (e) {
             var exceltype = $('.select-type').val(),
                 params = {
-                    url: 'oiling/upload?' + exceltype,
+                    url: 'oiling/upload?' + exceltype + '&XDEBUG_SESSION_START=15134',
                     data: new FormData($(this).parent()[0]),
                     sCallback: function (data) {
                         alert('上传成功');
@@ -351,7 +351,7 @@
                         postpone_reason: postponeReason
                     },
                     sCallback: function (data) {
-//                        window.location.reload();
+                        window.location.reload();
                     },
                     eCallback: function (err) {
                         if (err.errcode == 1) {

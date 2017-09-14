@@ -83,9 +83,10 @@ class WarningInfo extends BaseController {
                 'msg' => "最近一次消警日期为：" . date('Y年m月d日', $maxDelTime) . "，请输入大于该时间的消警日期"
             ]);
         }
-        $excelHandle     = new ExcelHandle();
-        $posts['status'] = $excelHandle->getStatus($posts, $posts['how_long']);
-        $InfoWarningItem = $infoWarningModel
+        $excelHandle       = new ExcelHandle();
+        $posts['status']   = $excelHandle->getStatus($posts, $posts['how_long']);
+        $posts['deadline'] = $excelHandle->getDeadline($posts, $posts['how_long']);
+        $InfoWarningItem   = $infoWarningModel
             ->where('equ_key_no', '=', $posts['equ_key_no'])
             ->where('del_warning_time', '=', $posts['del_warning_time'])
             ->find();

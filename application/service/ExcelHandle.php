@@ -221,7 +221,7 @@ class ExcelHandle {
                     ->update([
                         'how_long' => $howLong,
                         'status'   => $this->getStatus($infoWarnItem, $howLong),
-                        'deadline' => $this->getDeadline($infoWarnItem)
+                        'deadline' => $this->getDeadline($infoWarnItem, $howLong)
                     ]);
             }
         }
@@ -253,6 +253,7 @@ class ExcelHandle {
                 $arr[$k]['postpone']         = empty($v[7]) ? null : $v[7];
                 $arr[$k]['how_long']         = $this->howLong($arr[$k]);
                 $arr[$k]['status']           = $this->getStatus($arr[$k], $arr[$k]['how_long']);
+                $arr[$k]['deadline']         = $this->getDeadline($arr[$k], $arr[$k]['how_long']);
                 $arr[$k]['postpone_reason']  = empty($v[8]) ? null : $v[8];
                 $arr[$k]['user_id']          = session('user_id');
                 $arr[$k]['oil_no']           = empty($v[9]) ? null : $v[9];
@@ -352,14 +353,15 @@ class ExcelHandle {
 
     }
 
-    private function getDeadline($infoWarn) {
-        $oilStandardItem = OilStandard::field('period', 'first_period')
+    public function getDeadline($infoWarn, $howLong) {
+        $oilStandardItem = OilStandard::field('period,first_period')
             ->where("equ_key_no={$infoWarn['equ_key_no']}")->find();
-        if (!$infoWarn['is_first_period']) {
-            $timestamp = $infoWarn['del_warning_time'] + ($oilStandardItem['period'] + $infoWarn['postpone']) * 60 * 60;
+        if ($infoWarn['is_first_period']) {
+            $long = $oilStandardItem['first_period'] + $infoWarn['postpone'] - $howLong;
         } else {
-            $timestamp = $infoWarn['del_warning_time'] + ($oilStandardItem['is_first_period'] + $infoWarn['postpone']) * 60 * 60;
+            $long = $oilStandardItem['period'] + $infoWarn['postpone'] - $howLong;
 
         }
+        return $long;
     }
 }
