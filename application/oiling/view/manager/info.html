@@ -81,6 +81,7 @@
                                 <th class="process">运行时长</th>
                                 <th class="process">当前状态</th>
                                 <th class="process">延期时长</th>
+                                <th class="process">润滑截止日期</th>
                                 <th class="process">是否首保</th>
                                 <th class="operate">操作</th>
                             </tr>
@@ -99,6 +100,7 @@
                             <td class="process">*{$v.how_long}</td>
                             <td class="process">*{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
                             <td class="process">*{$v.postpone}</td>
+                            <td class="process">*{$v.postpone+100}</td>
                             <td class="process">*{$v.is_first_period?'是':'否'}</td>
                             <td class="operate table-operate">
                                 <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
@@ -114,8 +116,15 @@
                                 >润滑</a>
                                 <a href="javascript:;"
                                    class="edit yanqi"
-                                   data-del_warning_time="*{$v.del_warning_time|date=" Y年m月d",###}"
-                                data-equ_key_no="*{$v.equ_key_no}">延期</a>
+                                   data-id="*{$v.id}"
+                                   data-equ_no="*{$v.equ_no}"
+                                   data-equ_oil_no="*{$v.equ_oil_no}"
+                                   data-equ_name="*{$v.equ_name}"
+                                   data-equ_oil_name="*{$v.equ_oil_name}"
+                                   data-how_long="*{$v.how_long}"
+                                   data-del_warning_time="*{$v.del_warning_time|date=" Y年m月d日",###}"
+                                data-equ_key_no="*{$v.equ_key_no}"
+                                >延期</a>
                             </td>
                             </tr>
                             *{/foreach}
@@ -170,20 +179,35 @@
                         <div class="hint-in2">
                             <div class="hint-in2a">
                                 <span class="hint-in2a1">延期日期</span>
-                                <span class="hint-in2a2"><input value="" name="" type="text"
-                                                                class="equ_no_val postpone-time"></span>
+                                <span class="hint-in2a2">
+                                    <input value=""
+                                           name=""
+                                           type="text"
+                                           class="equ_no_val postpone-date"
+                                    >
+                                </span>
 
                             </div>
                             <div class="hint-in2a">
                                 <span class="hint-in2a1">延期时长</span>
-                                <span class="hint-in2a2"><input value="300" name="" type="text"
-                                                                class="equ_name_val"></span>
+                                <span class="hint-in2a2">
+                                    <input value="300"
+                                           name=""
+                                           type="text"
+                                           class="equ_name_val postpone-hours"
+                                    >
+                                </span>
                             </div>
 
                             <div class="hint-in2a">
                                 <span class="hint-in2a1">延期原因</span>
-                                <span class="hint-in2a2"><input value="设备维修" name="" type="text"
-                                                                class="equ_name_val"></span>
+                                <span class="hint-in2a2">
+                                    <input value="设备维修"
+                                           name=""
+                                           type="text"
+                                           class="equ_name_val postpone-reason"
+                                    >
+                                </span>
                             </div>
 
                         </div>
@@ -258,7 +282,7 @@
         });
         $('.runhua').click(function () {
             $('.tanchuang .oiling').show();
-            $('.oiling-time').val($(this).data('del_warning_time'));
+            $('.oiling-time').val(formatDate(new Date(), 'yyyy年MM月dd日'));
             var id = $(this).data('id'),
                 equNo = $(this).data('equ_no'),
                 equOilNo = $(this).data('equ_oil_no'),
@@ -298,7 +322,45 @@
         });
         $('.yanqi').click(function () {
             $('.tanchuang .postpone').show();
-            $('.postpone-time').val($(this).data('del_warning_time'));
+            $('.postpone-date').val(formatDate(new Date(), 'yyyy年MM月dd日'));
+            var id = $(this).data('id'),
+                equNo = $(this).data('equ_no'),
+                equOilNo = $(this).data('equ_oil_no'),
+                equName = $(this).data('equ_name'),
+                howLong = $(this).data('how_long'),
+                equOilName = $(this).data('equ_oil_name');
+            $('.postpone .confirm').click(function (e) {
+                e.stopPropagation();
+                var postponeDate = $('.postpone-date').val().replace(/^\s+|\s+$/gm, ''),
+                    postponeHours = $('.postpone-hours').val(),
+                    postponeReason = $('.postpone-reason').val();
+                var params = {
+                    url: 'oiling/info/postpone?XDEBUG_SESSION_START=19741',
+                    type: 'post',
+                    data: {
+                        id: id,
+                        equ_no: equNo,
+                        equ_oil_no: equOilNo,
+                        equ_name: equName,
+                        equ_oil_name: equOilName,
+                        is_first_period: 0,
+                        warning_type: 0,
+                        how_long: howLong,
+                        del_warning_time: postponeDate,
+                        postpone: postponeHours,
+                        postpone_reason: postponeReason
+                    },
+                    sCallback: function (data) {
+//                        window.location.reload();
+                    },
+                    eCallback: function (err) {
+                        if (err.errcode == 1) {
+                            alert(err.msg);
+                        }
+                    }
+                };
+                window.base.getData(params);
+            });
         });
     });
 </script>

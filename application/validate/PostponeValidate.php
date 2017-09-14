@@ -9,10 +9,10 @@
 namespace app\validate;
 
 
-class LubricateValidate extends BaseValidate {
+class PostponeValidate extends BaseValidate {
     protected $rule = [
-        'quantity'         => 'require|isPositiveInt',
-        'oil_no'           => 'require|isPositiveInt',
+        'postpone'         => 'require|isPositiveInt',
+        'postpone_reason'  => 'chsAlpha',
         'del_warning_time' => 'require|FDate',
     ];
 }
