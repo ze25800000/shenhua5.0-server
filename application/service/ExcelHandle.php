@@ -220,7 +220,8 @@ class ExcelHandle {
                     ->where('equ_key_no', '=', $equKeyNo)
                     ->update([
                         'how_long' => $howLong,
-                        'status'   => $this->getStatus($infoWarnItem, $howLong)
+                        'status'   => $this->getStatus($infoWarnItem, $howLong),
+                        'deadline' => $this->getDeadline($infoWarnItem)
                     ]);
             }
         }
@@ -351,4 +352,14 @@ class ExcelHandle {
 
     }
 
+    private function getDeadline($infoWarn) {
+        $oilStandardItem = OilStandard::field('period', 'first_period')
+            ->where("equ_key_no={$infoWarn['equ_key_no']}")->find();
+        if (!$infoWarn['is_first_period']) {
+            $timestamp = $infoWarn['del_warning_time'] + ($oilStandardItem['period'] + $infoWarn['postpone']) * 60 * 60;
+        } else {
+            $timestamp = $infoWarn['del_warning_time'] + ($oilStandardItem['is_first_period'] + $infoWarn['postpone']) * 60 * 60;
+
+        }
+    }
 }
