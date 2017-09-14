@@ -301,7 +301,7 @@ class ExcelHandle {
             $maxDelTime = $infoWarnTempArr['del_warning_time'];
         }
         $howLong = WorkHour::where("equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>{$maxDelTime}")->sum('working_hour');
-        return $howLong;
+        return $howLong ? $howLong : 0;
     }
 
 //$equNo, $equOilNo, $howLong, $isFirstPeriod,$warningType,$postpone
@@ -357,9 +357,9 @@ class ExcelHandle {
         $oilStandardItem = OilStandard::field('period,first_period')
             ->where("equ_key_no={$infoWarn['equ_key_no']}")->find();
         if ($infoWarn['is_first_period']) {
-            $long = $oilStandardItem['first_period'] + $infoWarn['postpone'] - $howLong;
+            $long = $oilStandardItem['first_period'] + empty($infoWarn['postpone']) ? 0 : $infoWarn['postpone'] - $howLong;
         } else {
-            $long = $oilStandardItem['period'] + $infoWarn['postpone'] - $howLong;
+            $long = ($oilStandardItem['period'] + (empty($infoWarn['postpone']) ? 0 : $infoWarn['postpone'])) - $howLong;
 
         }
         return $long;

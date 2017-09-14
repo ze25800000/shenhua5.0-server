@@ -49,6 +49,13 @@
                 <div class="equ_tab equipment active">
                     <div class="title">
                         <h2>设备润滑标准</h2>
+                        <div class="temp-btn-group">
+                            下载模板：
+                            <a class="excel-temp-btn"
+                               href="info/download/template?exceltype=oilstandard">设备润滑excel模板</a>
+                        </div>
+                    </div>
+                    <div class="title">
                         <div class="uploader orange">
                             <form>
                                 <span>批量上传设备润滑标准：</span>
@@ -105,59 +112,61 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="table-box">·
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th class="num">编号</th>
-                                    <th class="time">润滑点（全称）</th>
-                                    <th class="process">物料编码</th>
-                                    <th class="process">用量</th>
-                                    <th class="process">单位</th>
-                                    <th class="process">更换最长周期</th>
-                                    <th class="process">首保周期</th>
-                                    <th class="process">油脂采样间隔</th>
-                                    *{if condition="$scope===36"}
-                                    <th class="operate">操作</th>
-                                    *{/if}
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {{each oil_standard_list}}
-                                <tr>
-                                    <td class="num">${$value.equ_oil_no}</td>
-                                    <td class="time edit-item" data-id="${$value.id}" data-key="equ_oil_name">
-                                        ${$value.equ_oil_name}
-                                    </td>
-                                    <td class="process edit-item" data-id="${$value.id}" data-key="oil_no">
-                                        ${$value.oil_no}
-                                    </td>
-                                    <td class="process edit-item" data-id="${$value.id}" data-key="quantity">
-                                        ${$value.quantity}
-                                    </td>
-                                    <td class="process edit-item" data-id="${$value.id}" data-key="unit">
-                                        ${$value.unit}
-                                    </td>
-                                    <td class="process edit-item" data-id="${$value.id}" data-key="period">
-                                        ${$value.period}
-                                    </td>
-                                    <td class="process edit-item" data-id="${$value.id}" data-key="first_period">
-                                        ${$value.first_period}
-                                    </td>
-                                    <td class="process edit-item" data-id="${$value.id}" data-key="interval">
-                                        ${$value.interval}
-                                    </td>
-                                    *{if condition="$scope===36"}
-                                    <td class="operate table-operate">
-                                        <a href="equdetail/${$value.equ_key_no}" class="check" target="_blank">查看</a>
-                                        <a href="javascript:;" class="del btn2" data-id="${$value.id}">删除</a>
-                                    </td>
-                                    *{/if}
-                                </tr>
-                                {{/each}}
-                                </tbody>
-                            </table>
+                        <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
+                            <div class="table-box">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th class="num">编号</th>
+                                        <th class="time">润滑点（全称）</th>
+                                        <th class="process">物料编码</th>
+                                        <th class="process">用量</th>
+                                        <th class="process">单位</th>
+                                        <th class="process">更换最长周期</th>
+                                        <th class="process">首保周期</th>
+                                        <th class="process">油脂采样间隔</th>
+                                        *{if condition="$scope===36"}
+                                        <th class="operate">操作</th>
+                                        *{/if}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {{each oil_standard_list}}
+                                    <tr>
+                                        <td class="num">${$value.equ_oil_no}</td>
+                                        <td class="time edit-item" data-id="${$value.id}" data-key="equ_oil_name">
+                                            ${$value.equ_oil_name}
+                                        </td>
+                                        <td class="process edit-item" data-id="${$value.id}" data-key="oil_no">
+                                            ${$value.oil_no}
+                                        </td>
+                                        <td class="process edit-item" data-id="${$value.id}" data-key="quantity">
+                                            ${$value.quantity}
+                                        </td>
+                                        <td class="process edit-item" data-id="${$value.id}" data-key="unit">
+                                            ${$value.unit}
+                                        </td>
+                                        <td class="process edit-item" data-id="${$value.id}" data-key="period">
+                                            ${$value.period}
+                                        </td>
+                                        <td class="process edit-item" data-id="${$value.id}" data-key="first_period">
+                                            ${$value.first_period}
+                                        </td>
+                                        <td class="process edit-item" data-id="${$value.id}" data-key="interval">
+                                            ${$value.interval}
+                                        </td>
+                                        *{if condition="$scope===36"}
+                                        <td class="operate table-operate">
+                                            <a href="equdetail/${$value.equ_key_no}" class="check"
+                                               target="_blank">查看</a>
+                                            <a href="javascript:;" class="del btn2" data-id="${$value.id}">删除</a>
+                                        </td>
+                                        *{/if}
+                                    </tr>
+                                    {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="pagination ue-clear"></div>
                     </script>
@@ -229,6 +238,8 @@
                     }
                     sflag = false;
                     $("tbody").find("tr:odd").css("backgroundColor", "#eff6fa");
+                    var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
+                    $('.scroll-box').css('height', scrollHeight);
                 }
             };
         window.base.getData(params);

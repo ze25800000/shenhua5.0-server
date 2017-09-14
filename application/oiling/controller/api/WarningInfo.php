@@ -51,6 +51,7 @@ class WarningInfo extends BaseController {
         $excelHandle       = new ExcelHandle();
         $posts['how_long'] = $excelHandle->howLong($posts);
         $posts['status']   = $excelHandle->getStatus($posts, $posts['how_long']);
+        $posts['deadline'] = $excelHandle->getDeadline($posts, $posts['how_long']);
         $InfoWarningItem   = $infoWarningModel
             ->where('equ_key_no', '=', $posts['equ_key_no'])
             ->where('del_warning_time', '=', $posts['del_warning_time'])

@@ -235,6 +235,8 @@
 <script src="__JS__/data.js"></script>
 <script>
     $(function () {
+        var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
+        $('.scroll-box').css('height', scrollHeight);
         var ids = [];
         $('.check-download').click(function () {
             $('#infoTbody input').each(function (index, value) {
@@ -294,7 +296,7 @@
                     oilNo = $('.oilNo').val(),
                     delWarningTime = $('.oiling-time').val().replace(/^\s+|\s+$/gm, '');
                 var params = {
-                    url: 'oiling/info/lubricate',
+                    url: 'oiling/info/lubricate?XDEBUG_SESSION_START=15134',
                     type: 'post',
                     data: {
                         id: id,
