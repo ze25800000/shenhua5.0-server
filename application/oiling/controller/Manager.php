@@ -6,6 +6,7 @@ namespace app\oiling\controller;
 use app\lib\exception\DocumentException;
 use app\model\Equipment;
 use app\model\InfoWarning;
+use app\model\OilDetail;
 use app\model\OilStandard;
 use app\service\BaseController;
 use app\service\ExcelHandle;
@@ -46,10 +47,12 @@ class Manager extends BaseController {
     }
 
     public function info() {
-        $infoList = InfoWarning::getInfoList();
+        $infoList  = InfoWarning::getInfoList();
+        $oilNoList = OilDetail::field('oil_no,oil_name')->select();
         $this->assign([
-            'account'  => $this->account,
-            'infoList' => $infoList
+            'account'   => $this->account,
+            'infoList'  => $infoList,
+            'oilNoList' => $oilNoList
         ]);
         return $this->fetch();
     }

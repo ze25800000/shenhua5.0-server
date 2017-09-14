@@ -49,6 +49,34 @@ class ExcelHandle {
         return $excel_array;
     }
 
+    public function downloadExcel($data, $type = 'test.xls') {
+        ini_set('max_execution_time', '0');
+        vendor('PHPExcel');
+        $filename = str_replace('.xls', '', $type) . '.xls';
+        $phpexcel = new \PHPExcel();
+        $phpexcel->getProperties()
+            ->setCreator(session('userName'))
+            ->setLastModifiedBy(session('userName'))
+            ->setTitle("Office 2007 XLSX Test Document")
+            ->setSubject("Office 2007 XLSX Test Document")
+            ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+            ->setKeywords("office 2007 openxml php")
+            ->setCategory("Test result file");
+        $phpexcel->getActiveSheet()->fromArray($data);
+        $phpexcel->getActiveSheet()->setTitle('Sheet1');
+        $phpexcel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.ms-excel');
+        header("Content-Disposition: attachment;filename=$filename");
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0 PHPExcel_IOFactory
+        $objwriter = \PHPExcel_IOFactory::createWriter($phpexcel, 'Excel5');
+        $objwriter->save('php://output');
+        exit;
+    }
 
     public function oilStandard($excel_array) {
         $equipmentEquNoList = Equipment::field('equ_no')->select();
@@ -246,30 +274,36 @@ class ExcelHandle {
     /**计算距离上次消警的总时长
      *
      */
-    private function howLong($infoWarnTempArr) {
-        $infoWarnList = InfoWarning::where("equ_key_no='{$infoWarnTempArr['equ_key_no']}'")->select();
-        if (!empty($infoWarnTempArr)) {
-            if (empty($infoWarnList)) {
-                $howLong  = 0;
-                $workHour = WorkHour::where("equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>{$infoWarnTempArr['del_warning_time']}")->select();
-                foreach ($workHour as $k => $v) {
-                    $howLong += $v['working_hour'];
-                }
-                return $howLong;
-            } else {
-                $sql     = "SELECT SUM(working_hour) AS how_long FROM work_hour WHERE equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>(SELECT MAX(del_warning_time) FROM info_warning WHERE equ_key_no={$infoWarnTempArr['equ_key_no']})";
-                $howLong = WorkHour::query($sql);
-                if ($howLong[0]['how_long']) {
-                    return $howLong[0]['how_long'];
-                } else {
-                    return 0;
-                }
-            }
+    public function howLong($infoWarnTempArr) {
+//        $infoWarnList = InfoWarning::where("equ_key_no='{$infoWarnTempArr['equ_key_no']}'")->select();
+//        if (!empty($infoWarnTempArr)) {
+//            if (empty($infoWarnList)) {
+//                $howLong  = 0;
+//                $workHour = WorkHour::where("equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>{$infoWarnTempArr['del_warning_time']}")->select();
+//                foreach ($workHour as $k => $v) {
+//                    $howLong += $v['working_hour'];
+//                }
+//                return $howLong;
+//            } else {
+//                $sql     = "SELECT SUM(working_hour) AS how_long FROM work_hour WHERE equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>(SELECT MAX(del_warning_time) FROM info_warning WHERE equ_key_no={$infoWarnTempArr['equ_key_no']})";
+//                $howLong = WorkHour::query($sql);
+//                if ($howLong[0]['how_long']) {
+//                    return $howLong[0]['how_long'];
+//                } else {
+//                    return 0;
+//                }
+//            }
+//        }
+        $maxDelTime = InfoWarning::where("equ_key_no={$infoWarnTempArr['equ_key_no']}")->max('del_warning_time');
+        if ($infoWarnTempArr['del_warning_time'] > $maxDelTime || !$maxDelTime) {
+            $maxDelTime = $infoWarnTempArr['del_warning_time'];
         }
+        $howLong = WorkHour::where("equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>{$maxDelTime}")->sum('working_hour');
+        return $howLong;
     }
 
 //$equNo, $equOilNo, $howLong, $isFirstPeriod,$warningType,$postpone
-    private function getStatus($infoWarn, $howLong) {
+    public function getStatus($infoWarn, $howLong) {
         $oilStandardItem = OilStandard::field('first_period,period')->where("equ_key_no='{$infoWarn['equ_key_no']}'")->find();
         //是否处于首保周期
         if ($infoWarn['is_first_period']) {
@@ -317,41 +351,4 @@ class ExcelHandle {
 
     }
 
-    /**
-     * $data = array(
-     * array(NULL, 2010, 2011, 2012),
-     * array('Q1', 12, 15, 21),
-     * array('Q2', 56, 73, 86),
-     * array('Q3', 52, 61, 69),
-     * array('Q4', 30, 32, 0),
-     * );
-     */
-    public function downloadExcel($data, $type = 'test.xls') {
-        ini_set('max_execution_time', '0');
-        vendor('PHPExcel');
-        $filename = str_replace('.xls', '', $type) . '.xls';
-        $phpexcel = new \PHPExcel();
-        $phpexcel->getProperties()
-            ->setCreator(session('userName'))
-            ->setLastModifiedBy(session('userName'))
-            ->setTitle("Office 2007 XLSX Test Document")
-            ->setSubject("Office 2007 XLSX Test Document")
-            ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
-            ->setKeywords("office 2007 openxml php")
-            ->setCategory("Test result file");
-        $phpexcel->getActiveSheet()->fromArray($data);
-        $phpexcel->getActiveSheet()->setTitle('Sheet1');
-        $phpexcel->setActiveSheetIndex(0);
-        header('Content-Type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=$filename");
-        header('Cache-Control: max-age=0');
-        header('Cache-Control: max-age=1');
-        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
-        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-        header('Pragma: public'); // HTTP/1.0 PHPExcel_IOFactory
-        $objwriter = \PHPExcel_IOFactory::createWriter($phpexcel, 'Excel5');
-        $objwriter->save('php://output');
-        exit;
-    }
 }

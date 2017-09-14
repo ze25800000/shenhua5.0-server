@@ -94,7 +94,7 @@
                                 <input type="checkbox" data-id="*{$v.id}" *{if condition="$v.status>=2" }checked*{/if}>
                             </td>
                             <td class="process">*{$v.equ_oil_name}</td>
-                            <td class="time">*{$v.del_warning_time|date="Y年m月d",###}</td>
+                            <td class="time">*{$v.del_warning_time|date="Y年m月d日",###}</td>
                             <td class="process">*{$v.warning_type?'润滑':'延期'}</td>
                             <td class="process">*{$v.how_long}</td>
                             <td class="process">*{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
@@ -102,14 +102,94 @@
                             <td class="process">*{$v.is_first_period?'是':'否'}</td>
                             <td class="operate table-operate">
                                 <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
-                                <a href="#" class="edit">润滑</a>
-                                <a href="#" class="edit">延期</a>
+                                <a href="javascript:;"
+                                   class="edit runhua"
+                                   data-id="*{$v.id}"
+                                   data-equ_no="*{$v.equ_no}"
+                                   data-equ_oil_no="*{$v.equ_oil_no}"
+                                   data-equ_name="*{$v.equ_name}"
+                                   data-equ_oil_name="*{$v.equ_oil_name}"
+                                   data-del_warning_time="*{$v.del_warning_time|date=" Y年m月d日",###}"
+                                data-equ_key_no="*{$v.equ_key_no}"
+                                >润滑</a>
+                                <a href="javascript:;"
+                                   class="edit yanqi"
+                                   data-del_warning_time="*{$v.del_warning_time|date=" Y年m月d",###}"
+                                data-equ_key_no="*{$v.equ_key_no}">延期</a>
                             </td>
                             </tr>
                             *{/foreach}
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="tanchuang">
+                    <div class="hint oiling">
+                        <div class="hint-in1">
+                            <div class="hint1"></div>
+                            <div class="hint2">润滑</div>
+                            <div class="hint3"></div>
+                        </div>
+                        <div class="hint-in2">
+                            <div class="hint-in2a">
+                                <span class="hint-in2a1">润滑日期</span>
+                                <span class="hint-in2a2">
+                                    <input value=""
+                                           name=""
+                                           type="text"
+                                           class="oiling-time">
+                                </span>
+
+                            </div>
+                            <div class="hint-in2a">
+                                <span class="hint-in2a1">物料编号</span>
+                                <span class="hint-in2a2">
+                                    <select name="" class="oilNo">
+                                        *{foreach $oilNoList as $v}
+                                        <option value="*{$v.oil_no}">*{$v.oil_no} | *{$v.oil_name}</option>
+                                        *{/foreach}
+                                    </select>
+                                </span>
+                            </div>
+
+                            <div class="hint-in2a">
+                                <span class="hint-in2a1">用量</span>
+                                <span class="hint-in2a2"><input value="100" name="" type="text"
+                                                                class="quantity"></span>
+                            </div>
+
+                        </div>
+                        <a class="hint-in3 confirm" href="#">确定</a>
+                    </div>
+                    <div class="hint postpone">
+                        <div class="hint-in1">
+                            <div class="hint1"></div>
+                            <div class="hint2">延期</div>
+                            <div class="hint3"></div>
+                        </div>
+                        <div class="hint-in2">
+                            <div class="hint-in2a">
+                                <span class="hint-in2a1">延期日期</span>
+                                <span class="hint-in2a2"><input value="" name="" type="text"
+                                                                class="equ_no_val postpone-time"></span>
+
+                            </div>
+                            <div class="hint-in2a">
+                                <span class="hint-in2a1">延期时长</span>
+                                <span class="hint-in2a2"><input value="300" name="" type="text"
+                                                                class="equ_name_val"></span>
+                            </div>
+
+                            <div class="hint-in2a">
+                                <span class="hint-in2a1">延期原因</span>
+                                <span class="hint-in2a2"><input value="设备维修" name="" type="text"
+                                                                class="equ_name_val"></span>
+                            </div>
+
+                        </div>
+                        <a class="hint-in3 confirm" href="#">确定</a>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -140,7 +220,9 @@
             });
             var idsStr = ids.join(','),
                 url = 'info/download/' + idsStr + '?exceltype=infowarning';
-            window.location.href = url;
+            if (ids.length != 0) {
+                window.location.href = url;
+            }
         });
         $('.check-all').click(function () {
             if ($(this).attr('checked')) {
@@ -173,6 +255,46 @@
                     }
                 };
             window.base.uploadFile(params);
+        });
+        $('.runhua').click(function () {
+            $('.tanchuang .oiling').show();
+            $('.oiling-time').val($(this).data('del_warning_time'));
+            var id = $(this).data('id'),
+                equNo = $(this).data('equ_no'),
+                equOilNo = $(this).data('equ_oil_no'),
+                equName = $(this).data('equ_name'),
+                equOilName = $(this).data('equ_oil_name');
+            $('.oiling .confirm').click(function (e) {
+                e.stopPropagation();
+                var quantity = $('.quantity').val(),
+                    oilNo = $('.oilNo').val(),
+                    delWarningTime = $('.oiling-time').val().replace(/^\s+|\s+$/gm, '');
+                var params = {
+                    url: 'oiling/info/lubricate?XDEBUG_SESSION_START=19741',
+                    type: 'post',
+                    data: {
+                        id: id,
+                        equ_no: equNo,
+                        equ_oil_no: equOilNo,
+                        equ_name: equName,
+                        equ_oil_name: equOilName,
+                        is_first_period: 0,
+                        warning_type: 1,
+                        del_warning_time: delWarningTime,
+                        oil_no: oilNo,
+                        quantity: quantity
+                    },
+                    sCallback: function (data) {
+                        console.log(data);
+                        //                        window.location.reload();
+                    }
+                };
+                window.base.getData(params);
+            });
+        });
+        $('.yanqi').click(function () {
+            $('.tanchuang .postpone').show();
+            $('.postpone-time').val($(this).data('del_warning_time'));
         });
     });
 </script>

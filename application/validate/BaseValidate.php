@@ -45,4 +45,14 @@ class BaseValidate extends Validate {
         }
     }
 
+    protected function FDate($value) {
+        $rule   = "/^\d{4}年\d{1,2}月\d{1,2}日$/";
+        $result = preg_match($rule, $value);
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
