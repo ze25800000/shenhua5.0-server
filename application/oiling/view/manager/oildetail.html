@@ -61,6 +61,61 @@
                     </div>
                 </div>
                 *{/if}
+                <div class="query">
+                    <div class="query-conditions ue-clear">
+                        <div class="conditions time ue-clear">
+                            <label>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间：</label>
+                            <div class="time-select">
+                                <input id="monthly1" type="text" placeholder="开始时间">
+                                <i class="icon"></i>
+                            </div>
+                            <span class="line">-</span>
+                            <div class="time-select">
+                                <input id="monthly2" type="text"
+                                       placeholder="结束时间">
+                                <i class="icon"></i>
+                            </div>
+                        </div>
+                        <div class="query-btn ue-clear">
+                            <a href="javascript:;" class="confirm">查询</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-box">
+                    <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
+                        <table>
+                            <thead>
+                            <tr>
+
+                                <th class="process">物料编号</th>
+                                <th class="process">油品名称</th>
+                                <th class="process">物料描述</th>
+                                <th class="process">单位</th>
+                                <th class="process">单价(元)</th>
+                                <th class="process">用量</th>
+                                <th class="process">总计(元)</th>
+                                <th class="operate">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="infoTbody">
+
+                            <td class="process">10209358</td>
+                            <td class="process">抗磨液压油</td>
+                            <td class="process">DTE 25;VG46;1×208L\美孚</td>
+                            <td class="process">L</td>
+                            <td class="process">20.56</td>
+                            <td class="process">21325</td>
+                            <td class="process">215584</td>
+                            <td class="operate table-operate">
+                                <a class="edit" href="javascript:;">编辑</a>
+                                <a class="del" href="javascript:;">删除</a>
+                            </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div id="ft" class="ue-clear">
@@ -74,6 +129,28 @@
             </div>
         </div>
     </div>
-
-    <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
-    <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
+</div>
+<?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
+<?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
+<script src="__JS__/jquery.monthpicker.js"></script>
+<script>
+    $(function () {
+        $('#monthpicker').monthpicker({
+            years: [2015, 2014, 2013, 2012, 2011],
+            topOffset: 6,
+            onMonthSelect: function (m, y) {
+                console.log('Month: ' + m + ', year: ' + y);
+            }
+        });
+        $('#monthly1').val(new Date().getFullYear() + '-' + '01');
+        $('#monthly2').val(new Date().getFullYear() + '-' + 12);
+        $('#monthly1').monthpicker({
+            years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+            topOffset: 1
+        });
+        $('#monthly2').monthpicker({
+            years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+            topOffset: 1
+        });
+    });
+</script>
