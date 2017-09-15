@@ -53,7 +53,7 @@ Route::group('oiling/analysis', function () {
 
 //设备成本管理
 Route::group('oiling/oildetail', function () {
-
+    Route::get('costlist/:before/:after', 'oiling/api.OilDetailCost/getCostListByDate');
     Route::get('', 'oiling/Manager/oildetail');
 });
 

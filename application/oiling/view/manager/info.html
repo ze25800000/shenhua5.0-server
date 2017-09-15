@@ -243,6 +243,8 @@
     $(function () {
         var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
         $('.scroll-box').css('height', scrollHeight);
+        $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
+
         var ids = [];
         $('.check-download').click(function () {
             $('#infoTbody input').each(function (index, value) {
