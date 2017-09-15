@@ -40,16 +40,22 @@ Route::group('oiling/info', function () {
     Route::post('lubricate', 'oiling/api.WarningInfo/lubricate');
     //延期功能的实现
     Route::post('postpone', 'oiling/api.WarningInfo/postpone');
-    //必须加query：exceltype=workhour|infowarning
-    Route::get('download/template', 'oiling/api.Download/downloadTemplate');
     //下载已经选中id的润滑提示记录
     Route::get('download/:ids', 'oiling/api.Download/downLoadExcelByIds');
     Route::get('', 'oiling/manager/info');
 });
+
 //油脂分析
-Route::get('oiling/analysis', 'oiling/Manager/analysis');
+Route::group('oiling/analysis', function () {
+
+    Route::get('', 'oiling/Manager/analysis');
+});
+
 //设备成本管理
-Route::get('oiling/oildetail', 'oiling/Manager/oildetail');
+Route::group('oiling/oildetail', function () {
+
+    Route::get('', 'oiling/Manager/oildetail');
+});
 
 //润滑点详情页
 Route::get('oiling/equdetail/:equ_key_no', 'oiling/Manager/equdetail', [], ['equ_key_no' => '\d+']);
@@ -104,6 +110,7 @@ Route::post('oiling/upload', 'oiling/api.Upload/uploadExcel');
 //下载excel
 
 
-
+//必须加query：exceltype=workhour|infowarning
+Route::get('download/template', 'oiling/api.Download/downloadTemplate');
 
 

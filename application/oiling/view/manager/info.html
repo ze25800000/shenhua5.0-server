@@ -39,11 +39,13 @@
             <div class="content">
                 <div class="title">
                     <h2>润滑提示与记录</h2>
+                    *{if condition="$scope>=18"}
                     <div class="temp-btn-group">
                         下载模板：
-                        <a class="excel-temp-btn" href="info/download/template?exceltype=workhour">运行时间excel模板</a>
-                        <a class="excel-temp-btn" href="info/download/template?exceltype=warninginfo">消警记录excel模板</a>
+                        <a class="excel-temp-btn" href="/download/template?exceltype=workhour">运行时间excel模板</a>
+                        <a class="excel-temp-btn" href="/download/template?exceltype=warninginfo">消警记录excel模板</a>
                     </div>
+                    *{/if}
                 </div>
                 <div class="title">
                     <div class="check-content">
@@ -52,6 +54,7 @@
                         <span class="check-info">下载选中的润滑提示记录</span>
                         <a href="javascript:;" class="check-download">下载</a>
                     </div>
+                    *{if condition="$scope>=18"}
                     <div class="uploader orange info">
                         <form>
                             <span>批量上传运行时间或消警记录：</span>
@@ -66,6 +69,7 @@
                                    class="button upload" value="上传"/>
                         </form>
                     </div>
+                    *{/if}
                 </div>
                 <div class="table-box">
                     <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
@@ -104,6 +108,7 @@
                             <td class="process">*{$v.is_first_period?'是':'否'}</td>
                             <td class="operate table-operate">
                                 <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
+                                *{if condition="$scope>=18"}
                                 <a href="javascript:;"
                                    class="edit runhua"
                                    data-id="*{$v.id}"
@@ -125,6 +130,7 @@
                                    data-del_warning_time="*{$v.del_warning_time|date=" Y年m月d日",###}"
                                 data-equ_key_no="*{$v.equ_key_no}"
                                 >延期</a>
+                                *{/if}
                             </td>
                             </tr>
                             *{/foreach}

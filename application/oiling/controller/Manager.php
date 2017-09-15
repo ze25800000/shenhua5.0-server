@@ -9,7 +9,6 @@ use app\model\InfoWarning;
 use app\model\OilDetail;
 use app\model\OilStandard;
 use app\service\BaseController;
-use app\service\ExcelHandle;
 
 class Manager extends BaseController {
     public $userName;
@@ -50,6 +49,7 @@ class Manager extends BaseController {
         $infoList  = InfoWarning::getInfoList();
         $oilNoList = OilDetail::field('oil_no,oil_name')->select();
         $this->assign([
+            'scope' => $this->userScope,
             'account'   => $this->account,
             'infoList'  => $infoList,
             'oilNoList' => $oilNoList
@@ -59,6 +59,7 @@ class Manager extends BaseController {
 
     public function analysis() {
         $this->assign([
+            'scope' => $this->userScope,
             'account' => $this->account,
         ]);
         return $this->fetch();
@@ -66,6 +67,7 @@ class Manager extends BaseController {
 
     public function oildetail() {
         $this->assign([
+            'scope' => $this->userScope,
             'account' => $this->account,
         ]);
         return $this->fetch();

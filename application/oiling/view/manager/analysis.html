@@ -5,7 +5,7 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,&nbsp;{$account}</div>
+                <div class="welcome ue-clear">欢迎您,&nbsp;*{$account}</div>
             </div>
             <div class="toolbar ue-clear">
                 <a href="/" class="home-btn">首页</a>
@@ -37,6 +37,30 @@
                 </ul>
             </div>
             <div class="content">
+                <div class="title">
+                    <h2>油脂化验指标分析</h2>
+                    *{if condition="$scope>=18"}
+                    <div class="temp-btn-group">
+                        下载模板：
+                        <a style="width: 160px;" class="excel-temp-btn"
+                           href="info/download/template?exceltype=oilanalysis">油脂化验指标分析excel模板</a>
+                    </div>
+                    *{/if}
+                </div>
+                *{if condition="$scope>=18"}
+                <div class="title">
+                    <div class="uploader orange analysis">
+                        <form>
+                            <span>批量上传油脂化验指标分析：</span>
+                            <a href="javascript:;" class="a-upload">
+                                <input type="file" name="excel" id=""><span class="showFileName">点击这里上传文件</span>
+                            </a>
+                            <input type="button" name="file" data-param="exceltype=analysis"
+                                   class="button upload" value="上传"/>
+                        </form>
+                    </div>
+                </div>
+                *{/if}
             </div>
         </div>
     </div>

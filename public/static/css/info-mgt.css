@@ -636,7 +636,11 @@ input[type=text]::-webkit-focus-inner {
     -moz-box-shadow: #999 0px 0px 5px;
     box-shadow: #999 0px 0px 5px;
     text-align: center;
-    color: #FFF
+    color: #FFF;
+    cursor: pointer;
+}
+.rhbza1:hover {
+    background-color: #ed6316;
 }
 
 .rhbza h2 {
@@ -654,7 +658,10 @@ input[type=text]::-webkit-focus-inner {
 }
 
 .rhbza p a {
-    color: #a6d6f8;
+    color: rgba(172, 221, 255, 0.67);
+}
+.rhbza p a:hover {
+    color: #fff;
 }
 
 .rhbza2 a {
@@ -987,6 +994,7 @@ button {
 .tanchuang .oiling .confirm, .tanchuang .postpone .confirm {
     bottom: 10px;
 }
+
 .tanchuang .oiling select {
     display: block;
     width: 330px;
@@ -1000,4 +1008,9 @@ button {
     border-color: rgb(204, 204, 204);
     border-image: initial;
     padding: 0px 5px;
+}
+
+.title .analysis .a-upload, .title .oildetail .a-upload {
+    width: 100px;
+    right: 0;
 }

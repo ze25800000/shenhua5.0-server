@@ -9,6 +9,7 @@
 namespace app\model;
 
 
+use app\lib\tools\Tools;
 use app\service\ExcelHandle;
 
 class InfoWarning extends BaseModel {
@@ -20,9 +21,22 @@ class InfoWarning extends BaseModel {
     }
 
     public static function getWarningMessage() {
-        $result     = self::where('status', '>=', '2')->select();
-        $collection = collection($result)->visible(['equ_name', 'equ_oil_name', 'status', 'how_long', 'del_warning_time', '']);
-        return $collection;
+        $getEquKeyNos = OilStandard::field('equ_key_no')->select();
+        $equKeyNos    = Tools::listMoveToArray($getEquKeyNos, 'equ_key_no');
+        $arr          = [];
+        foreach ($equKeyNos as $v) {
+            $temp = self::where("equ_key_no='{$v}'")
+                ->order('del_warning_time desc')
+                ->limit(1)
+                ->find();
+            array_push($arr, $temp);
+        }
+        foreach ($arr as $k => $v) {
+            if ($v['status'] < 2) {
+                unset($arr[$k]);
+            }
+        }
+        return $arr;
     }
 
     public static function getInfoList($page = 1) {

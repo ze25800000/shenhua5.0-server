@@ -49,12 +49,15 @@
                 <div class="equ_tab equipment active">
                     <div class="title">
                         <h2>设备润滑标准</h2>
+                        *{if condition="$scope==36"}
                         <div class="temp-btn-group">
                             下载模板：
                             <a class="excel-temp-btn"
                                href="info/download/template?exceltype=oilstandard">设备润滑excel模板</a>
                         </div>
+                        *{/if}
                     </div>
+                    *{if condition="$scope==36"}
                     <div class="title">
                         <div class="uploader orange">
                             <form>
@@ -68,6 +71,7 @@
                             </form>
                         </div>
                     </div>
+                    *{/if}
                     <div class="query">
                         <div class="rhbza">
                             <ul id="equipments">
@@ -318,6 +322,7 @@
             window.base.getData(params);
         });
     });
+    *{if condition="$scope==36"}
     //编辑润滑标准条目信息
     $(document).on('dblclick', '.edit-item', function (e) {
         var _this = $(this),
@@ -332,6 +337,7 @@
         input.select();
         window.base.editItemByDblClick(_this, input, oldVal, url);
     });
+    *{/if}
     //上传excel
     $(document).on('click', '.upload', function () {
         console.log(new FormData($(this).parent()[0]))
