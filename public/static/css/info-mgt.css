@@ -1014,3 +1014,19 @@ button {
     width: 100px;
     right: 0;
 }
+
+.content-box .tab-pane li {
+    display: inline-block;
+    vertical-align: bottom;
+    font-size: 14px;
+    font-weight: bold;
+    color: #666666;
+    width: 120px;
+    height: 30px;
+    line-height: 35px;
+    text-align: center;
+}
+.content-box .tab-pane li.active {
+    background-color: #ffffff;
+    border-radius:5px 5px 0 0;
+}

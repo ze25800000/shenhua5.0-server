@@ -12,11 +12,25 @@ namespace app\oiling\controller;
 use app\service\BaseController;
 
 class User extends BaseController {
-    public function user() {
+    protected $beforeActionList = [
+        'checkAdminScope' => ['only' => 'system']
+    ];
+
+    public function center() {
+        $this->assign([
+            'scope'    => $this->userScope,
+            'account'  => $this->account,
+            'userName' => $this->userName
+        ]);
         return $this->fetch();
     }
 
     public function system() {
+        $this->assign([
+            'scope'    => $this->userScope,
+            'account'  => $this->account,
+            'userName' => $this->userName
+        ]);
         return $this->fetch();
     }
 }

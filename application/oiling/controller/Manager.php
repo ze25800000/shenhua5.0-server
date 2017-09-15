@@ -11,17 +11,6 @@ use app\model\OilStandard;
 use app\service\BaseController;
 
 class Manager extends BaseController {
-    public $userName;
-    public $userScope;
-    public $account;
-
-    public function __construct() {
-        parent::__construct();
-        $this->userName  = session('userName');
-        $this->userScope = session('userScope');
-        $this->account   = session('account');
-    }
-
     public function warning() {
         $WarningMessage = InfoWarning::getWarningMessage();
         $count          = count($WarningMessage);
@@ -49,7 +38,7 @@ class Manager extends BaseController {
         $infoList  = InfoWarning::getInfoList();
         $oilNoList = OilDetail::field('oil_no,oil_name')->select();
         $this->assign([
-            'scope' => $this->userScope,
+            'scope'     => $this->userScope,
             'account'   => $this->account,
             'infoList'  => $infoList,
             'oilNoList' => $oilNoList
@@ -59,7 +48,7 @@ class Manager extends BaseController {
 
     public function analysis() {
         $this->assign([
-            'scope' => $this->userScope,
+            'scope'   => $this->userScope,
             'account' => $this->account,
         ]);
         return $this->fetch();
@@ -67,7 +56,7 @@ class Manager extends BaseController {
 
     public function oildetail() {
         $this->assign([
-            'scope' => $this->userScope,
+            'scope'   => $this->userScope,
             'account' => $this->account,
         ]);
         return $this->fetch();

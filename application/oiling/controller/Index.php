@@ -55,13 +55,10 @@ class Index extends BaseController {
     }
 
     public function index() {
-        $userName  = session('userName');
-        $userScope = session('userScope');
-        $account   = session('account');
         $this->assign([
-            'userScope' => $userScope,
-            'userName'  => $userName,
-            'account'   => $account
+            'userScope' => $this->userScope,
+            'userName'  => $this->userName,
+            'account'   => $this->account
         ]);
         return $this->fetch();
     }

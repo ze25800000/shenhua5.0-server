@@ -9,19 +9,26 @@ use think\Controller;
 use think\Request;
 
 class BaseController extends Controller {
-    protected function isLogin() {
-        if (!session('?userName')) {
-            $this->redirect('/login');
+    protected $userName;
+    protected $userScope;
+    protected $account;
+
+    public function __construct() {
+        parent::__construct();
+        $this->userName  = session('userName');
+        $this->userScope = session('userScope');
+        $this->account   = session('account');
+        $url             = Request::instance()->url();
+        if (substr($url, 0, 6) != '/login') {
+            $this->isLogin();
         } else {
             return true;
         }
     }
 
-    public function __construct() {
-        parent::__construct();
-        $url = Request::instance()->url();
-        if (substr($url, 0, 6) != '/login') {
-            $this->isLogin();
+    protected function isLogin() {
+        if (!session('?userName')) {
+            $this->redirect('/login');
         } else {
             return true;
         }

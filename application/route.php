@@ -61,9 +61,10 @@ Route::group('oiling/oildetail', function () {
 Route::get('oiling/equdetail/:equ_key_no', 'oiling/Manager/equdetail', [], ['equ_key_no' => '\d+']);
 
 
-//系统管理
-/*Route::get('manager/document', 'oiling/manager/oilDocumentManager');
-Route::get('manager/member', 'oiling/manager/member');*/
+Route::group('user', function () {
+    Route::get('center', 'oiling/User/center');
+    Route::get('system', 'oiling/User/system');
+});
 
 
 //用户信息管理
