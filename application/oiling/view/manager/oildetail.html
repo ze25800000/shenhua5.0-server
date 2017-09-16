@@ -210,7 +210,10 @@
         });
         var date = new Date(),
             year = date.getFullYear(),
-            mouth = (1 + date.getMonth()).toString().length == 1 ? ('0' + (1 + date.getMonth())) : (1 + date.getMonth())
+            mouth = (2 + date.getMonth()).toString().length == 1 ? ('0' + (2 + date.getMonth())) : (2 + date.getMonth());
+        if (mouth == 13) {
+            mouth = 12;
+        }
         $('#monthly1').val(year + '-' + '01');
         $('#monthly2').val(year + '-' + mouth);
         $('#monthly1').monthpicker({
@@ -243,8 +246,8 @@
                     });
                     console.log(totalPrice);
                     var html = "<span class=\"date\">" + $('#monthly1').val() + "至" + $('#monthly2').val() + "</span>\n" +
-                        "                            <span class=\"zongji\">总计：</span>\n" +
-                        "                            <span class=\"num\">" + totalPrice + "元</span>";
+                        "<span class=\"zongji\">总计：</span>\n" +
+                        "<span class=\"num\">" + totalPrice + "元</span>";
                     $('.total-box').html(html);
                 }
             };
