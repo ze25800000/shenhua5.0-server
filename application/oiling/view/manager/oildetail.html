@@ -5,7 +5,7 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,&nbsp;*{$account} <a href="/user/center">个人中心</a></div>
+                <div class="welcome ue-clear">欢迎您,&nbsp;<a href="/user/center">*{$account} </a></div>
             </div>
             <div class="toolbar ue-clear">
                 <a href="/" class="home-btn">首页</a>
@@ -76,8 +76,13 @@
                                 <i class="icon"></i>
                             </div>
                         </div>
-                        <div class="query-btn ue-clear">
-                            <a href="javascript:;" class="confirm cost-confirm">查询</a>
+                        <div class="query-btn ue-clear cost-confirm">
+                            <a href="javascript:;" class="confirm">查询</a>
+                        </div>
+                        <div class="total-box ue-clear">
+                            <span class="date">2017-01至2018-01</span>
+                            <span class="zongji">总计：</span>
+                            <span class="num">21701元</span>
                         </div>
                     </div>
                 </div>
@@ -101,18 +106,27 @@
 
                             </tbody>
                             <script type="text/html" id="costTemplate">
-                                {{each data}}
+                                {{each(i,item) data}}
                                 <tr>
-                                    <td class="process">${$value.oil_no}</td>
-                                    <td class="process">${$value.oil_name}</td>
-                                    <td class="process">${$value.detail}</td>
-                                    <td class="process">${$value.unit}</td>
-                                    <td class="process">${$value.price}</td>
-                                    <td class="process">${$value.how_much}</td>
-                                    <td class="process">${$value.total}</td>
+                                    <td class="process edit-item" data-id="${item.id}" data-key="oil_no">
+                                        ${item.oil_no}
+                                    </td>
+                                    <td class="process edit-item" data-id="${item.id}" data-key="oil_name">
+                                        ${item.oil_name}
+                                    </td>
+                                    <td class="process edit-item" data-id="${item.id}" data-key="detail">
+                                        ${item.detail}
+                                    </td>
+                                    <td class="process edit-item" data-id="${item.id}" data-key="unit">${item.unit}</td>
+                                    <td class="process edit-item" data-id="${item.id}" data-key="price">
+                                        ${item.price}
+                                    </td>
+                                    <td class="process ">${item.how_much}</td>
+                                    <td class="process total">${item.total}</td>
                                     <td class="operate table-operate">
-                                        <a class="edit" href="javascript:;">编辑</a>
-                                        <a class="del" href="javascript:;">删除</a>
+                                        <a class="edit getEquName" data-oil_no="${item.oil_no}"
+                                           href="javascript:;">查看</a>
+                                        <a class="del delOilDetailItem" data-id="${item.id}" href="javascript:;">删除</a>
                                     </td>
                                 </tr>
                                 {{/each}}
@@ -120,20 +134,64 @@
                         </table>
                     </div>
                 </div>
+                <div class="tanchuang-equlist">
+                    <div class="tan-box">
+                        <h2>查看所属设备列表</h2>
+                        <div class="hint3"></div>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>润滑点名称</th>
+                                <th>润滑时间</th>
+                                <th>用量</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tanBody">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <script type="text/html" id="tanList">
+                    {{each(i,item) data}}
+                    <tr>
+                        <td>${item.equ_oil_name}</td>
+                        <td>${item.del_warning_time}</td>
+                        <td>${item.quantity}</td>
+                    </tr>
+                    {{/each}}
+                </script>
+                <div class="tanchuang">
+                    <div class="hintl">
+                        <div class="hintl-in1">
+                            <div class="hintl1"></div>
+                            <div class="hintl2">设备保养成本管理</div>
+                            <div class="hint3"></div>
+                        </div>
+                        <div class="hintl-in2">是否删除该条油品信息？</div>
+                        <a class="hintl-in3 confirm-del" href="javascript:;">是</a>
+                        <a class="hintl-in4" href="javascript:;">否</a>
+                    </div>
+                </div>
 
             </div>
         </div>
-        <div id="ft" class="ue-clear">
-            <div class="ft-left">
-                <span>神华集团</span>
-                <em>设备润滑管理系统</em>
-            </div>
-            <div class="ft-right">
-                <span>非同科技</span>
-                <em>2017</em>
-            </div>
+    </div>
+    <div id="ft" class="ue-clear">
+        <div class="ft-left">
+            <span>神华集团</span>
+            <em>设备润滑管理系统</em>
+        </div>
+        <div class="ft-right">
+            <span>非同科技</span>
+            <em>2017</em>
         </div>
     </div>
+</div>
 </div>
 <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
 <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
@@ -150,8 +208,11 @@
                 console.log('Month: ' + m + ', year: ' + y);
             }
         });
-        $('#monthly1').val(new Date().getFullYear() + '-' + '01');
-        $('#monthly2').val(new Date().getFullYear() + '-' + 12);
+        var date = new Date(),
+            year = date.getFullYear(),
+            mouth = (1 + date.getMonth()).toString().length == 1 ? ('0' + (1 + date.getMonth())) : (1 + date.getMonth())
+        $('#monthly1').val(year + '-' + '01');
+        $('#monthly2').val(year + '-' + mouth);
         $('#monthly1').monthpicker({
             years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
             topOffset: 1
@@ -160,28 +221,77 @@
             years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
             topOffset: 1
         });
-        costList();
+        var before = (new Date($('#monthly1').val()).getTime()) / 1000;
+        var after = (new Date($('#monthly2').val()).getTime()) / 1000;
+        costList(before, after);
 
-        function costList() {
-            var before = (new Date($('#monthly1').val()).getTime()) / 1000;
-            var after = (new Date($('#monthly2').val()).getTime()) / 1000;
+        function costList(before, after) {
             if (before >= after) {
+                alert('时间输入有误');
                 return false;
             }
             var params = {
                 url: '/oiling/oildetail/costlist/' + before + '/' + after + '',
                 sCallback: function (list) {
                     console.log(list);
-                    $(document).find('#costTbody').html();
-                    $('#costTemplate').tmpl(list).replaceAll('#costTbody');
+                    $(document).find('#costTbody').html('');
+                    $('#costTemplate').tmpl(list).appendTo('#costTbody');
                     $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
+                    var totalPrice = 0;
+                    $(document).find('.total').each(function (index, value) {
+                        totalPrice += parseFloat($(value).text());
+                    });
+                    console.log(totalPrice);
+                    var html = "<span class=\"date\">" + $('#monthly1').val() + "至" + $('#monthly2').val() + "</span>\n" +
+                        "                            <span class=\"zongji\">总计：</span>\n" +
+                        "                            <span class=\"num\">" + totalPrice + "元</span>";
+                    $('.total-box').html(html);
                 }
             };
             window.base.getData(params);
         }
 
         $('.cost-confirm').click(function () {
-            costList();
+            var before = (new Date($('#monthly1').val()).getTime()) / 1000;
+            var after = (new Date($('#monthly2').val()).getTime()) / 1000;
+            costList(before, after);
+        });
+        //编辑润滑标准条目信息
+        $(document).on('dblclick', '.edit-item', function (e) {
+            var _this = $(this),
+                oldVal = _this.html(),
+                url = '/oiling/oildetail/edit/';
+            oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
+            var long = oldVal.length * 12;
+            if (!/input/.test(oldVal)) {
+                _this.html('<input type="text" value="' + oldVal + '" style="width: ' + long + 'px">');
+            }
+            var input = _this.find('input');
+            input.select();
+            window.base.editItemByDblClick(_this, input, oldVal, url);
+        });
+        $(document).on('click', '.getEquName', function () {
+            $('#tanBody').html('');
+            var oilNo = $(this).data('oil_no'),
+                params = {
+                    url: 'oiling/oildetail/equname/' + oilNo + '?XDEBUG_SESSION_START=12455',
+                    sCallback: function (list) {
+                        $('.tanchuang-equlist').show(100);
+                        $('#tanList').tmpl(list).appendTo('#tanBody');
+                    },
+                    eCallback: function (err) {
+
+                    }
+                };
+            window.base.getData(params);
+
+        });
+        $(document).on('click', '.delOilDetailItem', function () {
+            $('.tanchuang .hintl').show(100);
+
+            $('.confirm-del').click(function (e) {
+
+            });
         });
     });
 </script>

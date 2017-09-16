@@ -43,8 +43,8 @@ $(".btn1").click(function (event) {
 });
 
 $(".hint-in3").click(function (event) {
-    $(".hint").css({"display": "none"});
-    $(".box").css({"display": "none"});
+    $(".hint").hide(100);
+    $(".box").hide(100);
 });
 
 $(".btn2").click(function (event) {
@@ -56,18 +56,18 @@ $(".btn2").click(function (event) {
 });
 
 $(".hint3").click(function (event) {
-    $(this).parent().parent().css({"display": "none"});
-    $(".box").css({"display": "none"});
+    $(this).parent().parent().hide(100);
+    $(".box").hide(100);
 });
 
 $(".hintl-in3").click(function (event) {
-    $(".hintl").css({"display": "none"});
-    $(".box").css({"display": "none"});
+    $(".hintl").hide(100);
+    $(".box").hide(100);
 });
 
 $(".hintl-in4").click(function () {
-    $(".hintl").css({"display": "none"});
-    $(".box").css({"display": "none"});
+    $(".hintl").hide(100);
+    $(".box").hide(100);
 });
 $(".a-upload").on("change", "input[type='file']", function () {
     var filePath = $(this).val();

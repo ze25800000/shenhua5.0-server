@@ -36,7 +36,7 @@ class Manager extends BaseController {
 
     public function info() {
         $infoList  = InfoWarning::getInfoList();
-        $oilNoList = OilDetail::field('oil_no,oil_name')->select();
+        $oilNoList = OilDetail::field('oil_no,oil_name,detail')->select();
         $this->assign([
             'scope'     => $this->userScope,
             'account'   => $this->account,

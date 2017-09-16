@@ -161,7 +161,7 @@
                                 <span class="hint-in2a2">
                                     <select name="" class="oilNo">
                                         *{foreach $oilNoList as $v}
-                                        <option value="*{$v.oil_no}">*{$v.oil_no} | *{$v.oil_name}</option>
+                                        <option value="*{$v.oil_no}">*{$v.oil_no} | *{$v.oil_name} | *{$v.detail}</option>
                                         *{/foreach}
                                     </select>
                                 </span>
@@ -243,7 +243,7 @@
     $(function () {
         var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
         $('.scroll-box').css('height', scrollHeight);
-        $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
+//        $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
 
         var ids = [];
         $('.check-download').click(function () {
@@ -291,7 +291,7 @@
             window.base.uploadFile(params);
         });
         $('.runhua').click(function () {
-            $('.tanchuang .oiling').show();
+            $('.tanchuang .oiling').show(100);
             $('.oiling-time').val(formatDate(new Date(), 'yyyy年MM月dd日'));
             var id = $(this).data('id'),
                 equNo = $(this).data('equ_no'),
@@ -331,7 +331,7 @@
             });
         });
         $('.yanqi').click(function () {
-            $('.tanchuang .postpone').show();
+            $('.tanchuang .postpone').show(100);
             $('.postpone-date').val(formatDate(new Date(), 'yyyy年MM月dd日'));
             var id = $(this).data('id'),
                 equNo = $(this).data('equ_no'),
