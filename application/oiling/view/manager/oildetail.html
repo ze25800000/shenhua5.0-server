@@ -306,5 +306,17 @@
                 window.base.getData(params);
             });
         });
+        $('.upload').click(function () {
+            var param = $(this).data('param');
+            var params = {
+                url: "/oiling/upload?" + param,
+                data: new FormData($(this).parent()[0]),
+                sCallback: function () {
+                    alert('上传成功');
+                    window.location.reload();
+                }
+            }
+            window.base.uploadFile(params);
+        });
     });
 </script>
