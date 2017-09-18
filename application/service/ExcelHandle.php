@@ -163,7 +163,7 @@ class ExcelHandle {
         if (!empty($OilAnalysisItem['Al']) && $OilAnalysisItem['Al'] > $this->config['Al']) array_push($oilStatus, 'Al元素超标');
         if (!empty($OilAnalysisItem['Si']) && $OilAnalysisItem['Si'] > $this->config['Si']) array_push($oilStatus, 'Si元素超标');
         if (!empty($OilAnalysisItem['Na']) && $OilAnalysisItem['Na'] > $this->config['Na']) array_push($oilStatus, 'Na元素超标');
-        if (!empty($OilAnalysisItem['pq']) && $OilAnalysisItem['pq'] > $this->config['pq']) array_push($oilStatus, 'pq元素超标');
+        if (!empty($OilAnalysisItem['pq']) && $OilAnalysisItem['pq'] > $this->config['pq']) array_push($oilStatus, 'PQ值超标');
         if (!empty($OilAnalysisItem['viscosity']) && $OilAnalysisItem['viscosity'] < $this->config['viscosity_min']) {
             array_push($oilStatus, '粘度偏低');
         } elseif ($OilAnalysisItem['viscosity'] > $this->config['viscosity_max']) {

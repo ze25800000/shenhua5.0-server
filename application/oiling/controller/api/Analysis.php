@@ -35,6 +35,7 @@ class Analysis extends BaseController {
         $keys                 = array_keys($post);
         $analysis->$keys[0]   = $post[$keys[0]];
         $analysis->oil_status = implode('<br>', $excelHandle->getOilStatus($analysis));
+        $analysis->advise     = empty($analysis->oil_status) ? 1 : 0;
 
         $result = $analysis->save();
         if (!$result) {
