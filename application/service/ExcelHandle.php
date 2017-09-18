@@ -10,6 +10,7 @@ namespace app\service;
 
 use app\lib\exception\DocumentException;
 use app\lib\exception\UploadException;
+use app\model\OilConfig;
 use app\model\Equipment;
 use app\model\InfoWarning;
 use app\model\OilAnalysis;
@@ -19,6 +20,12 @@ use app\model\WorkHour;
 use think\Request;
 
 class ExcelHandle {
+    protected $config;
+
+    public function __construct() {
+        $this->config = OilConfig::get(1);
+    }
+
     public function excelToArray() {
         vendor('PHPExcel');
         $file = Request::instance()->file('excel');
@@ -122,30 +129,18 @@ class ExcelHandle {
                 $arr[$k]['equ_no']        = $v[0];
                 $arr[$k]['equ_oil_no']    = $v[1];
                 $arr[$k]['equ_key_no']    = $v[0] . config('salt') . $v[1];
-                $arr[$k]['equ_name']      = $v[2];
                 $arr[$k]['equ_oil_name']  = $v[3];
-                $arr[$k]['part']          = $v[4];
-                $arr[$k]['sampling_time'] = $this->getTimestamp($v[5]);
-                $arr[$k]['oil_name']      = $v[6];
-                $arr[$k]['oil_no']        = $v[7];
-                $arr[$k]['working']       = $v[8];
-                $arr[$k]['Fe']            = $v[9];
-                $arr[$k]['Cu']            = $v[10];
-                $arr[$k]['Pb']            = $v[11];
-                $arr[$k]['Al']            = $v[12];
-                $arr[$k]['Cr']            = $v[13];
-                $arr[$k]['Si']            = $v[14];
-                $arr[$k]['Na']            = $v[15];
-                $arr[$k]['Mo']            = $v[16];
-                $arr[$k]['viscosity']     = $v[17];
-                $arr[$k]['fuel_dilution'] = $v[18];
-                $arr[$k]['ph']            = $v[19];
-                $arr[$k]['h2o']           = $v[20];
-                $arr[$k]['pq']            = $v[21];
-                $arr[$k]['contaminate']   = $v[22];
-                $arr[$k]['status']        = $v[23];
-                $arr[$k]['advise']        = $v[24];
-                $arr[$k]['result']        = $v[25];
+                $arr[$k]['sampling_time'] = $this->getTimestamp($v[4]);
+                $arr[$k]['work_hour']     = $this->howLong($arr[$k]['equ_key_no'], $arr[$k]['sampling_time']);
+                $arr[$k]['Fe']            = $v[5];
+                $arr[$k]['Cu']            = $v[6];
+                $arr[$k]['Al']            = $v[7];
+                $arr[$k]['Si']            = $v[8];
+                $arr[$k]['Na']            = $v[9];
+                $arr[$k]['pq']            = $v[10];
+                $arr[$k]['viscosity']     = $v[11];
+                $arr[$k]['oil_status']    = implode('，', $this->getOilStatus($arr[$k]));
+                $arr[$k]['advise']        = empty($arr[$k]['oil_status']) ? 1 : 0;
                 $item                     = $oilAnalysisModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and sampling_time={$arr[$k]['sampling_time']}")->find();
                 if ($item) {
                     $arr[$k]['id'] = $item->id;
@@ -159,6 +154,29 @@ class ExcelHandle {
             ]);
         }
         return true;
+    }
+
+    public function getOilStatus($OilAnalysisItem) {
+        $oilStatus = [];
+        if (
+            $OilAnalysisItem['Fe'] > $this->config['Fe'] ||
+            $OilAnalysisItem['Cu'] > $this->config['Cu'] ||
+            $OilAnalysisItem['Al'] > $this->config['Al'] ||
+            $OilAnalysisItem['Si'] > $this->config['Si'] ||
+            $OilAnalysisItem['Na'] > $this->config['Na'] ||
+            $OilAnalysisItem['pq'] > $this->config['pq']
+        ) {
+            array_push($oilStatus, '污染度超标');
+        }
+        $viscosityArr = explode(',', $this->config['viscosity']);
+        $viscosityMin = $viscosityArr[0];
+        $viscosityMax = $viscosityArr[1];
+        if ($OilAnalysisItem['viscosity'] < $viscosityMin) {
+            array_push($oilStatus, '粘度偏低');
+        } elseif ($OilAnalysisItem['viscosity'] > $viscosityMax) {
+            array_push($oilStatus, '粘度偏高');
+        }
+        return $oilStatus;
     }
 
     public function oilDetail($excel_array) {
@@ -215,7 +233,7 @@ class ExcelHandle {
                     ->order("del_warning_time DESC")
                     ->limit(1)
                     ->find();
-                $howLong      = $this->howLong($infoWarnItem);
+                $howLong      = $this->howLong($infoWarnItem->equ_key_no, $infoWarnItem->del_warning_time);
                 $infoWarningModel
                     ->where('equ_key_no', '=', $equKeyNo)
                     ->update([
@@ -251,7 +269,7 @@ class ExcelHandle {
                 $arr[$k]['is_first_period']  = preg_match('/是/', $v[5]) ? 1 : 0;
                 $arr[$k]['warning_type']     = preg_match('/润滑/', $v[6]) ? 1 : 0;
                 $arr[$k]['postpone']         = empty($v[7]) ? null : $v[7];
-                $arr[$k]['how_long']         = $this->howLong($arr[$k]);
+                $arr[$k]['how_long']         = $this->howLong($arr[$k]['equ_key_no'], $arr[$k]['del_warning_time']);
                 $arr[$k]['status']           = $this->getStatus($arr[$k], $arr[$k]['how_long']);
                 $arr[$k]['deadline']         = $this->getDeadline($arr[$k], $arr[$k]['how_long']);
                 $arr[$k]['postpone_reason']  = empty($v[8]) ? null : $v[8];
@@ -276,31 +294,12 @@ class ExcelHandle {
     /**计算距离上次消警的总时长
      *
      */
-    public function howLong($infoWarnTempArr) {
-//        $infoWarnList = InfoWarning::where("equ_key_no='{$infoWarnTempArr['equ_key_no']}'")->select();
-//        if (!empty($infoWarnTempArr)) {
-//            if (empty($infoWarnList)) {
-//                $howLong  = 0;
-//                $workHour = WorkHour::where("equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>{$infoWarnTempArr['del_warning_time']}")->select();
-//                foreach ($workHour as $k => $v) {
-//                    $howLong += $v['working_hour'];
-//                }
-//                return $howLong;
-//            } else {
-//                $sql     = "SELECT SUM(working_hour) AS how_long FROM work_hour WHERE equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>(SELECT MAX(del_warning_time) FROM info_warning WHERE equ_key_no={$infoWarnTempArr['equ_key_no']})";
-//                $howLong = WorkHour::query($sql);
-//                if ($howLong[0]['how_long']) {
-//                    return $howLong[0]['how_long'];
-//                } else {
-//                    return 0;
-//                }
-//            }
-//        }
-        $maxDelTime = InfoWarning::where("equ_key_no={$infoWarnTempArr['equ_key_no']}")->max('del_warning_time');
-        if ($infoWarnTempArr['del_warning_time'] > $maxDelTime || !$maxDelTime) {
-            $maxDelTime = $infoWarnTempArr['del_warning_time'];
+    public function howLong($equKeyNo, $time) {
+        $maxDelTime = InfoWarning::where("equ_key_no={$equKeyNo} and warning_type=1")->max('del_warning_time');
+        if ($time > $maxDelTime || !$maxDelTime) {
+            $maxDelTime = $time;
         }
-        $howLong = WorkHour::where("equ_key_no={$infoWarnTempArr['equ_key_no']} and start_time>{$maxDelTime}")->sum('working_hour');
+        $howLong = WorkHour::where("equ_key_no={$equKeyNo} and start_time>{$maxDelTime}")->sum('working_hour');
         return $howLong ? $howLong : 0;
     }
 

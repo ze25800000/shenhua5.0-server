@@ -47,6 +47,7 @@ class Manager extends BaseController {
     }
 
     public function analysis() {
+
         $this->assign([
             'scope'   => $this->userScope,
             'account' => $this->account,

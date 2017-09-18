@@ -5,7 +5,8 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;*{$account}</a></div>
+                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;*{$account}</a>
+                </div>
             </div>
             <div class="toolbar ue-clear">
                 <a href="/" class="home-btn">首页</a>
@@ -49,18 +50,58 @@
                 </div>
                 *{if condition="$scope>=18"}
                 <div class="title">
+                    <div class="check-content">
+                        <span class="select-all">全选:</span>
+                        <input class="check-all" type="checkbox">
+                        <span class="check-info">下载选中的油脂指标分析记录</span>
+                        <a href="javascript:;" class="check-download">下载</a>
+                    </div>
                     <div class="uploader orange analysis">
                         <form>
                             <span>批量上传油脂化验指标分析：</span>
                             <a href="javascript:;" class="a-upload">
                                 <input type="file" name="excel" id=""><span class="showFileName">点击这里上传文件</span>
                             </a>
-                            <input type="button" name="file" data-param="exceltype=analysis"
+                            <input type="button" name="file" data-param="exceltype=oilanalysis"
                                    class="button upload" value="上传"/>
                         </form>
                     </div>
                 </div>
                 *{/if}
+                <div class="table-box">
+                    <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="num">
+                                    选择
+                                </th>
+                                <th class="time">润滑点（全称）</th>
+                                <th class="process">采样日期</th>
+                                <th class="process">运行时长</th>
+                                <th class="process">润滑状态</th>
+                                <th class="process">物料编号</th>
+                                <th class="process">油品名称</th>
+                                <th class="process">Fe</th>
+                                <th class="process">Cu</th>
+                                <th class="process">Al</th>
+                                <th class="process">Si</th>
+                                <th class="process">Na</th>
+                                <th class="process">PQ</th>
+                                <th class="process">粘度</th>
+                                <th class="process">油脂状态</th>
+                                <th class="process">处理意见</th>
+                                <th class="operate">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="analysisBody">
+                            <tr>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -78,3 +119,16 @@
 
 <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
 <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
+<script>
+    $('.upload').click(function () {
+        var param = $(this).data('param'),
+            params = {
+                url: 'oiling/upload?' + param + '&XDEBUG_SESSION_START=14188',
+                data: new FormData($(this).parent()[0]),
+                sCallback: function () {
+                    alert('上传成功');
+                }
+            };
+        window.base.uploadFile(params);
+    });
+</script>
