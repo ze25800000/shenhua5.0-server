@@ -37,7 +37,7 @@ class OilDetailCost extends BaseController {
 
     public function getEquOilNameByOilNo($oil_no) {
         $list = InfoWarning::where('oil_no', '=', $oil_no)
-            ->field('equ_oil_name,del_warning_time,quantity')
+            ->field('equ_key_no,equ_oil_name,del_warning_time,quantity')
             ->select();
         foreach ($list as &$v) {
             $v['del_warning_time'] = date('Y年m月d日', $v['del_warning_time']);

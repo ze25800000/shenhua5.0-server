@@ -277,7 +277,8 @@ body {
     top: 0;
     line-height: 46px;
 }
-.query .total-box span{
+
+.query .total-box span {
     font-size: 16px;
     font-weight: bold;
     color: #777;
@@ -1185,4 +1186,12 @@ button {
 .tanchuang-equlist .tan-box tbody tr td {
     border-left: none;
     border-bottom: 1px dotted #c7c7c7;
+}
+
+.tanchuang-equlist #tanBody a {
+    color: #555;
+}
+
+.tanchuang-equlist #tanBody a:hover {
+    color: #2c7bbc;
 }

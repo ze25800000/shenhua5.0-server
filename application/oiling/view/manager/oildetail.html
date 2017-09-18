@@ -159,7 +159,7 @@
                 <script type="text/html" id="tanList">
                     {{each(i,item) data}}
                     <tr>
-                        <td>${item.equ_oil_name}</td>
+                        <td><a href="/oiling/equdetail/${item.equ_key_no}" target="_blank">${item.equ_oil_name}</a></td>
                         <td>${item.del_warning_time}</td>
                         <td>${item.quantity}</td>
                     </tr>
@@ -277,8 +277,9 @@
             $('#tanBody').html('');
             var oilNo = $(this).data('oil_no'),
                 params = {
-                    url: 'oiling/oildetail/equname/' + oilNo + '?XDEBUG_SESSION_START=12455',
+                    url: 'oiling/oildetail/equname/' + oilNo,
                     sCallback: function (list) {
+                        console.log(list)
                         $('.tanchuang-equlist').show(100);
                         $('#tanList').tmpl(list).appendTo('#tanBody');
                     },
@@ -291,9 +292,18 @@
         });
         $(document).on('click', '.delOilDetailItem', function () {
             $('.tanchuang .hintl').show(100);
-
+            var id = $(this).data('id'),
+                _this = $(this);
             $('.confirm-del').click(function (e) {
-
+                e.stopPropagation();
+                var params = {
+                    url: 'oiling/oildetail/delete/' + id,
+                    type: 'delete',
+                    sCallback: function (data) {
+                        _this.parent().parent().hide(200).remove();
+                    }
+                };
+                window.base.getData(params);
             });
         });
     });

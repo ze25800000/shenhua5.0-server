@@ -56,6 +56,7 @@ Route::group('oiling/oildetail', function () {
     Route::get('equname/:oil_no', 'oiling/api.OilDetailCost/getEquOilNameByOilNo');
     Route::get('costlist/:before/:after', 'oiling/api.OilDetailCost/getCostListByDate');
     Route::post('edit/:id', 'oiling/api.OilDetailCost/editOilDetailItemById');
+    Route::delete('delete/:id', 'oiling/api.OilDetailCost/deleteOilDetailItemById');
     Route::get('', 'oiling/Manager/oildetail');
 });
 
