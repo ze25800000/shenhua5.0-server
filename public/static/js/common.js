@@ -86,7 +86,7 @@ window.base = {
         };
         this.getData(params);
     },
-    editItemByDblClick: function (_this, input, oldVal, url) {
+    editItemByDblClick: function (_this, input, oldVal, url, callback) {
         $(window).keydown(function (e) {
             if (e.keyCode == 27) {
                 _this.html(oldVal);
@@ -107,11 +107,12 @@ window.base = {
                 key = input.parent().data('key');
             _this.html(newVal);
             var params = {
-                url: url + id + '?XDEBUG_SESSION_START=13415',
+                url: url + id + '?XDEBUG_SESSION_START=14188',
                 type: 'post',
                 data: {[key]: newVal},
                 sCallback: function (data) {
-                    alert(data.msg)
+                    alert(data.msg);
+                    callback && callback(data);
                 },
                 eCallback: function (err) {
                     alert('修改失败');

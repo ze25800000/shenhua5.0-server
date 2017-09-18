@@ -99,18 +99,18 @@
                             <td class="num"><input *{if condition="$v.advise==0" }checked*{/if} type="checkbox"
                                 data-id="*{$v.id}">
                             </td>
-                            <td class="time">*{$v.equ_oil_name}</td>
-                            <td class="time">*{$v.sampling_time}</td>
+                            <td class="time edit-item" data-id="*{$v.id}" data-key="equ_oil_name">*{$v.equ_oil_name}</td>
+                            <td class="time edit-item" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}</td>
                             <td class="process">*{$v.work_hour}</td>
                             <td class="process">*{$v.oil_no}</td>
                             <td class="process">*{$v.oil_name}</td>
-                            <td class="num" *{if condition="$v.Fe>$c.Fe" } style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
-                            <td class="num" *{if condition="$v.Cu>$c.Cu" } style="color: red;font-weight: 600;" *{/if}>*{$v.Cu}</td>
-                            <td class="num" *{if condition="$v.Al>$c.Al" } style="color: red;font-weight: 600;" *{/if}>*{$v.Al}</td>
-                            <td class="num" *{if condition="$v.Si>$c.Si" } style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
-                            <td class="num" *{if condition="$v.Na>$c.Na" } style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
-                            <td class="num" *{if condition="$v.pq>$c.pq" } style="color: red;font-weight: 600;" *{/if}>*{$v.pq}</td>
-                            <td class="num" *{if
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" } style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" } style="color: red;font-weight: 600;" *{/if}>*{$v.Cu}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$c.Al" } style="color: red;font-weight: 600;" *{/if}>*{$v.Al}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$c.Si" } style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$c.Na" } style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="pq" *{if condition="$v.pq>$c.pq" } style="color: red;font-weight: 600;" *{/if}>*{$v.pq}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="viscosity" *{if
                                 condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
                             <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
@@ -192,6 +192,22 @@
                 }
             };
             window.base.getData(params);
+        });
+    });
+    //编辑润滑标准条目信息
+    $(document).on('dblclick', '.edit-item', function (e) {
+        var _this = $(this),
+            oldVal = _this.html(),
+            url = '/oiling/analysis/edititem/';
+        oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
+        var long = oldVal.length * 12;
+        if (!/input/.test(oldVal)) {
+            _this.html('<input type="text" value="' + oldVal + '" style="width: ' + long + 'px">');
+        }
+        var input = _this.find('input');
+        input.select();
+        window.base.editItemByDblClick(_this, input, oldVal, url, function () {
+            window.location.reload();
         });
     });
 </script>
