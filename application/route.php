@@ -47,6 +47,7 @@ Route::group('oiling/info', function () {
 
 //油脂分析
 Route::group('oiling/analysis', function () {
+    Route::delete('del/:id', 'oiling/api.Analysis/deleteOilAnalysisItemById');
     Route::get('download/:ids', 'oiling/api.Download/downLoadExcelByIds');
     Route::get('', 'oiling/Manager/analysis');
 });

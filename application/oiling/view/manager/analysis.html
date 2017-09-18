@@ -96,7 +96,8 @@
                             <tbody id="analysisBody">
                             *{foreach $OilList as $v}
                             <tr *{if condition="$v.advise==0" } style="background-color: #fffdcf" *{/if}>
-                            <td class="num"><input *{if condition="$v.advise==0" }checked*{/if} type="checkbox" data-id="*{$v.id}">
+                            <td class="num"><input *{if condition="$v.advise==0" }checked*{/if} type="checkbox"
+                                data-id="*{$v.id}">
                             </td>
                             <td class="time">*{$v.equ_oil_name}</td>
                             <td class="time">*{$v.sampling_time}</td>
@@ -109,13 +110,14 @@
                             <td class="num" *{if condition="$v.Si>$c.Si" } style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
                             <td class="num" *{if condition="$v.Na>$c.Na" } style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
                             <td class="num" *{if condition="$v.pq>$c.pq" } style="color: red;font-weight: 600;" *{/if}>*{$v.pq}</td>
-                            <td class="num" *{if condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
+                            <td class="num" *{if
+                                condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
                             <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
                             <td class="process">*{$v.advise?'正常使用':'建议更换'}</td>
                             <td class="operate table-operate">
                                 <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
-                                <a href="javascript:;" class="del">删除</a>
+                                <a href="javascript:;" class="del" data-id="*{$v.id}">删除</a>
                             </td>
                             </tr>
                             *{/foreach}
@@ -138,7 +140,18 @@
         </div>
     </div>
 </div>
-
+<div class="tanchuang">
+    <div class="hintl">
+        <div class="hintl-in1">
+            <div class="hintl1"></div>
+            <div class="hintl2">油脂化验指标分析删除窗口</div>
+            <div class="hint3"></div>
+        </div>
+        <div class="hintl-in2">是否删除该油脂化验指标分析？</div>
+        <a class="hintl-in3 confirm-del" href="javascript:;">是</a>
+        <a class="hintl-in4" href="javascript:;">否</a>
+    </div>
+</div>
 <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
 <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
 <script>
@@ -165,5 +178,20 @@
         if (ids.length != 0) {
             window.location.href = url;
         }
+    });
+    $('.del').click(function () {
+        $('.hintl').show(100);
+        var id = $(this).data('id'),
+            _this = $(this);
+        $('.confirm-del').click(function () {
+            var params = {
+                url: '/oiling/analysis/del/' + id,
+                type: 'delete',
+                sCallback: function () {
+                    _this.parent().parent().hide(200).remove();
+                }
+            };
+            window.base.getData(params);
+        });
     });
 </script>
