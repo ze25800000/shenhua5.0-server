@@ -10,5 +10,4 @@ namespace app\model;
 
 
 class OilConfig extends BaseModel {
-
 }

@@ -139,7 +139,7 @@ class ExcelHandle {
                 $arr[$k]['Na']            = $v[9];
                 $arr[$k]['pq']            = $v[10];
                 $arr[$k]['viscosity']     = $v[11];
-                $arr[$k]['oil_status']    = implode('，', $this->getOilStatus($arr[$k]));
+                $arr[$k]['oil_status']    = implode('<br>', $this->getOilStatus($arr[$k]));
                 $arr[$k]['advise']        = empty($arr[$k]['oil_status']) ? 1 : 0;
                 $item                     = $oilAnalysisModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and sampling_time={$arr[$k]['sampling_time']}")->find();
                 if ($item) {
@@ -158,22 +158,15 @@ class ExcelHandle {
 
     public function getOilStatus($OilAnalysisItem) {
         $oilStatus = [];
-        if (
-            $OilAnalysisItem['Fe'] > $this->config['Fe'] ||
-            $OilAnalysisItem['Cu'] > $this->config['Cu'] ||
-            $OilAnalysisItem['Al'] > $this->config['Al'] ||
-            $OilAnalysisItem['Si'] > $this->config['Si'] ||
-            $OilAnalysisItem['Na'] > $this->config['Na'] ||
-            $OilAnalysisItem['pq'] > $this->config['pq']
-        ) {
-            array_push($oilStatus, '污染度超标');
-        }
-        $viscosityArr = explode(',', $this->config['viscosity']);
-        $viscosityMin = $viscosityArr[0];
-        $viscosityMax = $viscosityArr[1];
-        if ($OilAnalysisItem['viscosity'] < $viscosityMin) {
+        if ($OilAnalysisItem['Fe'] > $this->config['Fe']) array_push($oilStatus, 'Fe元素超标');
+        if ($OilAnalysisItem['Cu'] > $this->config['Cu']) array_push($oilStatus, 'Cu元素超标');
+        if ($OilAnalysisItem['Al'] > $this->config['Al']) array_push($oilStatus, 'Al元素超标');
+        if ($OilAnalysisItem['Si'] > $this->config['Si']) array_push($oilStatus, 'Si元素超标');
+        if ($OilAnalysisItem['Na'] > $this->config['Na']) array_push($oilStatus, 'Na元素超标');
+        if ($OilAnalysisItem['pq'] > $this->config['pq']) array_push($oilStatus, 'pq元素超标');
+        if ($OilAnalysisItem['viscosity'] < $this->config['viscosity_min']) {
             array_push($oilStatus, '粘度偏低');
-        } elseif ($OilAnalysisItem['viscosity'] > $viscosityMax) {
+        } elseif ($OilAnalysisItem['viscosity'] > $this->config['viscosity_max']) {
             array_push($oilStatus, '粘度偏高');
         }
         return $oilStatus;
@@ -311,7 +304,7 @@ class ExcelHandle {
             //如果消警类型为延期，让保养周期和延期时长相加
             $duration = $infoWarn['warning_type'] ? $oilStandardItem['first_period'] : $oilStandardItem['first_period'] + $infoWarn['postpone'];
             if ($howLong < $duration) {
-                if ($duration - $howLong > 300) {
+                if ($duration - $howLong > $this->config['postpone']) {
                     //正常
                     return 1;
                 } else {
@@ -325,7 +318,7 @@ class ExcelHandle {
         } else {
             $duration = $infoWarn['warning_type'] ? $oilStandardItem['period'] : $oilStandardItem['period'] + $infoWarn['postpone'];
             if ($howLong < $duration) {
-                if ($duration - $howLong > 300) {
+                if ($duration - $howLong > $this->config['postpone']) {
                     //正常
                     return 1;
                 } else {

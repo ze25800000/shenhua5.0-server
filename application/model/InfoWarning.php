@@ -39,7 +39,7 @@ class InfoWarning extends BaseModel {
         return $arr;
     }
 
-    public static function getInfoList($page = 1) {
+    public static function getInfoList() {
         //获得equ_key_no组成的数组
         $infoWarningModel = self::field('equ_key_no')->select();
         $excel            = new ExcelHandle();

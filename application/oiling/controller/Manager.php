@@ -6,6 +6,8 @@ namespace app\oiling\controller;
 use app\lib\exception\DocumentException;
 use app\model\Equipment;
 use app\model\InfoWarning;
+use app\model\OilAnalysis;
+use app\model\OilConfig;
 use app\model\OilDetail;
 use app\model\OilStandard;
 use app\service\BaseController;
@@ -47,10 +49,13 @@ class Manager extends BaseController {
     }
 
     public function analysis() {
-
+        $OilAnalysisList = OilAnalysis::getAnalysisList();
+        $OilConfig       = OilConfig::get(1);
         $this->assign([
+            'c'       => $OilConfig,
+            'OilList' => $OilAnalysisList,
             'scope'   => $this->userScope,
-            'account' => $this->account,
+            'account' => $this->account
         ]);
         return $this->fetch();
     }

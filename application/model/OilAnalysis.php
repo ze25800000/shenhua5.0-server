@@ -11,4 +11,59 @@ namespace app\model;
 
 class OilAnalysis extends BaseModel {
     protected $hidden = ['create_time', 'update_time'];
+
+    public function getSamplingTimeAttr($value) {
+        return date('Y年m月d日', $value);
+    }
+
+    public function infoItem() {
+        return $this->hasMany('InfoWarning', 'equ_key_no', 'equ_key_no')
+//            ->field('oil_no')
+            ->order('del_warning_time desc')
+            ->limit(1);
+    }
+
+    public static function getAnalysisList() {
+        $result    = OilAnalysis::field('equ_key_no')->select();
+        $equKeyNos = array_column(collection($result)->toArray(), 'equ_key_no');
+        $arr       = [];
+        foreach ($equKeyNos as $k => $v) {
+            $oil = self::where('equ_key_no', '=', $v)
+                ->order('sampling_time desc')
+                ->limit(1)
+                ->find();
+
+            $info = InfoWarning::field('oil_no')
+                ->order('del_warning_time desc')
+                ->limit(1)
+                ->find();
+
+            $oil['oil_no']   = $info['oil_no'];
+            $OilDetail       = OilDetail::field('oil_name')
+                ->where(['oil_no' => $oil['oil_no']])
+                ->find();
+            $oil['oil_name'] = $OilDetail['oil_name'];
+            array_push($arr, $oil);
+        }
+//        dump(collection($arr)->toArray());
+        return collection($arr)->toArray();
+    }
+
+    public static function getOilAnalysisByIds($ids) {
+        $result     = self::select($ids);
+        $collection = collection($result)
+            ->toArray();
+        foreach ($collection as &$v) {
+            $info          = InfoWarning::field('oil_no')
+                ->order('del_warning_time desc')
+                ->limit(1)
+                ->find();
+            $v['oil_no']   = $info['oil_no'];
+            $OilDetail     = OilDetail::field('oil_name')
+                ->where(['oil_no' => $v['oil_no']])
+                ->find();
+            $v['oil_name'] = $OilDetail['oil_name'];
+        }
+        return $collection;
+    }
 }

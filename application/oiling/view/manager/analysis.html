@@ -79,25 +79,47 @@
                                 <th class="time">润滑点（全称）</th>
                                 <th class="process">采样日期</th>
                                 <th class="process">运行时长</th>
-                                <th class="process">润滑状态</th>
                                 <th class="process">物料编号</th>
                                 <th class="process">油品名称</th>
-                                <th class="process">Fe</th>
-                                <th class="process">Cu</th>
-                                <th class="process">Al</th>
-                                <th class="process">Si</th>
-                                <th class="process">Na</th>
-                                <th class="process">PQ</th>
-                                <th class="process">粘度</th>
+                                <th class="num">Fe</th>
+                                <th class="num">Cu</th>
+                                <th class="num">Al</th>
+                                <th class="num">Si</th>
+                                <th class="num">Na</th>
+                                <th class="num">PQ</th>
+                                <th class="num">粘度</th>
                                 <th class="process">油脂状态</th>
                                 <th class="process">处理意见</th>
                                 <th class="operate">操作</th>
                             </tr>
                             </thead>
                             <tbody id="analysisBody">
-                            <tr>
-                                <td></td>
+                            *{foreach $OilList as $v}
+                            <tr *{if condition="$v.advise==0" } style="background-color: #fffdcf" *{/if}>
+                            <td class="num"><input *{if condition="$v.advise==0" }checked*{/if} type="checkbox" data-id="*{$v.id}">
+                            </td>
+                            <td class="time">*{$v.equ_oil_name}</td>
+                            <td class="time">*{$v.sampling_time}</td>
+                            <td class="process">*{$v.work_hour}</td>
+                            <td class="process">*{$v.oil_no}</td>
+                            <td class="process">*{$v.oil_name}</td>
+                            <td class="num" *{if condition="$v.Fe>$c.Fe" } style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
+                            <td class="num" *{if condition="$v.Cu>$c.Cu" } style="color: red;font-weight: 600;" *{/if}>*{$v.Cu}</td>
+                            <td class="num" *{if condition="$v.Al>$c.Al" } style="color: red;font-weight: 600;" *{/if}>*{$v.Al}</td>
+                            <td class="num" *{if condition="$v.Si>$c.Si" } style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
+                            <td class="num" *{if condition="$v.Na>$c.Na" } style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
+                            <td class="num" *{if condition="$v.pq>$c.pq" } style="color: red;font-weight: 600;" *{/if}>*{$v.pq}</td>
+                            <td class="num" *{if condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
+                                style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
+                            <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
+                            <td class="process">*{$v.advise?'正常使用':'建议更换'}</td>
+                            <td class="operate table-operate">
+                                <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
+                                <a href="javascript:;" class="del">删除</a>
+                            </td>
                             </tr>
+                            *{/foreach}
+
                             </tbody>
                         </table>
                     </div>
@@ -130,5 +152,18 @@
                 }
             };
         window.base.uploadFile(params);
+    });
+    $('.check-download').click(function () {
+        var ids = [];
+        $('#analysisBody input').each(function (index, value) {
+            if ($(value).attr('checked')) {
+                ids.push($(value).data('id'));
+            }
+        });
+        var idsStr = ids.join(','),
+            url = '/oiling/analysis/download/' + idsStr + '?exceltype=oilanalysis&XDEBUG_SESSION_START=14188';
+        if (ids.length != 0) {
+            window.location.href = url;
+        }
     });
 </script>
