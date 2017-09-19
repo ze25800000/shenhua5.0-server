@@ -5,7 +5,8 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;*{$account}</a></div>
+                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;*{$account}</a>
+                </div>
             </div>
             <div class="toolbar ue-clear">
                 <a href="/" class="home-btn">首页</a>
@@ -70,6 +71,29 @@
                         </form>
                     </div>
                     *{/if}
+                </div>
+                <div class="query">
+                    <div class="query-conditions ue-clear">
+                        <div class="conditions time ue-clear">
+                            <label>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间：</label>
+                            <div class="time-select">
+                                <input id="monthly1" type="text" placeholder="开始时间">
+                                <i class="icon"></i>
+                            </div>
+                            <span class="line">-</span>
+                            <div class="time-select">
+                                <input id="monthly2" type="text"
+                                       placeholder="结束时间">
+                                <i class="icon"></i>
+                            </div>
+                        </div>
+                        <div class="query-btn ue-clear cost-confirm">
+                            <a href="javascript:;" class="confirm info-confirm">查询</a>
+                        </div>
+                        <div class="query-btn ue-clear cost-confirm">
+                            <a href="/oiling/info" class="confirm">最近一次</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="table-box">
                     <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
@@ -239,6 +263,28 @@
 <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
 <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
 <script src="__JS__/data.js"></script>
+<script src="__JS__/jquery.monthpicker.js"></script>
+<script type="text/html" id="infoListTemplate">
+    {{each(index,item) data}}
+    <tr>
+        <td class="num">
+            <input type="checkbox" data-id="${item.id}">
+        </td>
+        <td class="process">${item.equ_oil_name}</td>
+        <td class="time">${item.del_warning_time}</td>
+        <td class="process">{{if item.warning_type==1}}润滑{{else}}延期{{/if}}</td>
+        <td class="process">${item.how_long}</td>
+        <td class="process">{{if item.status==3}}超期{{else item.status==2}}临近{{else}}正常{{/if}}</td>
+        <td class="process">${item.postpone}</td>
+        <td class="process">${item.deadline}</td>
+        <td class="process">{{if item.is_first_period==1}}是{{else}}否{{/if}}</td>
+        <td class="operate table-operate">
+            <a href="equdetail/${item.equ_key_no}" class="check" target="_blank">查看</a>
+        </td>
+
+    </tr>
+    {{/each}}
+</script>
 <script>
     $(function () {
         var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
@@ -372,5 +418,50 @@
                 window.base.getData(params);
             });
         });
+
+        //日期
+        $('#monthpicker').monthpicker({
+            years: [2015, 2014, 2013, 2012, 2011],
+            topOffset: 6,
+            onMonthSelect: function (m, y) {
+                console.log('Month: ' + m + ', year: ' + y);
+            }
+        });
+//        var date = new Date(),
+//            year = date.getFullYear(),
+//            mouth = (2 + date.getMonth()).toString().length == 1 ? ('0' + (2 + date.getMonth())) : (2 + date.getMonth());
+//        if (mouth == 13) {
+//            mouth = 12;
+//        }
+//        $('#monthly1').val(year + '-' + '01');
+//        $('#monthly2').val(year + '-' + mouth);
+        $('#monthly1').monthpicker({
+            years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+            topOffset: 1
+        });
+        $('#monthly2').monthpicker({
+            years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+            topOffset: 1
+        });
+        $('.info-confirm').click(function () {
+            var before = (new Date($('#monthly1').val()).getTime()) / 1000;
+            var after = (new Date($('#monthly2').val()).getTime()) / 1000;
+            var params = {
+                url: '/oiling/info/list/' + before + '/' + after,
+                sCallback: function (list) {
+                    console.log(list);
+                    var data = list.data;
+                    for (var i = 0; i < data.length; i++) {
+                        list.data[i].del_warning_time = formatDate(new Date(list.data[i].del_warning_time*1000), 'yyyy年MM月dd日');
+                    }
+                    $('#infoTbody').html('');
+                    $('#infoListTemplate').tmpl(list).appendTo('#infoTbody');
+                    $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
+
+                }
+            };
+            window.base.getData(params);
+        });
+
     });
 </script>

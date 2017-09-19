@@ -61,4 +61,13 @@ class InfoWarning extends BaseModel {
             ->toArray();
         return $collection;
     }
+
+    public static function getInfoListByDate($before, $after) {
+        $result = self::where('del_warning_time', '>=', $before)
+            ->where('del_warning_time', '<=', $after)
+            ->order('del_warning_time desc')
+            ->order('equ_key_no asc')
+            ->select();
+        return $result;
+    }
 }

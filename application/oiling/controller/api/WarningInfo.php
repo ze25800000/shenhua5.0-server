@@ -5,6 +5,7 @@ namespace app\oiling\controller\api;
 
 use app\lib\tools\Tools;
 use app\service\ExcelHandle;
+use app\validate\DetailDateValidate;
 use app\validate\IDCollection;
 use app\lib\exception\DocumentException;
 use app\model\InfoWarning;
@@ -24,14 +25,15 @@ class WarningInfo extends BaseController {
         return $this->ajaxReturn('获取报警信息成功', 0, $info);
     }
 
-    public function getInfoList($page) {
-        $info = InfoWarning::getInfoList($page);
-        if (!$info) {
+    public function getInfoListByDate($before, $after) {
+        (new DetailDateValidate())->goCheck();
+        $result = InfoWarning::getInfoListByDate($before, $after);
+        if (!$result) {
             throw new DocumentException([
-                'msg' => '获取润滑提示信息失败'
+                'msg' => '通过时间获取润滑提示列表失败'
             ]);
         }
-        return $this->ajaxReturn('获取润滑提示信息成功', 0, $info);
+        return $this->ajaxReturn('通过时间获取润滑提示列表成功', 0, $result);
     }
 
     public function lubricate() {

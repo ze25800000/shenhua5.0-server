@@ -10,6 +10,7 @@ namespace app\oiling\controller\api;
 
 
 use app\lib\exception\DocumentException;
+use app\lib\tools\Tools;
 use app\model\OilAnalysis;
 use app\service\BaseController;
 use app\service\ExcelHandle;
@@ -29,14 +30,18 @@ class Analysis extends BaseController {
 
     public function editOilAnalysisItemById($id) {
         (new IDMustBePositiveInt())->goCheck();
-        $analysis             = OilAnalysis::get($id);
-        $excelHandle          = new ExcelHandle();
-        $post                 = input('post.');
-        $keys                 = array_keys($post);
-        $analysis->$keys[0]   = $post[$keys[0]];
+        $analysis    = OilAnalysis::get($id);
+        $excelHandle = new ExcelHandle();
+        $post        = input('post.');
+        $keys        = array_keys($post);
+        if ($keys[0] == 'sampling_time') {
+            $timestamp          = Tools::getTimestamp($post[$keys[0]]);
+            $analysis->$keys[0] = $timestamp;
+        } else {
+            $analysis->$keys[0] = $post[$keys[0]];
+        }
         $analysis->oil_status = implode('<br>', $excelHandle->getOilStatus($analysis));
         $analysis->advise     = empty($analysis->oil_status) ? 1 : 0;
-
         $result = $analysis->save();
         if (!$result) {
             throw new DocumentException([

@@ -236,7 +236,6 @@
             var params = {
                 url: '/oiling/oildetail/costlist/' + before + '/' + after + '',
                 sCallback: function (list) {
-                    console.log(list);
                     $(document).find('#costTbody').html('');
                     $('#costTemplate').tmpl(list).appendTo('#costTbody');
                     $(document).find('tr:odd').css("backgroundColor", "#eff6fa");

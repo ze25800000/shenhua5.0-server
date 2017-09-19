@@ -35,6 +35,7 @@ Route::group('oiling/standard', function () {
 
 //润滑提示与记录
 Route::group('oiling/info', function () {
+    Route::get('list/:before/:after', 'oiling/api.WarningInfo/getInfoListByDate');
     Route::get('getlist/:page', 'oiling/api.WarningInfo/getInfoList');
     //润滑功能的实现
     Route::post('lubricate', 'oiling/api.WarningInfo/lubricate');
