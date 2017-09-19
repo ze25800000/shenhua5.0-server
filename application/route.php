@@ -71,37 +71,10 @@ Route::get('oiling/equdetail/:equ_key_no', 'oiling/Manager/equdetail', [], ['equ
 Route::group('user', function () {
     Route::post('center/edit/:id', 'oiling/api.Center/editUserDetailById');
     Route::post('center/modpwd', 'oiling/api.Center/modifyPasswordById');
+    Route::post('system/edit', 'oiling/api.System/editSystemDetail');
     Route::get('center', 'oiling/User/center');
     Route::get('system', 'oiling/User/system');
 });
-
-
-//用户信息管理
-//通过id获取用户信息，进行编辑
-Route::get('user/edit/:id', 'oiling/manager/getUserById');
-Route::post('user/update', 'oiling/manager/updateUserById');
-Route::post('user/add', 'oiling/manager/addUser');
-Route::delete('user/delete', 'oiling/manager/deleteUserById');
-
-//对设备进行操作
-Route::get('document/equipment/getlist', 'oiling/manager/getEquipmentList');
-Route::post('document/equipment/add', 'oiling/manager/addEquipment');
-//Route::post('document/equipment/edit/:id', 'oiling/manager/editEquipmentByNo');
-
-//操作润滑标准
-Route::get('document/oilstandard/getlist', 'oiling/manager/getOilStandardList');
-Route::delete('document/oilstandard/delete_equ/:equ_no', 'oiling/manager/deleteEquipmentByNo');
-Route::delete('document/oilstandard/del/:id', 'oiling/manager/delOilStandardItemById');
-
-//油液分析报告
-Route::get('document/oilanalysis/getlist', 'oiling/manager/getOilAnalysisList');
-Route::post('document/oilanalysis/edititem/:id', 'oiling/manager/editOilAnalysisDetailById');
-Route::delete('document/oilanalysis/del/:id', 'oiling/manager/delOilAnalysisItemById');
-
-//润滑油标准、成本管理
-Route::get('document/oildetail/getlist', 'oiling/manager/getOilDetailList');
-Route::post('document/oildetail/edititem/:id', 'oiling/manager/editOilDetailById');
-Route::delete('document/oildetail/del/:id', 'oiling/manager/delOilDetailItemById');
 
 //报警页面获取报警信息
 Route::get('oiling/warning/getlist', 'oiling/api.WarningInfo/getWarningMessage');

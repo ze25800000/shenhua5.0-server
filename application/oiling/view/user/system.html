@@ -1,11 +1,12 @@
-<?php require(APP_PATH.'/oiling/view/manager/common/header.html');?>
+<?php require(APP_PATH.'/oiling/view/user/common/header.html');?>
 <div id="container">
     <div id="hd">
         <div class="hd-wrap ue-clear">
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,&nbsp;<a style="color: #fff;" href="/user/center">&nbsp;*{$account}</a></div>
+                <div class="welcome ue-clear">欢迎您,&nbsp;<a style="color: #fff;"
+                                                           href="/user/center">&nbsp;*{$account}</a></div>
             </div>
             <div class="toolbar ue-clear">
                 <a href="/" class="home-btn">首页</a>
@@ -32,6 +33,64 @@
                 <div class="title">
                     <h2>系统管理</h2>
                 </div>
+                <div class="content-box">
+                    <ul class="tab-pane title">
+                        <li class="active">参数变量配置</li>
+                        <li>账户管理</li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="user-base active">
+                            <table>
+                                <tr>
+                                    <td>临近状态时间</td>
+                                    <td class="edit-item" data-id="*{$config.id}" data-key="postpone">
+                                        *{$config.postpone}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Fe</td>
+                                    <td class="edit-item" data-id="*{$config.id}" data-key="Fe">*{$config.Fe}</td>
+                                </tr>
+                                <tr>
+                                    <td>Cu</td>
+                                    <td class="edit-item" data-id="*{$config.id}" data-key="Cu">*{$config.Cu}</td>
+                                </tr>
+                                <tr>
+                                    <td>Al</td>
+                                    <td class="edit-item" data-id="*{$config.id}" data-key="Al">*{$config.Al}</td>
+                                </tr>
+                                <tr>
+                                    <td>Si</td>
+                                    <td class="edit-item" data-id="*{$config.id}" data-key="Si">*{$config.Si}</td>
+                                </tr>
+                                <tr>
+                                    <td>Na</td>
+                                    <td class="edit-item" data-id="*{$config.id}" data-key="Na">*{$config.Na}</td>
+                                </tr>
+                                <tr>
+                                    <td>PQ</td>
+                                    <td class="edit-item" data-id="*{$config.id}" data-key="pq">*{$config.pq}</td>
+                                </tr>
+                                <tr>
+                                    <td>粘度最小值</td>
+                                    <td class="edit-item" data-id="*{$config.id}" data-key="viscosity_min">
+                                        *{$config.viscosity_min}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>粘度最大值</td>
+                                    <td class="edit-item" data-id="*{$config.id}" data-key="viscosity_max">
+                                        *{$config.viscosity_max}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="mod-password">
+                            <table>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="ft" class="ue-clear">
@@ -45,6 +104,33 @@
             </div>
         </div>
     </div>
-
-    <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
-    <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
+</div>
+<?php require(APP_PATH.'/oiling/view/user/common/exitDialog.html');?>
+<?php require(APP_PATH.'/oiling/view/user/common/footer.html');?>
+<script>
+    //选项卡
+    $('.tab-pane li').click(function (e) {
+        $(this).addClass('active').siblings().removeClass('active');
+        $('.tab-content>div').eq($(this).index()).addClass('active').siblings().removeClass('active')
+    });
+    //修改参数
+    $(document).on('dblclick', '.edit-item', function (e) {
+        var _this = $(this),
+            oldVal = _this.html(),
+            url = 'user/system/edit/';
+        oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
+        var long = oldVal.length * 12;
+        if (!/input/.test(oldVal)) {
+            _this.html('<input type="text" value="' + oldVal + '" style="width: 30px;height:16px;outline: none">');
+        }
+        var input = _this.find('input');
+        input.select();
+        window.base.editItemByDblClick(_this, input, oldVal, url, function () {
+//            window.location.reload();
+        }, function (err) {
+            if (err.account) alert(err.account);
+            if (err.name) alert(err.name);
+            if (err.phone) alert(err.phone);
+        });
+    });
+</script>

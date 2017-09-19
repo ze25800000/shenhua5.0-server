@@ -51,7 +51,7 @@ class InfoWarning extends BaseModel {
         }
         $collection = collection($result)->toArray();
         array_multisort(array_column($collection, 'equ_key_no'), SORT_ASC, $collection);
-        return $collection;
+        return $result;
     }
 
     public static function getInfoListByIds($ids) {

@@ -9,6 +9,7 @@
 namespace app\oiling\controller;
 
 
+use app\model\OilConfig;
 use app\service\BaseController;
 use app\model\User as UserModel;
 
@@ -29,7 +30,9 @@ class User extends BaseController {
     }
 
     public function system() {
+        $config = OilConfig::get(1);
         $this->assign([
+            'config'   => $config,
             'scope'    => $this->userScope,
             'account'  => $this->account,
             'userName' => $this->userName
