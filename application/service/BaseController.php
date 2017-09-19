@@ -12,12 +12,14 @@ class BaseController extends Controller {
     protected $userName;
     protected $userScope;
     protected $account;
+    protected $id;
 
     public function __construct() {
         parent::__construct();
         $this->userName  = session('userName');
         $this->userScope = session('userScope');
         $this->account   = session('account');
+        $this->user_id   = session('user_id');
         $url             = Request::instance()->url();
         if (substr($url, 0, 6) != '/login') {
             $this->isLogin();

@@ -86,7 +86,7 @@ window.base = {
         };
         this.getData(params);
     },
-    editItemByDblClick: function (_this, input, oldVal, url, callback) {
+    editItemByDblClick: function (_this, input, oldVal, url, sCallback, eCallback) {
         $(window).keydown(function (e) {
             if (e.keyCode == 27) {
                 _this.html(oldVal);
@@ -112,11 +112,12 @@ window.base = {
                 data: {[key]: newVal},
                 sCallback: function (data) {
                     alert(data.msg);
-                    callback && callback(data);
+                    sCallback && sCallback(data);
                 },
                 eCallback: function (err) {
-                    alert('修改失败');
+                    // alert(JSON.stringify(err.msg));
                     _this.html(oldVal);
+                    eCallback && eCallback(err.msg);
                 }
             };
             if (newVal != oldVal) {

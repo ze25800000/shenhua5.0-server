@@ -205,7 +205,7 @@
         <td class="num">${item.Na}</td>
         <td class="num">${item.pq}</td>
         <td class="num">${item.viscosity}</td>
-        <td class="process">${item.oil_status}</td>
+        <td class="process">{{if item.oil_status}}${item.oil_status}{{else}}良好{{/if}}</td>
         <td class="process">{{if item.advise==1}}正常使用{{else}}建议更换{{/if}}</td>
         <td class="operate table-operate">
             <a href="equdetail/${item.equ_key_no}" class="check" target="_blank">查看</a>

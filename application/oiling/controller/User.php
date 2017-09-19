@@ -10,6 +10,7 @@ namespace app\oiling\controller;
 
 
 use app\service\BaseController;
+use app\model\User as UserModel;
 
 class User extends BaseController {
     protected $beforeActionList = [
@@ -17,10 +18,12 @@ class User extends BaseController {
     ];
 
     public function center() {
+        $userDetail = UserModel::get($this->user_id);
         $this->assign([
-            'scope'    => $this->userScope,
-            'account'  => $this->account,
-            'userName' => $this->userName
+            'userDetail' => $userDetail,
+            'scope'      => $this->userScope,
+            'account'    => $this->account,
+            'userName'   => $this->userName
         ]);
         return $this->fetch();
     }

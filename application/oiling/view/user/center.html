@@ -44,31 +44,42 @@
                             <table>
                                 <tr>
                                     <td class="head">账号</td>
-                                    <td class="detail">admin</td>
+                                    <td class="detail edit-item" data-id="*{$userDetail.id}" data-key="account">
+                                        *{$userDetail.account}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="head">姓名</td>
-                                    <td class="detail">张三</td>
+                                    <td class="detail edit-item" data-id="*{$userDetail.id}" data-key="name">
+                                        *{$userDetail.name}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="head">电话号码</td>
-                                    <td class="detail">admin</td>
+                                    <td class="detail edit-item" data-id="*{$userDetail.id}" data-key="phone">
+                                        *{$userDetail.phone}
+                                    </td>
                                 </tr>
                             </table>
                         </div>
-                        <div class="mod-password ">
+                        <div class="mod-password">
                             <table>
                                 <tr>
                                     <td>原始密码</td>
-                                    <td><input type="password"></td>
+                                    <td><input type="password" id="oldPwd"></td>
                                 </tr>
                                 <tr>
                                     <td>新的密码</td>
-                                    <td><input type="password"></td>
+                                    <td><input type="password" id="newPwd"></td>
                                 </tr>
                                 <tr>
                                     <td>确认新的密码</td>
-                                    <td><input type="password"></td>
+                                    <td><input type="password" id="reNewPwd"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <a href="javascript:;" class="user-confirm" data-id="*{$userDetail.id}">确认修改</a>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -87,6 +98,80 @@
             </div>
         </div>
     </div>
-
-    <?php require(APP_PATH.'/oiling/view/user/common/exitDialog.html');?>
-    <?php require(APP_PATH.'/oiling/view/user/common/footer.html');?>
+</div>
+<?php require(APP_PATH.'/oiling/view/user/common/exitDialog.html');?>
+<?php require(APP_PATH.'/oiling/view/user/common/footer.html');?>
+<script>
+    //编辑润滑标准条目信息
+    $(document).on('dblclick', '.edit-item', function (e) {
+        var _this = $(this),
+            oldVal = _this.html(),
+            url = 'user/center/edit/';
+        oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
+        if (oldVal == 'admin') {
+            alert('超级管理员账号不可以更改');
+            return false;
+        }
+        var long = oldVal.length * 12;
+        if (!/input/.test(oldVal)) {
+            _this.html('<input type="text" value="' + oldVal + '" style="width: ' + long + 'px;height:16px;outline: none">');
+        }
+        var input = _this.find('input');
+        input.select();
+        window.base.editItemByDblClick(_this, input, oldVal, url, function () {
+//            window.location.reload();
+        }, function (err) {
+            if (err.account) alert(err.account);
+            if (err.name) alert(err.name);
+            if (err.phone) alert(err.phone);
+        });
+    });
+    //选项卡
+    $('.tab-pane li').click(function (e) {
+        $(this).addClass('active').siblings().removeClass('active');
+        $('.tab-content>div').eq($(this).index()).addClass('active').siblings().removeClass('active')
+    });
+    //修改密码
+    $('.user-confirm').click(function () {
+        var oldPwd = $('#oldPwd').val(),
+            newPwd = $('#newPwd').val(),
+            reNewPwd = $('#reNewPwd').val(),
+            id = $(this).data('id');
+        if (!oldPwd) {
+            alert('请输入原始密码');
+            return false;
+        }
+        if (!newPwd) {
+            alert('请输入新的密码');
+            return false;
+        } else if (newPwd.length < 6) {
+            alert('密码位数需要大于等于6位');
+            return false;
+        }
+        if (!reNewPwd) {
+            alert('请输入确认新的密码');
+            return false;
+        }
+        if (newPwd != reNewPwd) {
+            alert('新密码和确认新密码不一样');
+            return false;
+        }
+        var params = {
+            url: '/user/center/modpwd',
+            type: 'post',
+            data: {
+                id: id,
+                oldpwd: oldPwd,
+                newpwd: newPwd
+            },
+            sCallback: function (data) {
+                alert(data.msg);
+                window.location.reload();
+            },
+            eCallback: function (err) {
+                alert(err.msg);
+            }
+        };
+        window.base.getData(params);
+    })
+</script>

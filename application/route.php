@@ -69,6 +69,8 @@ Route::get('oiling/equdetail/:equ_key_no', 'oiling/Manager/equdetail', [], ['equ
 
 
 Route::group('user', function () {
+    Route::post('center/edit/:id', 'oiling/api.Center/editUserDetailById');
+    Route::post('center/modpwd', 'oiling/api.Center/modifyPasswordById');
     Route::get('center', 'oiling/User/center');
     Route::get('system', 'oiling/User/system');
 });

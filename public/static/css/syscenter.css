@@ -22,3 +22,7 @@
 .tab-content div table .detail {
     width: 200px;
 }
+
+.content-box .tab-pane li {
+    cursor: pointer;
+}
