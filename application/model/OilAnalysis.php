@@ -46,7 +46,8 @@ class OilAnalysis extends BaseModel {
             array_push($arr, $oil);
         }
 //        dump(collection($arr)->toArray());
-        return collection($arr)->toArray();
+//        return collection($arr)->toArray();
+        return $arr;
     }
 
     public static function getOilAnalysisByIds($ids) {
