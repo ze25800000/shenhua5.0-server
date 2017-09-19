@@ -66,4 +66,13 @@ class OilAnalysis extends BaseModel {
         }
         return $collection;
     }
+
+    public static function getOilAnalysisListByDate($before, $after) {
+        $result = self::where('sampling_time', '>=', $before)
+            ->where('sampling_time', '<=', $after)
+            ->order('sampling_time desc')
+            ->order('equ_key_no asc')
+            ->select();
+        return $result;
+    }
 }

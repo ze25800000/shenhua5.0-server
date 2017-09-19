@@ -220,7 +220,7 @@ body {
 /*人员*/
 .query .staff input {
     float: left;
-    width: 173px;
+    width: 250px;
     padding: 0 10px;
     height: 28px;
     border: 1px solid #c5d6e0;
@@ -946,7 +946,8 @@ button {
 .search-result {
     position: absolute;
     top: 40px;
-    width: 300px;
+    left: 110px;
+    width: 270px;
     height: auto;
     display: none;
     background-color: #fff;

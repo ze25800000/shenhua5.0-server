@@ -110,6 +110,7 @@
                         <div class="query">
                             <div class="query-conditions ue-clear">
                                 <div class="conditions staff ue-clear">
+                                    <span style="float: left;font-size: 14px;">搜索润滑点：</span>
                                     <input class="search" type="text" placeholder="请输入要查询的内容"/>
                                     <div class="search-result">
                                     </div>
@@ -379,8 +380,10 @@
         } else {
             $('.search-result').hide().html('');
         }
-        $(document).on('click', '.search-result p', function () {
-            var equKeyNo = $(this).data('equ_key_no');
+        $(document).on('blur', '.search', function () {
+            setTimeout(function () {
+            $('.search-result').hide(100).html('');
+            },300)
 
         })
     });

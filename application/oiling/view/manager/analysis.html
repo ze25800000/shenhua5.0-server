@@ -67,6 +67,29 @@
                         </form>
                     </div>
                 </div>
+                <div class="query">
+                    <div class="query-conditions ue-clear">
+                        <div class="conditions time ue-clear">
+                            <label>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间：</label>
+                            <div class="time-select">
+                                <input id="monthly1" type="text" placeholder="开始时间">
+                                <i class="icon"></i>
+                            </div>
+                            <span class="line">-</span>
+                            <div class="time-select">
+                                <input id="monthly2" type="text"
+                                       placeholder="结束时间">
+                                <i class="icon"></i>
+                            </div>
+                        </div>
+                        <div class="query-btn ue-clear cost-confirm">
+                            <a href="javascript:;" class="confirm info-confirm">查询</a>
+                        </div>
+                        <div class="query-btn ue-clear cost-confirm">
+                            <a href="/oiling/analysis" class="confirm">最近一次</a>
+                        </div>
+                    </div>
+                </div>
                 *{/if}
                 <div class="table-box">
                     <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
@@ -99,17 +122,25 @@
                             <td class="num"><input *{if condition="$v.advise==0" }checked*{/if} type="checkbox"
                                 data-id="*{$v.id}">
                             </td>
-                            <td class="time edit-item" data-id="*{$v.id}" data-key="equ_oil_name">*{$v.equ_oil_name}</td>
-                            <td class="time edit-item" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}</td>
+                            <td class="time edit-item" data-id="*{$v.id}" data-key="equ_oil_name">*{$v.equ_oil_name}
+                            </td>
+                            <td class="time edit-item" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}
+                            </td>
                             <td class="process">*{$v.work_hour}</td>
                             <td class="process">*{$v.oil_no}</td>
                             <td class="process">*{$v.oil_name}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" } style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" } style="color: red;font-weight: 600;" *{/if}>*{$v.Cu}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$c.Al" } style="color: red;font-weight: 600;" *{/if}>*{$v.Al}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$c.Si" } style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$c.Na" } style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="pq" *{if condition="$v.pq>$c.pq" } style="color: red;font-weight: 600;" *{/if}>*{$v.pq}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
+                                style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" }
+                                style="color: red;font-weight: 600;" *{/if}>*{$v.Cu}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$c.Al" }
+                                style="color: red;font-weight: 600;" *{/if}>*{$v.Al}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$c.Si" }
+                                style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$c.Na" }
+                                style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="pq" *{if condition="$v.pq>$c.pq" }
+                                style="color: red;font-weight: 600;" *{/if}>*{$v.pq}</td>
                             <td class="num edit-item" data-id="*{$v.id}" data-key="viscosity" *{if
                                 condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
@@ -154,6 +185,34 @@
 </div>
 <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
 <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
+<script src="__JS__/data.js"></script>
+<script src="__JS__/jquery.monthpicker.js"></script>
+<script type="text/html" id="analysisTemplate">
+    {{each(i,item) data}}
+    <tr>
+        <td class="num">
+            <input type="checkbox" data-id="${item.id}">
+        </td>
+        <td class="time" data-id="${item.id}" data-key="equ_oil_name">${item.equ_oil_name}</td>
+        <td class="time" data-id="${item.id}" data-key="sampling_time">${item.sampling_time}</td>
+        <td class="process">${item.work_hour}</td>
+        <td class="process">${item.oil_no}</td>
+        <td class="process">${item.oil_name}</td>
+        <td class="num">${item.Fe}</td>
+        <td class="num">${item.Cu}</td>
+        <td class="num">${item.Al}</td>
+        <td class="num">${item.Si}</td>
+        <td class="num">${item.Na}</td>
+        <td class="num">${item.pq}</td>
+        <td class="num">${item.viscosity}</td>
+        <td class="process">${item.oil_status}</td>
+        <td class="process">{{if item.advise==1}}正常使用{{else}}建议更换{{/if}}</td>
+        <td class="operate table-operate">
+            <a href="equdetail/${item.equ_key_no}" class="check" target="_blank">查看</a>
+        </td>
+    </tr>
+    {{/each}}
+</script>
 <script>
     $('.upload').click(function () {
         var param = $(this).data('param'),
@@ -209,5 +268,40 @@
         window.base.editItemByDblClick(_this, input, oldVal, url, function () {
             window.location.reload();
         });
+    });
+    //日期
+    $('#monthpicker').monthpicker({
+        years: [2015, 2014, 2013, 2012, 2011],
+        topOffset: 6,
+        onMonthSelect: function (m, y) {
+            console.log('Month: ' + m + ', year: ' + y);
+        }
+    });
+    $('#monthly1').monthpicker({
+        years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+        topOffset: 1
+    });
+    $('#monthly2').monthpicker({
+        years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+        topOffset: 1
+    });
+    $('.info-confirm').click(function () {
+        var before = (new Date($('#monthly1').val()).getTime()) / 1000;
+        var after = (new Date($('#monthly2').val()).getTime()) / 1000;
+        var params = {
+            url: '/oiling/analysis/list/' + before + '/' + after,
+            sCallback: function (list) {
+                console.log(list);
+                var data = list.data;
+                for (var i = 0; i < data.length; i++) {
+                    list.data[i].del_warning_time = formatDate(new Date(list.data[i].del_warning_time * 1000), 'yyyy年MM月dd日');
+                }
+                $('#analysisBody').html('');
+                $('#analysisTemplate').tmpl(list).appendTo('#analysisBody');
+                $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
+
+            }
+        };
+        window.base.getData(params);
     });
 </script>
