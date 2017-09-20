@@ -3,12 +3,17 @@
 namespace app\oiling\controller\api;
 
 
+use app\lib\exception\DocumentException;
 use app\model\InfoWarning;
 use app\model\OilAnalysis;
 use app\model\OilConfig;
+use app\model\User;
 use app\service\BaseController;
 use app\service\ExcelHandle;
+use app\validate\IDMustBePositiveInt;
+use app\validate\ScopeValidate;
 use app\validate\SystemVariableValidate;
+use app\validate\UserValidate;
 
 class System extends BaseController {
     public function editSystemDetail() {
@@ -43,5 +48,45 @@ class System extends BaseController {
         }
 //            Log::record($e);
         return $this->ajaxReturn('修改参数成功');
+    }
+
+    public function deleteUserById($id) {
+        (new IDMustBePositiveInt())->goCheck();
+        $result = User::where('id', '', $id)
+            ->delete();
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '删除用户失败'
+            ]);
+        }
+        return $this->ajaxReturn('删除用户成功');
+    }
+
+    public function modifyUserScope() {
+        (new ScopeValidate())->goCheck();
+        $user = User::get($_POST['id']);
+        if ($user->scope == $_POST['scope']) {
+            return;
+        }
+        $user->scope = $_POST['scope'];
+        $result      = $user->save();
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '修改用户权限失败'
+            ]);
+        }
+        return $this->ajaxReturn('修改用户权限成功');
+    }
+
+    public function addUser() {
+        (new UserValidate())->goCheck();
+        $model  = new User();
+        $result = $model->save($_POST);
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '新建用户失败'
+            ]);
+        }
+        return $this->ajaxReturn('新建用户成功');
     }
 }

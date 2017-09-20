@@ -421,34 +421,40 @@
 
         //日期
         $('#monthpicker').monthpicker({
-            years: [2015, 2014, 2013, 2012, 2011],
             topOffset: 6,
             onMonthSelect: function (m, y) {
                 console.log('Month: ' + m + ', year: ' + y);
             }
         });
         $('#monthly1').monthpicker({
-            years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
             topOffset: 1
         });
         $('#monthly2').monthpicker({
-            years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
             topOffset: 1
         });
         $('.info-confirm').click(function () {
-            var before = (new Date($('#monthly1').val()).getTime()) / 1000;
-            var after = (new Date($('#monthly2').val()).getTime()) / 1000;
+            var dateBefore = $('#monthly1').val();
+            var dateAfter = $('#monthly2').val();
+            if (!dateBefore || !dateAfter || dateBefore >= dateAfter) {
+                alert('请输入正确的时间');
+                return false;
+            }
+            var before = (new Date(dateBefore).getTime()) / 1000;
+            var after = (new Date(dateAfter).getTime()) / 1000;
             var params = {
                 url: '/oiling/info/list/' + before + '/' + after,
                 sCallback: function (list) {
                     console.log(list);
                     var data = list.data;
                     for (var i = 0; i < data.length; i++) {
-                        list.data[i].del_warning_time = formatDate(new Date(list.data[i].del_warning_time*1000), 'yyyy年MM月dd日');
+                        list.data[i].del_warning_time = formatDate(new Date(list.data[i].del_warning_time * 1000), 'yyyy年MM月dd日');
                     }
                     $('#infoTbody').html('');
                     $('#infoListTemplate').tmpl(list).appendTo('#infoTbody');
                     $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
+                },
+                eCallback: function () {
+                    alert(dateBefore + '至' + dateAfter + '没有润滑提示与记录');
 
                 }
             };

@@ -217,7 +217,7 @@
     $('.upload').click(function () {
         var param = $(this).data('param'),
             params = {
-                url: 'oiling/upload?' + param + '&XDEBUG_SESSION_START=14188',
+                url: 'oiling/upload?' + param,
                 data: new FormData($(this).parent()[0]),
                 sCallback: function () {
                     alert('上传成功');
@@ -233,7 +233,7 @@
             }
         });
         var idsStr = ids.join(','),
-            url = '/oiling/analysis/download/' + idsStr + '?exceltype=oilanalysis&XDEBUG_SESSION_START=14188';
+            url = '/oiling/analysis/download/' + idsStr + '?exceltype=oilanalysis';
         if (ids.length != 0) {
             window.location.href = url;
         }
@@ -270,36 +270,36 @@
         });
     });
     //日期
-    $('#monthpicker').monthpicker({
-        years: [2015, 2014, 2013, 2012, 2011],
-        topOffset: 6,
-        onMonthSelect: function (m, y) {
-            console.log('Month: ' + m + ', year: ' + y);
-        }
-    });
     $('#monthly1').monthpicker({
-        years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
         topOffset: 1
     });
     $('#monthly2').monthpicker({
-        years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
         topOffset: 1
     });
     $('.info-confirm').click(function () {
-        var before = (new Date($('#monthly1').val()).getTime()) / 1000;
-        var after = (new Date($('#monthly2').val()).getTime()) / 1000;
+        var dateBefore = $('#monthly1').val();
+        var dateAfter = $('#monthly2').val();
+        if (!dateBefore || !dateAfter || dateBefore >= dateAfter) {
+            alert('请输入正确的时间');
+            return false;
+        }
+        var before = (new Date(dateBefore).getTime()) / 1000;
+        var after = (new Date(dateAfter).getTime()) / 1000;
         var params = {
-            url: '/oiling/analysis/list/' + before + '/' + after,
+            url: '/oiling/analysis/list/' + before + '/' + after + '?XDEBUG_SESSION_START=14125',
             sCallback: function (list) {
                 console.log(list);
                 var data = list.data;
                 for (var i = 0; i < data.length; i++) {
+                    list.data[i].oil_status = list.data[i].oil_status.replace('<br>', '，');
                     list.data[i].del_warning_time = formatDate(new Date(list.data[i].del_warning_time * 1000), 'yyyy年MM月dd日');
                 }
                 $('#analysisBody').html('');
                 $('#analysisTemplate').tmpl(list).appendTo('#analysisBody');
                 $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
-
+            },
+            eCallback: function (err) {
+                alert(dateBefore + '至' + dateAfter + '没有油脂分析结果');
             }
         };
         window.base.getData(params);

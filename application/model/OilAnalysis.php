@@ -74,6 +74,17 @@ class OilAnalysis extends BaseModel {
             ->order('sampling_time desc')
             ->order('equ_key_no asc')
             ->select();
+        foreach ($result as $k => &$v) {
+            $info          = InfoWarning::field('oil_no')
+                ->order('del_warning_time desc')
+                ->limit(1)
+                ->find();
+            $v['oil_no']   = $info['oil_no'];
+            $OilDetail     = OilDetail::field('oil_name')
+                ->where(['oil_no' => $v['oil_no']])
+                ->find();
+            $v['oil_name'] = $OilDetail['oil_name'];
+        }
         return $result;
     }
 }

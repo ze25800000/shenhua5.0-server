@@ -201,13 +201,7 @@
         var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
         $('.scroll-box').css('height', scrollHeight);
 
-        $('#monthpicker').monthpicker({
-            years: [2015, 2014, 2013, 2012, 2011],
-            topOffset: 6,
-            onMonthSelect: function (m, y) {
-                console.log('Month: ' + m + ', year: ' + y);
-            }
-        });
+
         var date = new Date(),
             year = date.getFullYear(),
             mouth = (2 + date.getMonth()).toString().length == 1 ? ('0' + (2 + date.getMonth())) : (2 + date.getMonth());
@@ -217,11 +211,9 @@
         $('#monthly1').val(year + '-' + '01');
         $('#monthly2').val(year + '-' + mouth);
         $('#monthly1').monthpicker({
-            years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
             topOffset: 1
         });
         $('#monthly2').monthpicker({
-            years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
             topOffset: 1
         });
         var before = (new Date($('#monthly1').val()).getTime()) / 1000;
@@ -243,11 +235,13 @@
                     $(document).find('.total').each(function (index, value) {
                         totalPrice += parseFloat($(value).text());
                     });
-                    console.log(totalPrice);
                     var html = "<span class=\"date\">" + $('#monthly1').val() + "至" + $('#monthly2').val() + "</span>\n" +
                         "<span class=\"zongji\">总计：</span>\n" +
                         "<span class=\"num\">" + totalPrice + "元</span>";
                     $('.total-box').html(html);
+                },
+                eCallback:function (err) {
+                    alert()
                 }
             };
             window.base.getData(params);
@@ -278,7 +272,6 @@
                 params = {
                     url: 'oiling/oildetail/equname/' + oilNo,
                     sCallback: function (list) {
-                        console.log(list)
                         $('.tanchuang-equlist').show(100);
                         $('#tanList').tmpl(list).appendTo('#tanBody');
                     },

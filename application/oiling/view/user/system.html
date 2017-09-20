@@ -117,7 +117,7 @@
     $(document).on('dblclick', '.edit-item', function (e) {
         var _this = $(this),
             oldVal = _this.html(),
-            url = 'user/system/edit/';
+            url = 'user/system/varedit/';
         oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
         var long = oldVal.length * 12;
         if (!/input/.test(oldVal)) {

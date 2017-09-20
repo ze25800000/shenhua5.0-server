@@ -71,7 +71,10 @@ Route::get('oiling/equdetail/:equ_key_no', 'oiling/Manager/equdetail', [], ['equ
 Route::group('user', function () {
     Route::post('center/edit/:id', 'oiling/api.Center/editUserDetailById');
     Route::post('center/modpwd', 'oiling/api.Center/modifyPasswordById');
-    Route::post('system/edit', 'oiling/api.System/editSystemDetail');
+    Route::post('system/varedit', 'oiling/api.System/editSystemDetail');
+    Route::delete('system/deluser/:id', 'oiling/api.System/deleteUserById');
+    Route::post('system/modscope/:id', 'oiling/api.System/modifyUserScope');
+    Route::post('system/addUser', 'oiling/api.System/addUser');
     Route::get('center', 'oiling/User/center');
     Route::get('system', 'oiling/User/system');
 });
