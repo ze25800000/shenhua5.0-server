@@ -103,10 +103,11 @@
         </div>
         <div class="rhd_xqa">
             <h3>油脂化验指标：</h3>
-            <div class="rhd_xqb">
+            <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
                 <table>
                     <thead>
                     <tr>
+                        <th class="num">ID</th>
                         <th class="process">采样日期</th>
                         <th class="process">运行时长</th>
                         <th class="process">物料编号</th>
@@ -121,305 +122,110 @@
                     </tr>
                     </thead>
                     <tbody id="analysisBody">
-                    *{foreach $detail.oil_analysis_list as $v}
+                    *{foreach $detail.oil_analysis_list as $k=>$v}
+                    <td class="num">*{$k+1}</td>
                     <td class="time" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}</td>
                     <td class="process">*{$v.work_hour}</td>
                     <td class="process">*{$v.oil_no}</td>
                     <td class="num" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
+                        style="color: red;font-weight: 600;" *{
+                    /if}>*{$v.Fe}</td>
                     <td class="num" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.Cu}</td>
+                        style="color: red;font-weight: 600;" *{
+                    /if}>*{$v.Cu}</td>
                     <td class="num" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$c.Al" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.Al}</td>
+                        style="color: red;font-weight: 600;" *{
+                    /if}>*{$v.Al}</td>
                     <td class="num" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$c.Si" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
+                        style="color: red;font-weight: 600;" *{
+                    /if}>*{$v.Si}</td>
                     <td class="num" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$c.Na" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
+                        style="color: red;font-weight: 600;" *{
+                    /if}>*{$v.Na}</td>
                     <td class="num" data-id="*{$v.id}" data-key="pq" *{if condition="$v.pq>$c.pq" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.pq}</td>
+                        style="color: red;font-weight: 600;" *{
+                    /if}>*{$v.pq}</td>
                     <td class="num" data-id="*{$v.id}" data-key="viscosity" *{if
                         condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
+                        style="color: red;font-weight: 600;" *{
+                    /if}>*{$v.viscosity}</td>
                     <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
                     </tr>
                     *{/foreach}
-
                     </tbody>
                 </table>
-
             </div>
         </div>
-
         <div class="rhd_xqa">
             <h3>操作记录：</h3>
-            <div class="rhd_xqb">
-                <p><b>润滑记录<a href="#">【查看全部】</a></b></p>
-                <div class="table-box">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th class="num">编号</th>
-                            <th class="time">润滑点（全称）</th>
-                            <th class="process">物料编码</th>
-                            <th class="process">用量</th>
-                            <th class="process">单位</th>
-                            <th class="process">更换最长周期</th>
-                            <th class="process">油脂采样间隔</th>
-                            <th class="operate">操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-
-
-                        </tbody>
-                    </table>
-                </div>
-                <div class="line"></div>
-                <p><b>延期记录<a href="#">【查看全部】</a></b></p>
-                <div class="table-box">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th class="num">编号</th>
-                            <th class="time">润滑点（全称）</th>
-                            <th class="process">物料编码</th>
-                            <th class="process">用量</th>
-                            <th class="process">单位</th>
-                            <th class="process">更换最长周期</th>
-                            <th class="process">油脂采样间隔</th>
-                            <th class="operate">操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="num">1</td>
-                            <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                            <td class="process">1077231</td>
-                            <td class="process">100</td>
-                            <td class="process">500</td>
-                            <td class="process">3500</td>
-                            <td class="process">500</td>
-                            <td class="operate table-operate">
-                                <a href="#" class="check">查看</a>
-                                <a href="#" class="edit">编辑</a>
-                                <a href="#" class="del">删除</a>
-                            </td>
-                        </tr>
-
-
-                        </tbody>
-                    </table>
-                </div>
+            <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="num">ID</th>
+                        <th class="process">上次消警时间</th>
+                        <th class="process">消警类型</th>
+                        <th class="process">运行时长</th>
+                        <th class="process">状态</th>
+                        <th class="process">物料编号</th>
+                        <th class="process">用量</th>
+                        <th class="process">延期时长</th>
+                        <th class="process">延期原因</th>
+                        <th class="operate">是否首保</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    *{foreach $detail.info_warning_detail as $k=>$v}
+                    <tr>
+                        <td class="num">*{$k+1}</td>
+                        <td class="time">*{$v.del_warning_time|date="Y年m月d日",###}</td>
+                        <td class="time">*{$v.warning_type?"润滑":"延期"}</td>
+                        <td class="process">*{$v.how_long}</td>
+                        <td class="process">*{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
+                        <td class="process">*{$v.oil_no}</td>
+                        <td class="process">*{$v.quantity}</td>
+                        <td class="process">*{$v.postpone}</td>
+                        <td class="process">*{$v.postpone_reason}</td>
+                        <td class="process">*{$v.is_first_period}</td>
+                    </tr>
+                    *{/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="rhd_xqa">
+            <h3>运行时间：</h3>
+            <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="num">编号</th>
+                        <th class="time">润滑点（全称）</th>
+                        <th class="process">物料编码</th>
+                        <th class="process">用量</th>
+                        <th class="process">单位</th>
+                        <th class="process">更换最长周期</th>
+                        <th class="process">油脂采样间隔</th>
+                        <th class="operate">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="num">1</td>
+                        <td class="time">1号破碎站给料机电动机1前段轴承</td>
+                        <td class="process">1077231</td>
+                        <td class="process">100</td>
+                        <td class="process">500</td>
+                        <td class="process">3500</td>
+                        <td class="process">500</td>
+                        <td class="operate table-operate">
+                            <a href="#" class="check">查看</a>
+                            <a href="#" class="edit">编辑</a>
+                            <a href="#" class="del">删除</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
