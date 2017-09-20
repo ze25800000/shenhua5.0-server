@@ -1201,3 +1201,158 @@ button {
     color: #2c7bbc;
 }
 
+/*润滑点详情页*/
+.rhd_xq {
+    width: 1058px;
+    height: auto;
+    margin: 20px auto 50px auto;
+    padding: 20px;
+    border: 1px #ddd solid;
+}
+
+.rhd_xq h2 {
+    height: 60px;
+    line-height: 60px;
+    font-size: 24px;
+    text-align: center;
+    border-bottom: 1px #ddd solid;
+}
+
+.rhd_xqa {
+    padding: 20px 0;
+    border-bottom: 1px #ddd dashed;
+}
+
+.rhd_xqa h3 {
+    background: #eee;
+    height: 36px;
+    line-height: 36px;
+    padding: 0 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.rhd_xqa h3 a {
+    color: #0572c1;
+}
+
+.rhd_xqa h3 a:hover {
+    color: #F60;
+}
+
+.rhd_xqa1 {
+    display: block;
+    float: left;
+}
+
+.rhd_xqa2 {
+    display: block;
+    float: right;
+}
+
+.rhd_xqb {
+    padding: 20px 0 0 0;
+}
+
+.rhd_xqb1 {
+    float: left;
+    width: 840px;
+    padding: 0 0 0 10px;
+}
+
+.rhd_xqb2 {
+    height: 80px;
+    float: right;
+    width: 140px;
+}
+
+.rhd_xqb1a {
+
+}
+
+.rhd_xqb1 table {
+    border: none;
+    width: 500px;
+    padding-bottom: 20px;
+}
+
+.rhd_xqb1 .status {
+    width: 800px;
+    margin-top: 20px;
+}
+
+.rhd_xqb1a td {
+    border-left: none;
+}
+
+.rhd_xqb1a th {
+    font-weight: bold;
+    text-align: right;
+}
+
+.rhd_xqb1a span b {
+    font-weight: bold;
+}
+
+.rhd_xqb2a {
+    display: block;
+    width: 120px;
+    padding: 10px 10px 0 0;
+    height: 30px;
+}
+
+.rhd_xqb2a a {
+    display: block;
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+    background: #0572c1;
+    text-align: center;
+    color: #FFF;
+    font-size: 18px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.rhd_xqb2a a:hover {
+    background: #F60;
+}
+
+.rhd_xqa_ls {
+    color: #03F;
+}
+
+.rhd_xqa_red {
+    color: #F00
+}
+
+.rhd_xqa_hs {
+    color: #F90
+}
+
+.rhd_xqb p {
+    font-size: 14px;
+    line-height: 30px;
+    padding: 0 10px;
+}
+
+.rhd_xqb p b {
+    font-weight: bold;
+}
+
+.rh_foot {
+    position: fixed;
+    z-index: 999;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    min-width: 1100px;
+}
+
+.rhd_line {
+    height: 1px;
+    width: 100%;
+    border-bottom: 1px #ddd dashed;
+    margin: 10px 0;
+}

@@ -69,16 +69,18 @@ class Manager extends BaseController {
     }
 
     public function equdetail($equ_key_no) {
-        $result = OilStandard::getEquipmentByKeyNo($equ_key_no);
-        if (!$result) {
-            throw new DocumentException([
-                'msg' => '获取详细数据失败'
-            ]);
-        }
+        $result    = OilStandard::getEquipmentByKeyNo($equ_key_no);
+        $OilConfig = OilConfig::get(1);
         $this->assign([
             'account' => $this->account,
-            'detail'  => $result
+            'detail'  => $result,
+            'c'       => $OilConfig,
         ]);
         return $this->fetch();
+    }
+
+    public function detail($equ_key_no) {
+        $result = OilStandard::getEquipmentByKeyNo($equ_key_no);
+        return $this->ajaxReturn('success', 0, $result);
     }
 }

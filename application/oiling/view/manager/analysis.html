@@ -103,7 +103,6 @@
                                 <th class="process">采样日期</th>
                                 <th class="process">运行时长</th>
                                 <th class="process">物料编号</th>
-                                <th class="process">油品名称</th>
                                 <th class="num">Fe</th>
                                 <th class="num">Cu</th>
                                 <th class="num">Al</th>
@@ -128,7 +127,6 @@
                             </td>
                             <td class="process">*{$v.work_hour}</td>
                             <td class="process">*{$v.oil_no}</td>
-                            <td class="process">*{$v.oil_name}</td>
                             <td class="num edit-item" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
                             <td class="num edit-item" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" }
@@ -197,7 +195,6 @@
         <td class="time" data-id="${item.id}" data-key="sampling_time">${item.sampling_time}</td>
         <td class="process">${item.work_hour}</td>
         <td class="process">${item.oil_no}</td>
-        <td class="process">${item.oil_name}</td>
         <td class="num">${item.Fe}</td>
         <td class="num">${item.Cu}</td>
         <td class="num">${item.Al}</td>
@@ -214,6 +211,7 @@
     {{/each}}
 </script>
 <script>
+    $('title').html('油脂化验指标分析');
     $('.upload').click(function () {
         var param = $(this).data('param'),
             params = {

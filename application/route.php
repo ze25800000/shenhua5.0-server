@@ -99,4 +99,6 @@ Route::post('oiling/upload', 'oiling/api.Upload/uploadExcel');
 //必须加query：exceltype=workhour|infowarning
 Route::get('download/template', 'oiling/api.Download/downloadTemplate');
 
+Route::get('detail/:equ_key_no', 'oiling/manager/detail');
+
 

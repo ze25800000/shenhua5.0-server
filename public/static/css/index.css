@@ -1,5 +1,5 @@
 ﻿html{*overflow:auto;min-width: 1020px;}
-body{ font-family:'微软雅黑';background:#2a83cf;}
+body{ font-family:'微软雅黑';}
 
 /*页面头部*/
 #hd{  height:74px;background: url(../images/hyytbg-4.png) repeat-x center top;}

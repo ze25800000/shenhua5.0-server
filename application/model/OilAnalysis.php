@@ -25,24 +25,13 @@ class OilAnalysis extends BaseModel {
 
     public static function getAnalysisList() {
         $result    = OilAnalysis::field('equ_key_no')->select();
-        $equKeyNos = array_column(collection($result)->toArray(), 'equ_key_no');
+        $equKeyNos = array_unique(array_column(collection($result)->toArray(), 'equ_key_no'));
         $arr       = [];
         foreach ($equKeyNos as $k => $v) {
             $oil = self::where('equ_key_no', '=', $v)
                 ->order('sampling_time desc')
                 ->limit(1)
                 ->find();
-
-            $info = InfoWarning::field('oil_no')
-                ->order('del_warning_time desc')
-                ->limit(1)
-                ->find();
-
-            $oil['oil_no']   = $info['oil_no'];
-            $OilDetail       = OilDetail::field('oil_name')
-                ->where(['oil_no' => $oil['oil_no']])
-                ->find();
-            $oil['oil_name'] = $OilDetail['oil_name'];
             array_push($arr, $oil);
         }
 //        dump(collection($arr)->toArray());
@@ -74,17 +63,6 @@ class OilAnalysis extends BaseModel {
             ->order('sampling_time desc')
             ->order('equ_key_no asc')
             ->select();
-        foreach ($result as $k => &$v) {
-            $info          = InfoWarning::field('oil_no')
-                ->order('del_warning_time desc')
-                ->limit(1)
-                ->find();
-            $v['oil_no']   = $info['oil_no'];
-            $OilDetail     = OilDetail::field('oil_name')
-                ->where(['oil_no' => $v['oil_no']])
-                ->find();
-            $v['oil_name'] = $OilDetail['oil_name'];
-        }
         return $result;
     }
 }

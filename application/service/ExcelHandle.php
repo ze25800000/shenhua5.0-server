@@ -132,6 +132,7 @@ class ExcelHandle {
                 $arr[$k]['equ_oil_name']  = $v[3];
                 $arr[$k]['sampling_time'] = $this->getTimestamp($v[4]);
                 $arr[$k]['work_hour']     = $this->howLong($arr[$k]['equ_key_no'], $arr[$k]['sampling_time']);
+                $arr[$k]['oil_no']        = $this->getOilNoFromInfo($arr[$k]['equ_key_no']);
                 $arr[$k]['Fe']            = $v[5];
                 $arr[$k]['Cu']            = $v[6];
                 $arr[$k]['Al']            = $v[7];
@@ -154,6 +155,15 @@ class ExcelHandle {
             ]);
         }
         return true;
+    }
+
+    public function getOilNoFromInfo($equKeyNo) {
+        $info = InfoWarning::where('equ_key_no', '=', $equKeyNo)
+            ->field('oil_no')
+            ->order('del_warning_time desc')
+            ->limit(1)
+            ->find();
+        return $info['oil_no'];
     }
 
     public function getOilStatus($OilAnalysisItem) {
