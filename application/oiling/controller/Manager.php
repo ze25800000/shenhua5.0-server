@@ -41,6 +41,7 @@ class Manager extends BaseController {
         $oilNoList = OilDetail::field('oil_no,oil_name,detail')->select();
         $this->assign([
             'scope'     => $this->userScope,
+            'userId'    => $this->user_id,
             'account'   => $this->account,
             'infoList'  => $infoList,
             'oilNoList' => $oilNoList
@@ -71,10 +72,13 @@ class Manager extends BaseController {
     public function equdetail($equ_key_no) {
         $result    = OilStandard::getEquipmentByKeyNo($equ_key_no);
         $OilConfig = OilConfig::get(1);
+        $oilNoList = OilDetail::field('oil_no,oil_name,detail')->select();
         $this->assign([
-            'account' => $this->account,
-            'detail'  => $result,
-            'c'       => $OilConfig,
+            'account'   => $this->account,
+            'userId'    => $this->user_id,
+            'detail'    => $result,
+            'c'         => $OilConfig,
+            'oilNoList' => $oilNoList
         ]);
         return $this->fetch();
     }

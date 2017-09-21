@@ -136,6 +136,7 @@
                                 <a href="javascript:;"
                                    class="edit runhua"
                                    data-id="*{$v.id}"
+                                   data-user_id="*{$userId}"
                                    data-equ_no="*{$v.equ_no}"
                                    data-equ_oil_no="*{$v.equ_oil_no}"
                                    data-equ_name="*{$v.equ_name}"
@@ -146,6 +147,7 @@
                                 <a href="javascript:;"
                                    class="edit yanqi"
                                    data-id="*{$v.id}"
+                                   data-user_id="*{$userId}"
                                    data-equ_no="*{$v.equ_no}"
                                    data-equ_oil_no="*{$v.equ_oil_no}"
                                    data-equ_name="*{$v.equ_name}"
@@ -341,6 +343,7 @@
             $('.tanchuang .oiling').show(100);
             $('.oiling-time').val(formatDate(new Date(), 'yyyy年MM月dd日'));
             var id = $(this).data('id'),
+                userId = $(this).data('user_id'),
                 equNo = $(this).data('equ_no'),
                 equOilNo = $(this).data('equ_oil_no'),
                 equName = $(this).data('equ_name'),
@@ -355,6 +358,7 @@
                     type: 'post',
                     data: {
                         id: id,
+                        user_id: userId,
                         equ_no: equNo,
                         equ_oil_no: equOilNo,
                         equ_name: equName,
@@ -381,6 +385,7 @@
             $('.tanchuang .postpone').show(100);
             $('.postpone-date').val(formatDate(new Date(), 'yyyy年MM月dd日'));
             var id = $(this).data('id'),
+                userId = $(this).data('user_id'),
                 equNo = $(this).data('equ_no'),
                 equOilNo = $(this).data('equ_oil_no'),
                 equName = $(this).data('equ_name'),
@@ -396,6 +401,7 @@
                     type: 'post',
                     data: {
                         id: id,
+                        user_id: userId,
                         equ_no: equNo,
                         equ_oil_no: equOilNo,
                         equ_name: equName,

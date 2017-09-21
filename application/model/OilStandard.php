@@ -4,7 +4,7 @@ namespace app\model;
 
 
 class OilStandard extends BaseModel {
-    protected $hidden = ['create_time', 'update_time', 'equ_name', 'equ_no'];
+    protected $hidden = ['create_time', 'update_time'];
 
     public function infoWarningDetail() {
         return $this->hasMany('InfoWarning', 'equ_key_no', 'equ_key_no');
@@ -21,13 +21,17 @@ class OilStandard extends BaseModel {
     public static function getEquipmentByKeyNo($no) {
         return self::with([
             'infoWarningDetail' => function ($query) {
-                $query->with(['user'])->order('del_warning_time', 'desc');
+                $query->with(['user'])
+                    ->order('del_warning_time', 'desc')
+                    ->order('create_time desc');
             },
             'oilAnalysisList'   => function ($query) {
-                $query->order('sampling_time', 'desc');
+                $query->order('sampling_time', 'desc')
+                    ->order('create_time desc');
             },
             'timeList'          => function ($query) {
-                $query->order('start_time', 'desc');
+                $query->order('start_time', 'desc')
+                    ->order('create_time desc');
             }
         ])->where('equ_key_no', '=', $no)->find();
     }

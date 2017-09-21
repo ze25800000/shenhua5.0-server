@@ -92,12 +92,33 @@
                 </div>
             </div>
             <div class="rhd_xqb2">
-                    <span class="rhd_xqb2a">
-                        <a href="#">润 滑</a>
-                    </span>
                 <span class="rhd_xqb2a">
-                        <a href="#">延 期</a>
-                    </span>
+                    <a href="javascript:;"
+                       class="runhua"
+                       data-id="*{$detail.id}"
+                       data-user_id="*{$userId}"
+                       data-equ_no="*{$detail.equ_no}"
+                       data-equ_oil_no="*{$detail.equ_oil_no}"
+                       data-equ_name="*{$detail.equ_name}"
+                       data-equ_oil_name="*{$detail.equ_oil_name}"
+                       data-del_warning_time="*{$detail.info_warning_detail[0]['del_warning_time']|date=" Y年m月d日",###}"
+                                data-equ_key_no="*{$detail.equ_key_no}"
+                                >润滑</a>
+                </span>
+                <span class="rhd_xqb2a">
+                    <a href="javascript:;"
+                       class="edit yanqi"
+                       data-id="*{$detail.id}"
+                       data-user_id="*{$userId}"
+                       data-equ_no="*{$detail.equ_no}"
+                       data-equ_oil_no="*{$detail.equ_oil_no}"
+                       data-equ_name="*{$detail.equ_name}"
+                       data-equ_oil_name="*{$detail.equ_oil_name}"
+                       data-how_long="*{$detail.info_warning_detail[0]['how_long']}"
+                       data-del_warning_time="*{$detail.info_warning_detail[0]['del_warning_time']|date=" Y年m月d日",###}"
+                                data-equ_key_no="*{$detail.equ_key_no}"
+                                >延期</a>
+                </span>
             </div>
             <div class="clear"></div>
         </div>
@@ -172,6 +193,7 @@
                         <th class="process">延期时长</th>
                         <th class="process">延期原因</th>
                         <th class="operate">是否首保</th>
+                        <th class="operate">操作人员</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -186,7 +208,8 @@
                         <td class="process">*{$v.quantity}</td>
                         <td class="process">*{$v.postpone}</td>
                         <td class="process">*{$v.postpone_reason}</td>
-                        <td class="process">*{$v.is_first_period}</td>
+                        <td class="process">*{$v.is_first_period?'是':'否'}</td>
+                        <td class="process">*{$v.user.name}</td>
                     </tr>
                     *{/foreach}
                     </tbody>
@@ -199,52 +222,112 @@
                 <table>
                     <thead>
                     <tr>
-                        <th class="num">编号</th>
-                        <th class="time">润滑点（全称）</th>
-                        <th class="process">物料编码</th>
-                        <th class="process">用量</th>
-                        <th class="process">单位</th>
-                        <th class="process">更换最长周期</th>
-                        <th class="process">油脂采样间隔</th>
-                        <th class="operate">操作</th>
+                        <th class="num">ID</th>
+                        <th class="time">运行起始时间</th>
+                        <th class="process">运行时长</th>
+
                     </tr>
                     </thead>
                     <tbody>
+                    *{foreach $detail.time_list as $k=>$v}
                     <tr>
-                        <td class="num">1</td>
-                        <td class="time">1号破碎站给料机电动机1前段轴承</td>
-                        <td class="process">1077231</td>
-                        <td class="process">100</td>
-                        <td class="process">500</td>
-                        <td class="process">3500</td>
-                        <td class="process">500</td>
-                        <td class="operate table-operate">
-                            <a href="#" class="check">查看</a>
-                            <a href="#" class="edit">编辑</a>
-                            <a href="#" class="del">删除</a>
-                        </td>
+                        <td class="num">*{$k+1}</td>
+                        <td class="time">*{$v.start_time|date="Y年m月d日",###}</td>
+                        <td class="process">*{$v.working_hour}</td>
                     </tr>
+                    *{/foreach}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <div class="tanchuang">
+        <div class="hint oiling">
+            <div class="hint-in1">
+                <div class="hint1"></div>
+                <div class="hint2">润滑</div>
+                <div class="hint3"></div>
+            </div>
+            <div class="hint-in2">
+                <div class="hint-in2a">
+                    <span class="hint-in2a1">润滑日期</span>
+                    <span class="hint-in2a2">
+                                    <input value=""
+                                           name=""
+                                           type="text"
+                                           class="oiling-time">
+                                </span>
+
+                </div>
+                <div class="hint-in2a">
+                    <span class="hint-in2a1">物料编号</span>
+                    <span class="hint-in2a2">
+                                    <select name="" class="oilNo">
+                                        *{foreach $oilNoList as $v}
+                                        <option value="*{$v.oil_no}">*{$v.oil_no} | *{$v.oil_name} | *{$v.detail}</option>
+                                        *{/foreach}
+                                    </select>
+                                </span>
+                </div>
+
+                <div class="hint-in2a">
+                    <span class="hint-in2a1">用量</span>
+                    <span class="hint-in2a2"><input value="100" name="" type="text"
+                                                    class="quantity"></span>
+                </div>
+
+            </div>
+            <a class="hint-in3 confirm" href="#">确定</a>
+        </div>
+        <div class="hint postpone">
+            <div class="hint-in1">
+                <div class="hint1"></div>
+                <div class="hint2">延期</div>
+                <div class="hint3"></div>
+            </div>
+            <div class="hint-in2">
+                <div class="hint-in2a">
+                    <span class="hint-in2a1">延期日期</span>
+                    <span class="hint-in2a2">
+                                    <input value=""
+                                           name=""
+                                           type="text"
+                                           class="equ_no_val postpone-date"
+                                    >
+                                </span>
+
+                </div>
+                <div class="hint-in2a">
+                    <span class="hint-in2a1">延期时长</span>
+                    <span class="hint-in2a2">
+                                    <input value="300"
+                                           name=""
+                                           type="text"
+                                           class="equ_name_val postpone-hours"
+                                    >
+                                </span>
+                </div>
+
+                <div class="hint-in2a">
+                    <span class="hint-in2a1">延期原因</span>
+                    <span class="hint-in2a2">
+                                    <input value="设备维修"
+                                           name=""
+                                           type="text"
+                                           class="equ_name_val postpone-reason"
+                                    >
+                                </span>
+                </div>
+
+            </div>
+            <a class="hint-in3 confirm" href="#">确定</a>
+        </div>
+
+    </div>
+
     <div id="ft" class="ue-clear rh_foot">
         <div class="ft-left"><em>版权所有：赵奇创新工作室</em></div>
         <div class="ft-right"><em>技术支持：非同科技</em></div>
-    </div>
-    <div class="exitDialog">
-        <div class="dialog-content">
-            <div class="ui-dialog-icon"></div>
-            <div class="ui-dialog-text">
-                <p class="dialog-content">你确定要退出系统？</p>
-                <p class="tips">如果是请点击“确定”，否则点“取消”</p>
-                <div class="buttons">
-                    <input type="button" class="button long2 ok" value="确定"/>
-                    <input type="button" class="button long2 normal" value="取消"/>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>
@@ -252,5 +335,92 @@
 <script src="__JS__/data.js"></script>
 <script>
     //设置标签
-    $('title').html('*{$detail.equ_oil_name}')
+    $('title').html('*{$detail.equ_oil_name}');
+    $('.runhua').click(function () {
+        $('.tanchuang .oiling').show(100);
+        $('.oiling-time').val(formatDate(new Date(), 'yyyy年MM月dd日'));
+        var id = $(this).data('id'),
+            userId = $(this).data('user_id'),
+            equNo = $(this).data('equ_no'),
+            equOilNo = $(this).data('equ_oil_no'),
+            equName = $(this).data('equ_name'),
+            equOilName = $(this).data('equ_oil_name');
+        $('.oiling .confirm').click(function (e) {
+            e.stopPropagation();
+            var quantity = $('.quantity').val(),
+                oilNo = $('.oilNo').val(),
+                delWarningTime = $('.oiling-time').val().replace(/^\s+|\s+$/gm, '');
+            var params = {
+                url: 'oiling/info/lubricate?XDEBUG_SESSION_START=11295',
+                type: 'post',
+                data: {
+                    id: id,
+                    user_id: userId,
+                    equ_no: equNo,
+                    equ_oil_no: equOilNo,
+                    equ_name: equName,
+                    equ_oil_name: equOilName,
+                    is_first_period: 0,
+                    warning_type: 1,
+                    del_warning_time: delWarningTime,
+                    oil_no: oilNo,
+                    quantity: quantity
+                },
+                sCallback: function (data) {
+                    window.location.reload();
+                },
+                eCallback: function (err) {
+                    if (err.errcode == 1) {
+                        alert(err.msg);
+                    }
+                }
+            };
+            window.base.getData(params);
+        });
+    });
+    $('.yanqi').click(function () {
+        $('.tanchuang .postpone').show(100);
+        $('.postpone-date').val(formatDate(new Date(), 'yyyy年MM月dd日'));
+        var id = $(this).data('id'),
+            userId = $(this).data('user_id'),
+            equNo = $(this).data('equ_no'),
+            equOilNo = $(this).data('equ_oil_no'),
+            equName = $(this).data('equ_name'),
+            howLong = $(this).data('how_long'),
+            equOilName = $(this).data('equ_oil_name');
+        $('.postpone .confirm').click(function (e) {
+            e.stopPropagation();
+            var postponeDate = $('.postpone-date').val().replace(/^\s+|\s+$/gm, ''),
+                postponeHours = $('.postpone-hours').val(),
+                postponeReason = $('.postpone-reason').val();
+            var params = {
+                url: 'oiling/info/postpone?XDEBUG_SESSION_START=11295',
+                type: 'post',
+                data: {
+                    id: id,
+                    user_id: userId,
+                    equ_no: equNo,
+                    equ_oil_no: equOilNo,
+                    equ_name: equName,
+                    equ_oil_name: equOilName,
+                    is_first_period: 0,
+                    warning_type: 0,
+                    how_long: howLong,
+                    del_warning_time: postponeDate,
+                    postpone: postponeHours,
+                    postpone_reason: postponeReason
+                },
+                sCallback: function (data) {
+                    window.location.reload();
+                },
+                eCallback: function (err) {
+                    if (err.errcode == 1) {
+                        alert(err.msg);
+                    }
+                }
+            };
+            window.base.getData(params);
+        });
+    });
+
 </script>

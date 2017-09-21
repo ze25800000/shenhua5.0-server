@@ -12,7 +12,7 @@ class BaseController extends Controller {
     protected $userName;
     protected $userScope;
     protected $account;
-    protected $id;
+    protected $user_id;
 
     public function __construct() {
         parent::__construct();

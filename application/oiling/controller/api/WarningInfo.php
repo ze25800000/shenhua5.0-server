@@ -57,6 +57,7 @@ class WarningInfo extends BaseController {
         $InfoWarningItem   = $infoWarningModel
             ->where('equ_key_no', '=', $posts['equ_key_no'])
             ->where('del_warning_time', '=', $posts['del_warning_time'])
+            ->where('warning_type','=','1')
             ->find();
         if (!$InfoWarningItem) {
             unset($posts['id']);
@@ -81,7 +82,7 @@ class WarningInfo extends BaseController {
         $maxDelTime                = $infoWarningModel
             ->where("equ_key_no={$posts['equ_key_no']}")
             ->max('del_warning_time');
-        if ($maxDelTime >= $posts['del_warning_time']) {
+        if ($maxDelTime > $posts['del_warning_time']) {
             throw new DocumentException([
                 'msg' => "最近一次消警日期为：" . date('Y年m月d日', $maxDelTime) . "，请输入大于该时间的消警日期"
             ]);
@@ -92,6 +93,7 @@ class WarningInfo extends BaseController {
         $InfoWarningItem   = $infoWarningModel
             ->where('equ_key_no', '=', $posts['equ_key_no'])
             ->where('del_warning_time', '=', $posts['del_warning_time'])
+            ->where('warning_type=0')
             ->find();
         if (!$InfoWarningItem) {
             unset($posts['id']);
