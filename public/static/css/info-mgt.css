@@ -1361,3 +1361,55 @@ button {
 .edit-item:hover {
     background-color: #c8f0ff;
 }
+
+.add-oil-analysis-box {
+    width: 100%;
+    height: 100%;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.add-oil-analysis-box .oil-analysis-window {
+    width: 760px;
+    height: 190px;
+    background-color: #fff;
+    border: 3px solid #ed6316;
+    border-radius: 3px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -380px;
+    margin-top: -90px;
+    padding: 20px;
+}
+
+.add-oil-analysis-box .oil-analysis-window table {
+    margin-top: 20px;
+}
+
+.add-oil-analysis-box .oil-analysis-window input {
+    width: 100%;
+    height: 50px;
+    outline-color: #a3fcff;
+    border: none;
+    text-indent: 20px;
+}
+
+.add-oil-analysis-box .oil-analysis-window .box-bottom {
+
+}
+
+.add-oil-analysis-box .oil-analysis-window .box-bottom a {
+    color: #ffffff;
+    float: right;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: #ed6316;
+    margin-left: 10px;
+    margin-top: 13px;
+
+}

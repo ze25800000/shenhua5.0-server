@@ -16,6 +16,7 @@ use app\service\BaseController;
 use app\service\ExcelHandle;
 use app\validate\DetailDateValidate;
 use app\validate\IDMustBePositiveInt;
+use app\validate\OilAnalysisItemValidate;
 
 class Analysis extends BaseController {
     public function deleteOilAnalysisItemById($id) {
@@ -61,5 +62,22 @@ class Analysis extends BaseController {
         return $this->ajaxReturn('通过时间获取油脂分析成功', 0, $result);
     }
 
-
+    public function addOilAnalysisItem() {
+        (new OilAnalysisItemValidate())->goCheck();
+        $excelHandle            = new ExcelHandle();
+        $_POST['equ_key_no']    = $_POST['equ_no'] . config('salt') . $_POST['equ_oil_no'];
+        $_POST['sampling_time'] = Tools::getTimestamp($_POST['sampling_time']);
+        $_POST['work_hour']     = $excelHandle->howLong($_POST['equ_key_no'], $_POST['sampling_time']);
+        $_POST['oil_no']        = $excelHandle->getOilNoFromInfo($_POST['equ_key_no']);
+        $_POST['oil_status']    = implode('<br>', $excelHandle->getOilStatus($_POST));
+        $_POST['advise']        = empty($_POST['oil_status']) ? 1 : 0;
+        $OilAnalysis            = new OilAnalysis($_POST);
+        $result                 = $OilAnalysis->save();
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '新增油脂分析条目失败'
+            ]);
+        }
+        return $this->ajaxReturn('新增油脂分析条目成功');
+    }
 }

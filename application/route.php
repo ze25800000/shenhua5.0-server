@@ -52,6 +52,7 @@ Route::delete('oiling/workhour/del/:id', 'oiling/api.WarningInfo/deleteWorkHourI
 
 //油脂分析
 Route::group('oiling/analysis', function () {
+    Route::post('add', 'oiling/api.Analysis/addOilAnalysisItem');
     Route::get('list/:before/:after', 'oiling/api.Analysis/getOilAnalysisListByDate');
     Route::delete('del/:id', 'oiling/api.Analysis/deleteOilAnalysisItemById');
     Route::post('edititem/:id', 'oiling/api.Analysis/editOilAnalysisItemById');
@@ -82,7 +83,6 @@ Route::group('user', function () {
     Route::get('center', 'oiling/User/center');
     Route::get('system', 'oiling/User/system');
 });
-
 
 
 //报警页面获取报警信息

@@ -167,7 +167,16 @@
             </div>
         </div>
         <div class="rhd_xqa">
-            <h3>油脂化验指标：</h3>
+            <h3>
+                <span class="rhd_xqa1">油脂化验指标：</span>
+                <span class="rhd_xqa2"><a href="javascript:;"
+                                          id="addOilAnalysisItem"
+                                          data-equ_no="*{$detail.equ_no}"
+                                          data-equ_oil_no="*{$detail.equ_oil_no}"
+                                          data-equ_name="*{$detail.equ_name}"
+                                          data-equ_oil_name="*{$detail.equ_oil_name}"
+                >【添加油脂化验指标】</a></span>
+            </h3>
             <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
                 <table>
                     <thead>
@@ -190,28 +199,28 @@
                     <tbody id="analysisBody">
                     *{foreach $detail.oil_analysis_list as $k=>$v}
                     <td class="num">*{$k+1}</td>
-                    <td class="time edit-item" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}</td>
+                    <td class="time" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}</td>
                     <td class="process">*{$v.work_hour}</td>
                     <td class="process">*{$v.oil_no}</td>
-                    <td class="num edit-item" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
+                    <td class="num" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.Fe}</td>
-                    <td class="num edit-item" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" }
+                    <td class="num" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.Cu}</td>
-                    <td class="num edit-item" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$c.Al" }
+                    <td class="num" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$c.Al" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.Al}</td>
-                    <td class="num edit-item" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$c.Si" }
+                    <td class="num" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$c.Si" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.Si}</td>
-                    <td class="num edit-item" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$c.Na" }
+                    <td class="num" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$c.Na" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.Na}</td>
-                    <td class="num edit-item" data-id="*{$v.id}" data-key="pq" *{if condition="$v.pq>$c.pq" }
+                    <td class="num" data-id="*{$v.id}" data-key="pq" *{if condition="$v.pq>$c.pq" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.pq}</td>
-                    <td class="num edit-item" data-id="*{$v.id}" data-key="viscosity" *{if
+                    <td class="num" data-id="*{$v.id}" data-key="viscosity" *{if
                         condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.viscosity}</td>
@@ -221,10 +230,50 @@
                     *{/foreach}
                     </tbody>
                 </table>
+                <div class="add-oil-analysis-box">
+                    <div class="oil-analysis-window">
+                        <h3>
+                            添加油脂分析记录
+                        </h3>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="process">采样日期</th>
+                                <th class="num">Fe</th>
+                                <th class="num">Cu</th>
+                                <th class="num">Al</th>
+                                <th class="num">Si</th>
+                                <th class="num">Na</th>
+                                <th class="num">PQ</th>
+                                <th class="num">粘度</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="num"><input id="samplingTime" type="text" value="2017年6月3日"></td>
+                                <td class="num"><input id="Fe" type="text" value="2.1"></td>
+                                <td class="num"><input id="Cu" type="text" value="3.6"></td>
+                                <td class="num"><input id="Al" type="text" value="1.3"></td>
+                                <td class="num"><input id="Si" type="text" value="2.1"></td>
+                                <td class="num"><input id="Na" type="text" value="3.65"></td>
+                                <td class="num"><input id="PQ" type="text" value="2.3"></td>
+                                <td class="num"><input id="viscosity" type="text" value="12"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="box-bottom">
+                            <a href="javascript:;" class="oil-analysis-confirm">确认</a>
+                            <a href="javascript:;" class="oil-analysis-cancel">取消</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="rhd_xqa">
-            <h3>运行时间：</h3>
+            <h3>
+                <span class="rhd_xqa1">运行时间：</span>
+                <span class="rhd_xqa2"><a href="#">【添加运行时间】</a></span>
+            </h3>
             <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
                 <table>
                     <thead>
@@ -460,7 +509,7 @@
         window.base.editItemByDblClick(_this, input, oldVal, url);
     });
     //删除
-    $('.rhd_xqb table tbody tr:first-child td.operate').html('<a href="javascript:;" class="del">删除</a>')
+    $('.rhd_xqb table tbody tr:first-child td.operate').html('<a href="javascript:;" class="del">删除</a>');
 
     $('.del-td').on('click', 'a', function () {
         $('.hintl').show(100);
@@ -473,7 +522,9 @@
                 url: 'oiling/' + type + '/del/' + id,
                 type: 'delete',
                 sCallback: function (data) {
-                    _this.parent().hide(200).remove();
+                    _this.parent().parent().hide(200).remove();
+//                    $(document).find('.rhd_xqb table tbody tr:first-child td.operate').html('<a href="javascript:;" class="del">删除</a>');
+                    window.location.reload();
                 },
                 eCallback: function (err) {
                     console.log(err);
@@ -481,5 +532,65 @@
             };
             window.base.getData(params);
         });
-    })
+    });
+
+    $('#addOilAnalysisItem').click(function (e) {
+        e.stopPropagation();
+        $('.add-oil-analysis-box').show(100);
+        var equNo = $(this).data('equ_no'),
+            equOilNo = $(this).data('equ_oil_no'),
+            equName = $(this).data('equ_name'),
+            equOilOame = $(this).data('equ_oil_name');
+        $('.oil-analysis-confirm').click(function (event) {
+            event.stopPropagation();
+            var samplingTime = $("#samplingTime").val(),
+                Fe = $("#Fe").val(),
+                Cu = $("#Cu").val(),
+                Al = $("#Al").val(),
+                Si = $("#Si").val(),
+                Na = $("#Na").val(),
+                pq = $("#PQ").val(),
+                viscosity = $("#viscosity").val(),
+                params = {
+                    url: 'oiling/analysis/add',
+                    type: 'post',
+                    data: {
+                        equ_no: equNo,
+                        equ_oil_no: equOilNo,
+                        equ_name: equName,
+                        equ_oil_name: equOilOame,
+                        sampling_time: samplingTime,
+                        Fe: Fe,
+                        Cu: Cu,
+                        Al: Al,
+                        Si: Si,
+                        Na: Na,
+                        pq: pq,
+                        viscosity: viscosity,
+                    },
+                    sCallback: function (data) {
+                        alert(data.msg);
+                        window.location.reload();
+                    },
+                    eCallback: function (err) {
+                        if (err.errcode == 2) {
+                            err.msg.sampling_time&&alert(err.msg.sampling_time);
+                            err.msg.Fe&&alert(err.msg.Fe);
+                            err.msg.Cu&&alert(err.msg.Cu);
+                            err.msg.Al&&alert(err.msg.Al);
+                            err.msg.Si&&alert(err.msg.Si);
+                            err.msg.Na&&alert(err.msg.Na);
+                            err.msg.pq&&alert(err.msg.pq);
+                            err.msg.viscosity&&alert(err.msg.viscosity);
+                        }
+                    }
+                };
+            window.base.getData(params);
+            $('.add-oil-analysis-box').hide(100);
+
+        });
+        $('.oil-analysis-cancel').click(function () {
+            $('.add-oil-analysis-box').hide(100);
+        });
+    });
 </script>
