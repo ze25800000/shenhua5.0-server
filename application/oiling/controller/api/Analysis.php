@@ -60,4 +60,6 @@ class Analysis extends BaseController {
         }
         return $this->ajaxReturn('通过时间获取油脂分析成功', 0, $result);
     }
+
+
 }

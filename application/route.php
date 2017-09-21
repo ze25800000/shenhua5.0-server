@@ -35,6 +35,7 @@ Route::group('oiling/standard', function () {
 
 //润滑提示与记录
 Route::group('oiling/info', function () {
+    Route::delete('del/:id', 'oiling/api.WarningInfo/deleteInfoItemById');
     Route::get('list/:before/:after', 'oiling/api.WarningInfo/getInfoListByDate');
     Route::get('getlist/:page', 'oiling/api.WarningInfo/getInfoList');
     //润滑功能的实现
@@ -45,6 +46,9 @@ Route::group('oiling/info', function () {
     Route::get('download/:ids', 'oiling/api.Download/downLoadExcelByIds');
     Route::get('', 'oiling/manager/info');
 });
+
+//运行时间
+Route::delete('oiling/workhour/del/:id', 'oiling/api.WarningInfo/deleteWorkHourItemById');
 
 //油脂分析
 Route::group('oiling/analysis', function () {
@@ -79,6 +83,8 @@ Route::group('user', function () {
     Route::get('system', 'oiling/User/system');
 });
 
+
+
 //报警页面获取报警信息
 Route::get('oiling/warning/getlist', 'oiling/api.WarningInfo/getWarningMessage');
 //获取对应设备编号的设备标准
@@ -98,7 +104,7 @@ Route::post('oiling/upload', 'oiling/api.Upload/uploadExcel');
 
 //必须加query：exceltype=workhour|infowarning
 Route::get('download/template', 'oiling/api.Download/downloadTemplate');
-
+//test
 Route::get('detail/:equ_key_no', 'oiling/manager/detail');
 
 

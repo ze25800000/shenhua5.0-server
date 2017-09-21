@@ -4,12 +4,14 @@ namespace app\oiling\controller\api;
 
 
 use app\lib\tools\Tools;
+use app\model\WorkHour;
 use app\service\ExcelHandle;
 use app\validate\DetailDateValidate;
 use app\validate\IDCollection;
 use app\lib\exception\DocumentException;
 use app\model\InfoWarning;
 use app\service\BaseController;
+use app\validate\IDMustBePositiveInt;
 use app\validate\LubricateValidate;
 use app\validate\PostponeValidate;
 use think\Config;
@@ -57,7 +59,7 @@ class WarningInfo extends BaseController {
         $InfoWarningItem   = $infoWarningModel
             ->where('equ_key_no', '=', $posts['equ_key_no'])
             ->where('del_warning_time', '=', $posts['del_warning_time'])
-            ->where('warning_type','=','1')
+            ->where('warning_type', '=', '1')
             ->find();
         if (!$InfoWarningItem) {
             unset($posts['id']);
@@ -107,5 +109,29 @@ class WarningInfo extends BaseController {
             ]);
         }
         return $this->ajaxReturn('延期操作成功');
+    }
+
+    public function deleteInfoItemById($id) {
+        (new IDMustBePositiveInt())->goCheck();
+        $result = InfoWarning::where('id', '=', $id)
+            ->delete();
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '删除消警记录失败'
+            ]);
+        }
+        return $this->ajaxReturn('删除消警记录成功');
+    }
+
+    public function deleteWorkHourItemById($id) {
+        (new IDMustBePositiveInt())->goCheck();
+        $result = WorkHour::where('id', '=', $id)
+            ->delete();
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '删除运行时间失败'
+            ]);
+        }
+        return $this->ajaxReturn('删除运行时间成功');
     }
 }

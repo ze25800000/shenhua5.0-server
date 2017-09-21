@@ -24,19 +24,21 @@
                     <table>
                         <tr class="rhd_xqb1a">
                             <th>物料编码：</th>
-                            <td>*{$detail.oil_no}</td>
+                            <td class="edit-item" data-id="*{$detail.id}" data-key="oil_no">*{$detail.oil_no}</td>
                             <th>用量：</th>
-                            <td>*{$detail.quantity}</td>
+                            <td class="edit-item" data-id="*{$detail.id}" data-key="quantity">*{$detail.quantity}</td>
                             <th>单位：</th>
-                            <td>*{$detail.unit}</td>
+                            <td class="edit-item" data-id="*{$detail.id}" data-key="unit">*{$detail.unit}</td>
                         </tr>
                         <tr class="rhd_xqb1a">
                             <th>更换最长周期：</th>
-                            <td>*{$detail.period}</td>
+                            <td class="edit-item" data-id="*{$detail.id}" data-key="period">*{$detail.period}</td>
                             <th>首保周期：</th>
-                            <td>*{$detail.first_period}</td>
+                            <td class="edit-item" data-id="*{$detail.id}" data-key="first_period">
+                                *{$detail.first_period}
+                            </td>
                             <th>油脂采样间隔：</th>
-                            <td>*{$detail.interval}</td>
+                            <td class="edit-item" data-id="*{$detail.id}" data-key="interval">*{$detail.interval}</td>
                         </tr>
                     </table>
                 </div>
@@ -123,6 +125,48 @@
             <div class="clear"></div>
         </div>
         <div class="rhd_xqa">
+            <h3>操作记录：</h3>
+            <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="num">ID</th>
+                        <th class="process">上次消警时间</th>
+                        <th class="process">消警类型</th>
+                        <th class="process">运行时长</th>
+                        <th class="process">状态</th>
+                        <th class="process">物料编号</th>
+                        <th class="process">用量</th>
+                        <th class="process">延期时长</th>
+                        <th class="process">延期原因</th>
+                        <th class="operate">是否首保</th>
+                        <th class="operate">操作人员</th>
+                        <th class="operate">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    *{foreach $detail.info_warning_detail as $k=>$v}
+                    <tr>
+                        <td class="num">*{$k+1}</td>
+                        <td class="time">*{$v.del_warning_time|date="Y年m月d日",###}</td>
+                        <td class="time">*{$v.warning_type?"润滑":"延期"}</td>
+                        <td class="process">*{$v.how_long}</td>
+                        <td class="process">*{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
+                        <td class="process">*{$v.oil_no}</td>
+                        <td class="process">*{$v.quantity}</td>
+                        <td class="process">*{$v.postpone}</td>
+                        <td class="process">*{$v.postpone_reason}</td>
+                        <td class="process">*{$v.is_first_period?'是':'否'}</td>
+                        <td class="process">*{$v.user.name}</td>
+                        <td class="operate table-operate del-td" data-id="*{$v.id}" data-type="info">
+                        </td>
+                    </tr>
+                    *{/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="rhd_xqa">
             <h3>油脂化验指标：</h3>
             <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
                 <table>
@@ -140,76 +184,39 @@
                         <th class="num">PQ</th>
                         <th class="num">粘度</th>
                         <th class="process">油脂状态</th>
+                        <th class="operate">操作</th>
                     </tr>
                     </thead>
                     <tbody id="analysisBody">
                     *{foreach $detail.oil_analysis_list as $k=>$v}
                     <td class="num">*{$k+1}</td>
-                    <td class="time" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}</td>
+                    <td class="time edit-item" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}</td>
                     <td class="process">*{$v.work_hour}</td>
                     <td class="process">*{$v.oil_no}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
+                    <td class="num edit-item" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.Fe}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" }
+                    <td class="num edit-item" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.Cu}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$c.Al" }
+                    <td class="num edit-item" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$c.Al" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.Al}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$c.Si" }
+                    <td class="num edit-item" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$c.Si" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.Si}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$c.Na" }
+                    <td class="num edit-item" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$c.Na" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.Na}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="pq" *{if condition="$v.pq>$c.pq" }
+                    <td class="num edit-item" data-id="*{$v.id}" data-key="pq" *{if condition="$v.pq>$c.pq" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.pq}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="viscosity" *{if
+                    <td class="num edit-item" data-id="*{$v.id}" data-key="viscosity" *{if
                         condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
                         style="color: red;font-weight: 600;" *{
                     /if}>*{$v.viscosity}</td>
                     <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
-                    </tr>
-                    *{/foreach}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="rhd_xqa">
-            <h3>操作记录：</h3>
-            <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
-                <table>
-                    <thead>
-                    <tr>
-                        <th class="num">ID</th>
-                        <th class="process">上次消警时间</th>
-                        <th class="process">消警类型</th>
-                        <th class="process">运行时长</th>
-                        <th class="process">状态</th>
-                        <th class="process">物料编号</th>
-                        <th class="process">用量</th>
-                        <th class="process">延期时长</th>
-                        <th class="process">延期原因</th>
-                        <th class="operate">是否首保</th>
-                        <th class="operate">操作人员</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    *{foreach $detail.info_warning_detail as $k=>$v}
-                    <tr>
-                        <td class="num">*{$k+1}</td>
-                        <td class="time">*{$v.del_warning_time|date="Y年m月d日",###}</td>
-                        <td class="time">*{$v.warning_type?"润滑":"延期"}</td>
-                        <td class="process">*{$v.how_long}</td>
-                        <td class="process">*{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
-                        <td class="process">*{$v.oil_no}</td>
-                        <td class="process">*{$v.quantity}</td>
-                        <td class="process">*{$v.postpone}</td>
-                        <td class="process">*{$v.postpone_reason}</td>
-                        <td class="process">*{$v.is_first_period?'是':'否'}</td>
-                        <td class="process">*{$v.user.name}</td>
+                    <td class="operate table-operate del-td" data-id="*{$v.id}" data-type="analysis"></td>
                     </tr>
                     *{/foreach}
                     </tbody>
@@ -225,7 +232,7 @@
                         <th class="num">ID</th>
                         <th class="time">运行起始时间</th>
                         <th class="process">运行时长</th>
-
+                        <th class="operate">操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -234,6 +241,7 @@
                         <td class="num">*{$k+1}</td>
                         <td class="time">*{$v.start_time|date="Y年m月d日",###}</td>
                         <td class="process">*{$v.working_hour}</td>
+                        <td class="operate table-operate del-td" data-id="*{$v.id}" data-type="workhour"></td>
                     </tr>
                     *{/foreach}
                     </tbody>
@@ -264,7 +272,13 @@
                     <span class="hint-in2a2">
                                     <select name="" class="oilNo">
                                         *{foreach $oilNoList as $v}
-                                        <option value="*{$v.oil_no}">*{$v.oil_no} | *{$v.oil_name} | *{$v.detail}</option>
+                                        <option
+                                                value="*{$v.oil_no}"
+                                                *{if condition="$detail.oil_no==$v.oil_no" }
+                                                selected
+                                                *{/if}
+                                        >*{$v.oil_no} | *{$v.oil_name} | *{$v.detail}
+                                        </option>
                                         *{/foreach}
                                     </select>
                                 </span>
@@ -322,7 +336,16 @@
             </div>
             <a class="hint-in3 confirm" href="#">确定</a>
         </div>
-
+        <div class="hintl">
+            <div class="hintl-in1">
+                <div class="hintl1"></div>
+                <div class="hintl2">设备润滑删除窗口</div>
+                <div class="hint3"></div>
+            </div>
+            <div class="hintl-in2">是否删除该设备润滑标准？</div>
+            <a class="hintl-in3 confirm-del" href="javascript:;">是</a>
+            <a class="hintl-in4" href="javascript:;">否</a>
+        </div>
     </div>
 
     <div id="ft" class="ue-clear rh_foot">
@@ -422,5 +445,41 @@
             window.base.getData(params);
         });
     });
+    //编辑润滑标准条目信息
+    $(document).on('dblclick', '.edit-item', function (e) {
+        var _this = $(this),
+            oldVal = _this.html(),
+            url = 'oiling/standard/edititem/';
+        oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
+        var long = oldVal.length * 12;
+        if (!/input/.test(oldVal)) {
+            _this.html('<input type="text" value="' + oldVal + '" style="width: ' + long + 'px">');
+        }
+        var input = _this.find('input');
+        input.select();
+        window.base.editItemByDblClick(_this, input, oldVal, url);
+    });
+    //删除
+    $('.rhd_xqb table tbody tr:first-child td.operate').html('<a href="javascript:;" class="del">删除</a>')
 
+    $('.del-td').on('click', 'a', function () {
+        $('.hintl').show(100);
+        var _this = $(this),
+            id = _this.parent().data('id'),
+            type = _this.parent().data('type');
+        $('.confirm-del').click(function (e) {
+            e.stopPropagation();
+            var params = {
+                url: 'oiling/' + type + '/del/' + id,
+                type: 'delete',
+                sCallback: function (data) {
+                    _this.parent().hide(200).remove();
+                },
+                eCallback: function (err) {
+                    console.log(err);
+                }
+            };
+            window.base.getData(params);
+        });
+    })
 </script>

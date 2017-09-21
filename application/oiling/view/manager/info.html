@@ -187,7 +187,15 @@
                                 <span class="hint-in2a2">
                                     <select name="" class="oilNo">
                                         *{foreach $oilNoList as $v}
-                                        <option value="*{$v.oil_no}">*{$v.oil_no} | *{$v.oil_name} | *{$v.detail}</option>
+                                         <option
+                                                 value="*{$v.oil_no}"
+                                                 *{foreach $oilNoStandard as $vv}
+                                                 *{if condition="$vv.oil_no==$v.oil_no" }
+                                                 selected
+                                                 *{/if}
+                                                *{/foreach}
+                                        >*{$v.oil_no} | *{$v.oil_name} | *{$v.detail}
+                                        </option>
                                         *{/foreach}
                                     </select>
                                 </span>
