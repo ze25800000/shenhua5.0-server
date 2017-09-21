@@ -48,7 +48,10 @@ Route::group('oiling/info', function () {
 });
 
 //运行时间
-Route::delete('oiling/workhour/del/:id', 'oiling/api.WarningInfo/deleteWorkHourItemById');
+Route::group('oiling/workhour', function () {
+    Route::delete('del/:id', 'oiling/api.WorkHour/deleteWorkHourItemById');
+    Route::post('add', 'oiling/api.WorkHour/addWorkHourItem');
+});
 
 //油脂分析
 Route::group('oiling/analysis', function () {

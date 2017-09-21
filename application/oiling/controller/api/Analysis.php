@@ -72,7 +72,15 @@ class Analysis extends BaseController {
         $_POST['oil_status']    = implode('<br>', $excelHandle->getOilStatus($_POST));
         $_POST['advise']        = empty($_POST['oil_status']) ? 1 : 0;
         $OilAnalysis            = new OilAnalysis($_POST);
-        $result                 = $OilAnalysis->save();
+        $MaxSamplingTime        = $OilAnalysis
+            ->where('equ_key_no', '=', $_POST['equ_key_no'])
+            ->max('sampling_time');
+        if ($MaxSamplingTime >= $_POST['sampling_time']) {
+            throw new DocumentException([
+                'msg' => '输入的采样时间不能小于等于上一次采样时间'
+            ]);
+        }
+        $result = $OilAnalysis->save();
         if (!$result) {
             throw new DocumentException([
                 'msg' => '新增油脂分析条目失败'

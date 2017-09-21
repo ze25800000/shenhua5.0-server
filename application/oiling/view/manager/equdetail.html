@@ -272,7 +272,13 @@
         <div class="rhd_xqa">
             <h3>
                 <span class="rhd_xqa1">运行时间：</span>
-                <span class="rhd_xqa2"><a href="#">【添加运行时间】</a></span>
+                <span class="rhd_xqa2"><a href="javascript:;"
+                                          id="addWorkHour"
+                                          data-equ_no="*{$detail.equ_no}"
+                                          data-equ_oil_no="*{$detail.equ_oil_no}"
+                                          data-equ_name="*{$detail.equ_name}"
+                                          data-equ_oil_name="*{$detail.equ_oil_name}"
+                >【添加运行时间】</a></span>
             </h3>
             <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
                 <table>
@@ -296,6 +302,22 @@
                     </tbody>
                 </table>
             </div>
+            <div class="add-oil-analysis-box workhour">
+                <div class="oil-analysis-window">
+                    <h3>
+                        添加运行时间
+                    </h3>
+                    <div class="content">
+                        <p><span>起始日期：</span><input id="startTime" type="text" value=""></p>
+                        <p><span>运行时长：</span><input id="workingHour" type="text" value="360"></p>
+                    </div>
+                    <div class="box-bottom">
+                        <a href="javascript:;" class="workhour-confirm">确认</a>
+                        <a href="javascript:;" class="workhour-cancel">取消</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="tanchuang">
@@ -519,7 +541,7 @@
         $('.confirm-del').click(function (e) {
             e.stopPropagation();
             var params = {
-                url: 'oiling/' + type + '/del/' + id,
+                url: 'oiling/' + type + '/del/' + id+'?XDEBUG_SESSION_START=11353',
                 type: 'delete',
                 sCallback: function (data) {
                     _this.parent().parent().hide(200).remove();
@@ -536,6 +558,7 @@
 
     $('#addOilAnalysisItem').click(function (e) {
         e.stopPropagation();
+        $('.add-oil-analysis-box #samplingTime').val(formatDate(new Date(), 'yyyy年MM月dd日'));
         $('.add-oil-analysis-box').show(100);
         var equNo = $(this).data('equ_no'),
             equOilNo = $(this).data('equ_oil_no'),
@@ -569,19 +592,21 @@
                         viscosity: viscosity,
                     },
                     sCallback: function (data) {
-                        alert(data.msg);
                         window.location.reload();
                     },
                     eCallback: function (err) {
                         if (err.errcode == 2) {
-                            err.msg.sampling_time&&alert(err.msg.sampling_time);
-                            err.msg.Fe&&alert(err.msg.Fe);
-                            err.msg.Cu&&alert(err.msg.Cu);
-                            err.msg.Al&&alert(err.msg.Al);
-                            err.msg.Si&&alert(err.msg.Si);
-                            err.msg.Na&&alert(err.msg.Na);
-                            err.msg.pq&&alert(err.msg.pq);
-                            err.msg.viscosity&&alert(err.msg.viscosity);
+                            err.msg.sampling_time && alert(err.msg.sampling_time);
+                            err.msg.Fe && alert(err.msg.Fe);
+                            err.msg.Cu && alert(err.msg.Cu);
+                            err.msg.Al && alert(err.msg.Al);
+                            err.msg.Si && alert(err.msg.Si);
+                            err.msg.Na && alert(err.msg.Na);
+                            err.msg.pq && alert(err.msg.pq);
+                            err.msg.viscosity && alert(err.msg.viscosity);
+                        }
+                        if (err.errcode == 1) {
+                            alert(err.msg);
                         }
                     }
                 };
@@ -590,6 +615,45 @@
 
         });
         $('.oil-analysis-cancel').click(function () {
+            $('.add-oil-analysis-box').hide(100);
+        });
+    });
+
+    $('#addWorkHour').click(function (e) {
+        e.stopPropagation();
+        $('#startTime').val(formatDate(new Date(), 'yyyy年MM月dd日'));
+        $('.workhour').show(100);
+        var equNo = $(this).data('equ_no'),
+            equOilNo = $(this).data('equ_oil_no'),
+            equOilOame = $(this).data('equ_oil_name');
+        $('.workhour-confirm').click(function (e) {
+            e.stopPropagation();
+            var startTime = $('#startTime').val(),
+                workingHour = $('#workingHour').val(),
+                params = {
+                    url: 'oiling/workhour/add',
+                    type: 'post',
+                    data: {
+                        equ_no: equNo,
+                        equ_oil_no: equOilNo,
+                        equ_oil_name: equOilOame,
+                        start_time: startTime,
+                        working_hour: workingHour
+                    },
+                    sCallback: function (data) {
+                        window.location.reload();
+                    },
+                    eCallback: function (err) {
+                        if (err.errcode == 1) {
+                            alert(err.msg);
+                        }
+                    }
+                };
+            window.base.getData(params);
+            $('.add-oil-analysis-box').hide(100);
+
+        });
+        $('.workhour-cancel').click(function () {
             $('.add-oil-analysis-box').hide(100);
         });
     });

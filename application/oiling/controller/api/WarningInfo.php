@@ -123,15 +123,4 @@ class WarningInfo extends BaseController {
         return $this->ajaxReturn('删除消警记录成功');
     }
 
-    public function deleteWorkHourItemById($id) {
-        (new IDMustBePositiveInt())->goCheck();
-        $result = WorkHour::where('id', '=', $id)
-            ->delete();
-        if (!$result) {
-            throw new DocumentException([
-                'msg' => '删除运行时间失败'
-            ]);
-        }
-        return $this->ajaxReturn('删除运行时间成功');
-    }
 }
