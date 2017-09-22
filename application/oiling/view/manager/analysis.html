@@ -246,6 +246,7 @@
                 type: 'delete',
                 sCallback: function () {
                     _this.parent().parent().hide(200).remove();
+                    window.location.reload();
                 }
             };
             window.base.getData(params);
