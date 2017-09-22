@@ -79,6 +79,7 @@ class Manager extends BaseController {
             'account'   => $this->account,
             'userId'    => $this->user_id,
             'detail'    => $result,
+            'scope'     => $this->userScope,
             'c'         => $OilConfig,
             'oilNoList' => $oilNoList
         ]);

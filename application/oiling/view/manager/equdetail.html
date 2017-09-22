@@ -1,5 +1,10 @@
 <?php require(APP_PATH.'/oiling/view/manager/common/header.html');?>
-
+<style>
+    .operate {
+        width: 30px !important;
+        text-align: center;
+    }
+</style>
 <div id="hd">
     <div class="hd-wrap ue-clear">
         <div class="top-light"></div>
@@ -93,6 +98,7 @@
                     </table>
                 </div>
             </div>
+            *{if condition="$scope>=18"}
             <div class="rhd_xqb2">
                 <span class="rhd_xqb2a">
                     <a href="javascript:;"
@@ -122,6 +128,7 @@
                                 >延期</a>
                 </span>
             </div>
+            *{/if}
             <div class="clear"></div>
         </div>
         <div class="rhd_xqa">
@@ -141,7 +148,9 @@
                         <th class="process">延期原因</th>
                         <th class="operate">是否首保</th>
                         <th class="operate">操作人员</th>
+                        *{if condition="$scope>=18"}
                         <th class="operate">操作</th>
+                        *{/if}
                     </tr>
                     </thead>
                     <tbody>
@@ -158,8 +167,10 @@
                         <td class="process">*{$v.postpone_reason}</td>
                         <td class="process">*{$v.is_first_period?'是':'否'}</td>
                         <td class="process">*{$v.user.name}</td>
+                        *{if condition="$scope>=18"}
                         <td class="operate table-operate del-td" data-id="*{$v.id}" data-type="info">
                         </td>
+                        *{/if}
                     </tr>
                     *{/foreach}
                     </tbody>
@@ -193,7 +204,9 @@
                         <th class="num">PQ</th>
                         <th class="num">粘度</th>
                         <th class="process">油脂状态</th>
+                        *{if condition="$scope>=18"}
                         <th class="operate">操作</th>
+                        *{/if}
                     </tr>
                     </thead>
                     <tbody id="analysisBody">
@@ -218,7 +231,9 @@
                         condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
                         style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
                     <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
+                    *{if condition="$scope>=18"}
                     <td class="operate table-operate del-td" data-id="*{$v.id}" data-type="analysis"></td>
+                    *{/if}
                     </tr>
                     *{/foreach}
                     </tbody>
@@ -280,7 +295,9 @@
                         <th class="num">ID</th>
                         <th class="time">运行起始时间</th>
                         <th class="process">运行时长</th>
+                        *{if condition="$scope>=18"}
                         <th class="operate">操作</th>
+                        *{/if}
                     </tr>
                     </thead>
                     <tbody>
@@ -289,7 +306,9 @@
                         <td class="num">*{$k+1}</td>
                         <td class="time">*{$v.start_time|date="Y年m月d日",###}</td>
                         <td class="process">*{$v.working_hour}</td>
-                        <td class="operate table-operate del-td" data-id="*{$v.id}" data-type="workhour"></td>
+                        *{if condition="$scope>=18"}
+                        <td style="width: 30px; text-align: center;" class="operate table-operate del-td" data-id="*{$v.id}" data-type="workhour"></td>
+                        *{/if}
                     </tr>
                     *{/foreach}
                     </tbody>
@@ -509,6 +528,7 @@
             window.base.getData(params);
         });
     });
+    *{if condition="$scope==36"}
     //编辑润滑标准条目信息
     $(document).on('dblclick', '.edit-item', function (e) {
         var _this = $(this),
@@ -523,6 +543,7 @@
         input.select();
         window.base.editItemByDblClick(_this, input, oldVal, url);
     });
+    *{/if}
     //删除
     $('.rhd_xqb table tbody tr:first-child td.operate').html('<a href="javascript:;" class="del">删除</a>');
     $('.del-td').on('click', 'a', function () {

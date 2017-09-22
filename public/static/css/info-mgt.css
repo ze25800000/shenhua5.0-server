@@ -48,6 +48,20 @@ body {
     overflow: visible;
     position: relative;
 }
+.query-conditions .search-box {
+    position: absolute;
+    right: 20px;
+    font-size: 14px;
+}
+.query-conditions .search-box .search-info {
+    line-height: 44px;
+}
+
+.query-conditions .search-box .search-input {
+    width: 280px;
+    border:1px solid #dcdcdc;
+    text-indent: 10px;
+}
 
 .query .conditions {
     overflow: visible;
@@ -277,7 +291,7 @@ body {
 
 .query .total-box {
     position: absolute;
-    right: 80px;
+    right: 700px;
     top: 0;
     line-height: 46px;
 }
@@ -752,7 +766,6 @@ button {
 
 .add-member .scope * {
     float: left;
-    font-size: 16px;
 }
 
 .add-member .scope input {

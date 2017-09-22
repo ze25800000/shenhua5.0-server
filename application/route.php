@@ -26,6 +26,7 @@ Route::get('oiling/warning', 'oiling/Manager/warning');
 //设备润滑标准
 Route::delete('oiling/equipment/del/:id', 'oiling/api.standard/delEquipmentById');
 Route::group('oiling/standard', function () {
+    Route::get('search/:keyword', 'oiling/api.Search/getListByKeyword');
     Route::get(':equ_no', 'oiling/api.Standard/getStandardByEquNo', [], ['equ_no' => '\d+']);
     Route::post('edititem/:id', 'oiling/api.Standard/editOilStandardDetailById');
     Route::delete('del/:id', 'oiling/api.standard/deleteOilStandardItemById');
@@ -35,6 +36,7 @@ Route::group('oiling/standard', function () {
 
 //润滑提示与记录
 Route::group('oiling/info', function () {
+    Route::get('search/:keyword', 'oiling/api.Search/getListByKeyword');
     Route::delete('del/:id', 'oiling/api.WarningInfo/deleteInfoItemById');
     Route::get('list/:before/:after', 'oiling/api.WarningInfo/getInfoListByDate');
     Route::get('getlist/:page', 'oiling/api.WarningInfo/getInfoList');
@@ -47,14 +49,9 @@ Route::group('oiling/info', function () {
     Route::get('', 'oiling/manager/info');
 });
 
-//运行时间
-Route::group('oiling/workhour', function () {
-    Route::delete('del/:id', 'oiling/api.WorkHour/deleteWorkHourItemById');
-    Route::post('add', 'oiling/api.WorkHour/addWorkHourItem');
-});
-
 //油脂分析
 Route::group('oiling/analysis', function () {
+    Route::get('search/:keyword', 'oiling/api.Search/getListByKeyword');
     Route::post('add', 'oiling/api.Analysis/addOilAnalysisItem');
     Route::get('list/:before/:after', 'oiling/api.Analysis/getOilAnalysisListByDate');
     Route::delete('del/:id', 'oiling/api.Analysis/deleteOilAnalysisItemById');
@@ -65,11 +62,18 @@ Route::group('oiling/analysis', function () {
 
 //设备成本管理
 Route::group('oiling/oildetail', function () {
+    Route::get('search/:keyword', 'oiling/api.Search/getListByKeyword');
     Route::get('equname/:oil_no', 'oiling/api.OilDetailCost/getEquOilNameByOilNo');
     Route::get('costlist/:before/:after', 'oiling/api.OilDetailCost/getCostListByDate');
     Route::post('edit/:id', 'oiling/api.OilDetailCost/editOilDetailItemById');
     Route::delete('delete/:id', 'oiling/api.OilDetailCost/deleteOilDetailItemById');
     Route::get('', 'oiling/Manager/oildetail');
+});
+
+//运行时间
+Route::group('oiling/workhour', function () {
+    Route::delete('del/:id', 'oiling/api.WorkHour/deleteWorkHourItemById');
+    Route::post('add', 'oiling/api.WorkHour/addWorkHourItem');
 });
 
 //润滑点详情页
@@ -88,23 +92,10 @@ Route::group('user', function () {
 });
 
 
-//报警页面获取报警信息
-Route::get('oiling/warning/getlist', 'oiling/api.WarningInfo/getWarningMessage');
-//获取对应设备编号的设备标准
-//通过通过设备id获取设备详情数据
-Route::get('oiling/equ/detail/:equ_key_no', 'oiling/api.detail/getEquipmentDetailByNo');
-//润滑提示与消警提示列表页
-Route::get('oiling/infolist/getlist/:page', 'oiling/api.WarningInfo/getInfoList');
 
 /*************************************公共功能**************************************/
-//搜索设备
-Route::get('search/:keyword', 'oiling/api.search/getEquipmentDetailByKeyWord');
-
 //上传基础数据并保存excel到数据库
 Route::post('oiling/upload', 'oiling/api.Upload/uploadExcel');
-//下载excel
-
-
 //必须加query：exceltype=workhour|infowarning
 Route::get('download/template', 'oiling/api.Download/downloadTemplate');
 //test

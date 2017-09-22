@@ -35,4 +35,10 @@ class OilStandard extends BaseModel {
             }
         ])->where('equ_key_no', '=', $no)->find();
     }
+
+    public static function getOilStandardListByKeyword($keyword) {
+        $result = self::where('equ_oil_name', 'LIKE', "%$keyword%")
+            ->select();
+        return $result;
+    }
 }

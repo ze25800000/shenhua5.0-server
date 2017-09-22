@@ -70,4 +70,22 @@ class InfoWarning extends BaseModel {
             ->select();
         return $result;
     }
+
+    public static function getInfoWarningListByKeyword($keyword) {
+        $equKeyNoLists = self::where('equ_oil_name', 'LIKE', "%$keyword%")
+            ->field('equ_key_no')->select();
+        $equKeyNos     = Tools::listMoveToArray($equKeyNoLists, 'equ_key_no');
+        $result        = [];
+        foreach ($equKeyNos as $equKeyNo) {
+            $item = self::where('equ_key_no', '=', $equKeyNo)
+                ->order('del_warning_time desc')
+                ->limit(1)
+                ->find();
+            array_push($result, $item);
+        }
+        if (empty($result)) {
+            return null;
+        }
+        return $result;
+    }
 }

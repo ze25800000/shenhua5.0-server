@@ -48,7 +48,6 @@
                     </div>
                     *{/if}
                 </div>
-                *{if condition="$scope>=18"}
                 <div class="title">
                     <div class="check-content">
                         <span class="select-all">全选:</span>
@@ -56,6 +55,7 @@
                         <span class="check-info">下载选中的油脂指标分析记录</span>
                         <a href="javascript:;" class="check-download">下载</a>
                     </div>
+                *{if condition="$scope>=18"}
                     <div class="uploader orange analysis">
                         <form>
                             <span>批量上传油脂化验指标分析：</span>
@@ -66,6 +66,7 @@
                                    class="button upload" value="上传"/>
                         </form>
                     </div>
+                *{/if}
                 </div>
                 <div class="query">
                     <div class="query-conditions ue-clear">
@@ -88,9 +89,12 @@
                         <div class="query-btn ue-clear cost-confirm">
                             <a href="/oiling/analysis" class="confirm">最近一次</a>
                         </div>
+                        <div class="search-box">
+                            <span class="search-info">搜索油脂化验指标分析：</span>
+                            <input class="search-input" type="text" placeholder="输入润滑点名称">
+                        </div>
                     </div>
                 </div>
-                *{/if}
                 <div class="table-box">
                     <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
                         <table>
@@ -146,7 +150,9 @@
                             <td class="process">*{$v.advise?'正常使用':'建议更换'}</td>
                             <td class="operate table-operate">
                                 <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
+                                *{if condition="$scope>=19"}
                                 <a href="javascript:;" class="del" data-id="*{$v.id}">删除</a>
+                                *{/if}
                             </td>
                             </tr>
                             *{/foreach}

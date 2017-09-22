@@ -109,11 +109,11 @@
                         </div>
                         <div class="query">
                             <div class="query-conditions ue-clear">
-                                <div class="conditions staff ue-clear">
-                                    <span style="float: left;font-size: 14px;">搜索润滑点：</span>
-                                    <input class="search" type="text" placeholder="请输入要查询的内容"/>
-                                    <div class="search-result">
-                                    </div>
+                                <div style="height: 37px;" class="conditions time ue-clear">
+                                </div>
+                                <div class="search-box">
+                                    <span class="search-info">搜索设备润滑标准：</span>
+                                    <input class="search-input" type="text" placeholder="输入润滑点名称">
                                 </div>
                             </div>
                         </div>
@@ -356,36 +356,5 @@
             }
         };
         window.base.uploadFile(params);
-    });
-    //搜索
-    $(document).on("keyup", '.search', function (e) {
-        var val = $(this).val(),
-            _this = $(this),
-            params = {
-                url: 'search/' + val,
-                sCallback: function (data) {
-                    if (data.errcode === 0) {
-                        var html = '',
-                            list = data.data;
-                        for (var i = 0; i < list.length; i++) {
-                            html += '<p><a target="_blank" href="equdetail/' + list[i].equ_key_no + '">' + list[i].equ_oil_name + '</a></p>'
-                        }
-                        $('.search-result').show(100).html(html);
-                    } else {
-                        $('.search-result').hide(100).html('')
-                    }
-                }
-            };
-        if (val) {
-            window.base.getData(params);
-        } else {
-            $('.search-result').hide().html('');
-        }
-        $(document).on('blur', '.search', function () {
-            setTimeout(function () {
-            $('.search-result').hide(100).html('');
-            },300)
-
-        })
     });
 </script>

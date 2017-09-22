@@ -9,6 +9,8 @@
 namespace app\model;
 
 
+use app\lib\tools\Tools;
+
 class OilAnalysis extends BaseModel {
     protected $hidden = ['create_time', 'update_time'];
 
@@ -63,6 +65,24 @@ class OilAnalysis extends BaseModel {
             ->order('sampling_time desc')
             ->order('equ_key_no asc')
             ->select();
+        return $result;
+    }
+
+    public static function getOilAnalysisListByKeyword($keyword) {
+        $equKeyNoLists = self::where('equ_oil_name', 'LIKE', "%$keyword%")
+            ->field('equ_key_no')->select();
+        $equKeyNos     = Tools::listMoveToArray($equKeyNoLists, 'equ_key_no');
+        $result        = [];
+        foreach ($equKeyNos as $equKeyNo) {
+            $item = self::where('equ_key_no', '=', $equKeyNo)
+                ->order('sampling_time desc')
+                ->limit(1)
+                ->find();
+            array_push($result, $item);
+        }
+        if (empty($result)) {
+            return null;
+        }
         return $result;
     }
 }

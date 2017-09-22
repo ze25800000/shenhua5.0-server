@@ -10,26 +10,38 @@ namespace app\oiling\controller\api;
 
 
 use app\lib\exception\DocumentException;
+use app\model\InfoWarning;
+use app\model\OilAnalysis;
+use app\model\OilDetail;
 use app\model\OilStandard;
 use app\service\BaseController;
 use app\validate\KeywordMustBeHanZiValidate;
+use think\Request;
 
 class Search extends BaseController {
-    /**搜索功能
-     * @param $keyword
-     * @return \think\response\Json
-     * @throws DocumentException
-     */
-    public function getEquipmentDetailByKeyWord($keyword) {
-        (new KeywordMustBeHanZiValidate())->goCheck();
-        $result = OilStandard::where("equ_oil_name like '%{$keyword}%'")->field('equ_key_no,equ_oil_name')->limit(10)->select();
+    public function getListByKeyword($keyword) {
+        $url = Request::instance()->url();
+        preg_match('/oiling\/(\w+)\/search/', $url, $matches);
+        $type = $matches[1];
+        switch ($type) {
+            case 'standard':
+                $result = OilStandard::getOilStandardListByKeyword($keyword);
+                break;
+            case 'info':
+                $result = InfoWarning::getInfoWarningListByKeyword($keyword);
+                break;
+            case 'analysis':
+                $result = OilAnalysis::getOilAnalysisListByKeyword($keyword);
+                break;
+            case 'oildetail':
+                $result = OilDetail::getOilDetailListByKeyword($keyword);
+                break;
+        }
         if (!$result) {
             throw new DocumentException([
-                'msg'     => '没有查询结果',
-                'code'    => '201',
-                'errcode' => '1'
+                'msg' => '通过关键字获取列表信息失败'
             ]);
         }
-        return $this->ajaxReturn('查询成功', 0, $result);
+        return $this->ajaxReturn('通过关键字获取列表信息成功', 0, $result);
     }
 }

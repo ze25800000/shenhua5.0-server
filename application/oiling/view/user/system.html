@@ -1,4 +1,11 @@
 <?php require(APP_PATH.'/oiling/view/user/common/header.html');?>
+<style>
+    select.scopeModify {
+        border: 1px solid #ebebeb;
+        height: 30px;
+        line-height: 30px;
+    }
+</style>
 <div id="container">
     <div id="hd">
         <div class="hd-wrap ue-clear">
@@ -355,10 +362,10 @@
                 type: 'post',
                 data: {id: id, scope: scope},
                 sCallback: function (data) {
-                    alert(data.msg);
+                    window.location.reload();
                 },
                 eCallback: function (err) {
-                    alert(err.msg);
+                    window.location.reload();
                 }
             };
             window.base.getData(params);
