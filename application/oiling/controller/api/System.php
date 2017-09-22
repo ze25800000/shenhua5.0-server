@@ -52,7 +52,7 @@ class System extends BaseController {
 
     public function deleteUserById($id) {
         (new IDMustBePositiveInt())->goCheck();
-        $result = User::where('id', '', $id)
+        $result = User::where('id', '=', $id)
             ->delete();
         if (!$result) {
             throw new DocumentException([
@@ -87,7 +87,8 @@ class System extends BaseController {
                 'msg' => '该账号已经存在'
             ]);
         }
-        $result = $model->save($_POST);
+        $_POST['password'] = empty($_POST['password']) ? md5('123456') : md5($_POST['password']);
+        $result            = $model->save($_POST);
         if (!$result) {
             throw new DocumentException([
                 'msg' => '新建用户失败'

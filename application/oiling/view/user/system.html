@@ -40,13 +40,59 @@
                              style=" border:none; border-bottom:1px #CCCCCC solid; background:#f1f1f1; height:33px;">
                             <h2 class="title-list">
                                 <ul class="ue-clear">
-                                    <li class="current"><a href="javascript:;">参数配置</a></li>
-                                    <li><a href="javascript:;">账户管理</a></li>
+                                    <li class="current"><a href="javascript:;">账户管理</a></li>
+                                    <li><a href="javascript:;">参数配置</a></li>
                                 </ul>
                             </h2>
                         </div>
                         <div class="content" style=" border:none; height:auto; ">
                             <div class="matter-content current ue-clear">
+                                <div class="table-operate ue-clear">
+                                    <a href="javascript:;" class="add addMember">添加</a>
+                                </div>
+                                <div class="table-box">
+                                    <table style=" border:none;  ">
+                                        <thead>
+                                        <tr>
+                                            <th class="name" style="width: 10px;text-align: center;">ID</th>
+                                            <th class="name">账号</th>
+                                            <th class="process">用户名</th>
+                                            <th class="node">电话</th>
+                                            <th class="time">权限</th>
+                                            <th class="operate">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        *{foreach $users as $k=> $user}
+                                        <tr style="border-bottom:1px #ddd solid; ">
+                                            <td class="name" style="width: 10px;text-align: center;">*{$k+1}</td>
+                                            <td class="name">*{$user.account}</td>
+                                            <td class="process">*{$user.name}</td>
+                                            <td class="node">*{$user.phone}</td>
+                                            <td class="time">
+                                                *{if condition="$user.scope==36"}
+                                                超级管理员
+                                                *{else/}
+                                                <select class="scopeModify" data-id="*{$user.id}">
+                                                    <option value="18" *{if condition="$user.scope==18" }selected*{/if}>系统维护员</option>
+                                                    <option value="9" *{if condition="$user.scope==9" }selected*{/if}>普通工作人员</option>
+                                                </select>
+                                                *{/if}
+                                            </td>
+
+                                            <td class="operate table-operate">
+                                                *{if condition="$user.scope!=36"}
+                                                <a href="javascript:;" class="del del-member"
+                                                   data-id="*{$user.id}">删除</a>
+                                                *{/if}
+                                            </td>
+                                        </tr>
+                                        *{/foreach}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="matter-content ue-clear">
 
                                 <div class="main" style=" border:none; padding:20px; ">
                                     <table>
@@ -94,47 +140,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="matter-content ue-clear">
-                                <div class="table-operate ue-clear">
-                                    <a href="javascript:;" class="add addMember">添加</a>
-                                </div>
-                                <div class="table-box">
-                                    <table style=" border:none;  ">
-                                        <thead>
-                                        <tr>
-                                            <th class="name" style="width: 10px;text-align: center;">ID</th>
-                                            <th class="name">账号</th>
-                                            <th class="process">用户名</th>
-                                            <th class="node">电话</th>
-                                            <th class="time">权限</th>
-                                            <th class="operate">操作</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        *{foreach $users as $k=> $user}
-                                        <tr style="border-bottom:1px #ddd solid; ">
-                                            <td class="name" style="width: 10px;text-align: center;">*{$k+1}</td>
-                                            <td class="name">*{$user.account}</td>
-                                            <td class="process">*{$user.name}</td>
-                                            <td class="node">*{$user.phone}</td>
-                                            <td class="time">
-                                                *{if condition="$user.scope==36"}
-                                                超级管理员
-                                                *{else/}
-                                                <select>
-                                                    <option value="18" *{if condition="$user.scope==18" }selected*{/if}>系统维护员</option>
-                                                    <option value="9" *{if condition="$user.scope==9" }selected*{/if}>普通工作人员</option>
-                                                </select>
-                                                *{/if}
-                                            </td>
-                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a>
-                                            </td>
-                                        </tr>
-                                        *{/foreach}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                     <div class="clear"></div>
@@ -195,6 +201,26 @@
                     </div>
                     <a class="hint-in3 member-confirm" href="#">确定</a>
                 </div>
+                <div class="hintl account-del">
+                    <div class="hintl-in1">
+                        <div class="hintl1"></div>
+                        <div class="hintl2">账户删除窗口</div>
+                        <div class="hint3"></div>
+                    </div>
+                    <div class="hintl-in2">是否删除该账户？</div>
+                    <a class="hintl-in3 confirm-del" href="javascript:;">是</a>
+                    <a class="hintl-in4" href="javascript:;">否</a>
+                </div>
+                <div class="hintl scope-mod">
+                    <div class="hintl-in1">
+                        <div class="hintl1"></div>
+                        <div class="hintl2">修改权限窗口</div>
+                        <div class="hint3"></div>
+                    </div>
+                    <div class="hintl-in2">确定修改该用户权限？</div>
+                    <a class="hintl-in3 confirm-scope" href="javascript:;">是</a>
+                    <a class="hintl-in4" href="javascript:;">否</a>
+                </div>
             </div>
         </div>
         <div id="ft" class="ue-clear">
@@ -246,7 +272,8 @@
     $(".duty").find("tbody").find("tr:even").css("backgroundColor", "#eff6fa");
 
     //添加员工
-    $('.addMember').click(function () {
+    $('.addMember').click(function (e) {
+        e.stopPropagation();
         $('.hint').show(100);
         var flag = true;
         $('.member-confirm').click(function (e) {
@@ -294,5 +321,47 @@
             }
         });
 
+    });
+
+    //删除员工
+    $('.del-member').click(function (e) {
+        var id = $(this).data('id');
+        $('.account-del').show(100);
+        $('.confirm-del').click(function (e) {
+            e.stopPropagation();
+            var params = {
+                url: 'user/system/deluser/' + id,
+                type: 'delete',
+                sCallback: function (data) {
+                    alert(data.msg);
+                    window.location.reload();
+                },
+                eCallback: function (err) {
+                    alert(err.msg)
+                }
+            };
+            window.base.getData(params);
+        });
+    });
+    $('.scopeModify').change(function (e) {
+        e.stopPropagation();
+        var scope = $(this).val(),
+            id = $(this).data('id');
+        $('.scope-mod').show(100);
+        $('.confirm-scope').click(function (e) {
+            e.stopPropagation();
+            var params = {
+                url: 'user/system/modscope',
+                type: 'post',
+                data: {id: id, scope: scope},
+                sCallback: function (data) {
+                    alert(data.msg);
+                },
+                eCallback: function (err) {
+                    alert(err.msg);
+                }
+            };
+            window.base.getData(params);
+        });
     });
 </script>

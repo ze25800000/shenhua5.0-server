@@ -8,7 +8,7 @@ class UserValidate extends BaseValidate {
         'account'  => 'require|alphaDash|length:3,10',
         'scope'    => 'require|in:9,18,36',
         'name'     => 'require|chs',
-        'password' => 'require|alphaNum|length:6,10',
+        'password' => 'alphaNum|length:6,10',
         'phone'    => 'isMobile'
     ];
     protected $message = [

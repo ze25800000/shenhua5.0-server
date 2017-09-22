@@ -12,6 +12,6 @@ namespace app\validate;
 class ScopeValidate extends BaseValidate {
     protected $rule = [
         'id'    => 'require|isPositiveInt',
-        'scope' => 'require|between:9,18,36'
+        'scope' => 'require|in:9,18,36'
     ];
 }
