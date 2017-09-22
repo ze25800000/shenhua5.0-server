@@ -31,59 +31,63 @@
                 </ul>
             </div>
             <div class="content">
-                <div class="title">
+                <div class="title ue-clear">
                     <h2>个人中心</h2>
+                    <a href="javascript:;" class="more">返回</a>
                 </div>
-                <div class="content-box">
-                    <ul class="tab-pane title">
-                        <li class="active">基本信息</li>
-                        <li>修改密码</li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="user-base active">
-                            <table>
-                                <tr>
-                                    <td class="head">账号</td>
-                                    <td class="detail edit-item" data-id="*{$userDetail.id}" data-key="account">
-                                        *{$userDetail.account}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="head">姓名</td>
-                                    <td class="detail edit-item" data-id="*{$userDetail.id}" data-key="name">
-                                        *{$userDetail.name}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="head">电话号码</td>
-                                    <td class="detail edit-item" data-id="*{$userDetail.id}" data-key="phone">
-                                        *{$userDetail.phone}
-                                    </td>
-                                </tr>
-                            </table>
+                <div class="content">
+                    <div class="article matter">
+                        <div class="title ue-clear"
+                             style=" border:none; border-bottom:1px #CCCCCC solid; background:#f1f1f1; height:33px;">
+                            <h2 class="title-list">
+                                <ul class="ue-clear">
+                                    <li class="current"><a href="javascript:;">基本信息</a></li>
+                                    <li><a href="javascript:;">修改密码</a></li>
+                                </ul>
+                            </h2>
                         </div>
-                        <div class="mod-password">
-                            <table>
-                                <tr>
-                                    <td>原始密码</td>
-                                    <td><input type="password" id="oldPwd"></td>
-                                </tr>
-                                <tr>
-                                    <td>新的密码</td>
-                                    <td><input type="password" id="newPwd"></td>
-                                </tr>
-                                <tr>
-                                    <td>确认新的密码</td>
-                                    <td><input type="password" id="reNewPwd"></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <a href="javascript:;" class="user-confirm" data-id="*{$userDetail.id}">确认修改</a>
-                                    </td>
-                                </tr>
-                            </table>
+                        <div class="content" style=" border:none; height:auto; ">
+                            <div class="matter-content current ue-clear">
+                                <div class="main" style=" border:none; padding:20px; ">
+                                    <table>
+                                        <tr>
+                                            <th>账 号：</th>
+                                            <td class="edit-item" data-id="*{$userDetail.id}" data-key="account">*{$account}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>姓 名：</th>
+                                            <td class="edit-item" data-id="*{$userDetail.id}" data-key="name">*{$userName}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>电 话：</th>
+                                            <td class="edit-item" data-id="*{$userDetail.id}" data-key="phone">*{$userDetail.phone}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="matter-content ue-clear">
+                                <div class="main" style=" border:none; padding:20px; ">
+                                    <p class="short-input ue-clear">
+                                        <label>原始密码：</label>
+                                        <input id="oldPwd" type="password" placeholder="原始密码"/>
+                                        <!--<span><em>*</em>请输入正确的时间格式</span>-->
+                                    </p>
+                                    <p class="short-input ue-clear">
+                                        <label>新的密码：</label>
+                                        <input id="newPwd" type="password" placeholder="新的密码"/>
+                                    </p>
+                                    <p class="short-input ue-clear">
+                                        <label>确认新的密码：</label>
+                                        <input id="reNewPwd" type="password" placeholder="新的密码"/>
+                                    </p>
+                                </div>
+                                <div class="btn ue-clear" style=" border:none; ">
+                                    <a href="javascript:;" class="confirm user-confirm" data-id="*{$userDetail.id}">确定修改</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="clear"></div>
                 </div>
             </div>
         </div>
@@ -173,5 +177,12 @@
             }
         };
         window.base.getData(params);
-    })
+    });
+    $(".title-list ul").on("click", "li", function () {
+        var aIndex = $(this).index();
+        $(this).addClass("current").siblings().removeClass("current");
+        $(".matter-content").removeClass("current").eq(aIndex).addClass("current");
+    });
+
+    $(".duty").find("tbody").find("tr:even").css("backgroundColor", "#eff6fa");
 </script>

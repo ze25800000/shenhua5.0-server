@@ -30,66 +30,111 @@
                 </ul>
             </div>
             <div class="content">
-                <div class="title">
+                <div class="title ue-clear">
                     <h2>系统管理</h2>
+                    <a href="javascript:;" class="more">返回</a>
                 </div>
-                <div class="content-box">
-                    <ul class="tab-pane title">
-                        <li class="active">参数变量配置</li>
-                        <li>账户管理</li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="user-base active">
-                            <table>
-                                <tr>
-                                    <td>临近状态时间</td>
-                                    <td class="edit-item" data-id="*{$config.id}" data-key="postpone">
-                                        *{$config.postpone}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Fe</td>
-                                    <td class="edit-item" data-id="*{$config.id}" data-key="Fe">*{$config.Fe}</td>
-                                </tr>
-                                <tr>
-                                    <td>Cu</td>
-                                    <td class="edit-item" data-id="*{$config.id}" data-key="Cu">*{$config.Cu}</td>
-                                </tr>
-                                <tr>
-                                    <td>Al</td>
-                                    <td class="edit-item" data-id="*{$config.id}" data-key="Al">*{$config.Al}</td>
-                                </tr>
-                                <tr>
-                                    <td>Si</td>
-                                    <td class="edit-item" data-id="*{$config.id}" data-key="Si">*{$config.Si}</td>
-                                </tr>
-                                <tr>
-                                    <td>Na</td>
-                                    <td class="edit-item" data-id="*{$config.id}" data-key="Na">*{$config.Na}</td>
-                                </tr>
-                                <tr>
-                                    <td>PQ</td>
-                                    <td class="edit-item" data-id="*{$config.id}" data-key="pq">*{$config.pq}</td>
-                                </tr>
-                                <tr>
-                                    <td>粘度最小值</td>
-                                    <td class="edit-item" data-id="*{$config.id}" data-key="viscosity_min">
-                                        *{$config.viscosity_min}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>粘度最大值</td>
-                                    <td class="edit-item" data-id="*{$config.id}" data-key="viscosity_max">
-                                        *{$config.viscosity_max}
-                                    </td>
-                                </tr>
-                            </table>
+                <div class="content">
+                    <div class="article matter">
+                        <div class="title ue-clear"
+                             style=" border:none; border-bottom:1px #CCCCCC solid; background:#f1f1f1; height:33px;">
+                            <h2 class="title-list">
+                                <ul class="ue-clear">
+                                    <li class="current"><a href="javascript:;">参数配置</a></li>
+                                    <li><a href="javascript:;">账户管理</a></li>
+                                </ul>
+                            </h2>
                         </div>
-                        <div class="mod-password">
-                            <table>
-                            </table>
+                        <div class="content" style=" border:none; height:auto; ">
+                            <div class="matter-content current ue-clear">
+
+                                <div class="main" style=" border:none; padding:20px; ">
+                                    <table>
+                                        <tr>
+                                            <th>账 号：</th>
+                                            <td class="edit-item">uimaker</td>
+                                        </tr>
+                                        <tr>
+                                            <th>姓 名：</th>
+                                            <td class="edit-item">uimaker</td>
+                                        </tr>
+                                        <tr>
+                                            <th>电 话：</th>
+                                            <td class="edit-item">uimaker</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="matter-content ue-clear">
+
+                                <div class="table-operate ue-clear">
+                                    <a href="javascript:;" class="add">添加</a>
+                                </div>
+                                <div class="table-box">
+                                    <table style=" border:none;  ">
+                                        <thead>
+                                        <tr>
+                                            <th class="name">账号</th>
+                                            <th class="process">用户名</th>
+                                            <th class="node">电话</th>
+                                            <th class="time">权限</th>
+                                            <th class="operate">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr style="border-bottom:1px #ddd solid; ">
+                                            <td class="name">admin</td>
+                                            <td class="process">xxxxx</td>
+                                            <td class="node">12345678978</td>
+                                            <td class="time"><select name="">
+                                                <option value="1">超级管理员</option>
+                                                <option value="2">管理员</option>
+                                                <option>管理员</option>
+                                            </select></td>
+                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
+                                        </tr>
+                                        <tr style="border-bottom:1px #ddd solid; ">
+                                            <td class="name">admin</td>
+                                            <td class="process">xxxxx</td>
+                                            <td class="node">12345678978</td>
+                                            <td class="time">超级管理员</td>
+                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
+                                        </tr>
+                                        <tr style="border-bottom:1px #ddd solid; ">
+                                            <td class="name">admin</td>
+                                            <td class="process">xxxxx</td>
+                                            <td class="node">12345678978</td>
+                                            <td class="time">超级管理员</td>
+                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
+                                        </tr>
+                                        <tr style="border-bottom:1px #ddd solid; ">
+                                            <td class="name">admin</td>
+                                            <td class="process">xxxxx</td>
+                                            <td class="node">12345678978</td>
+                                            <td class="time">超级管理员</td>
+                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
+                                        </tr>
+                                        <tr style="border-bottom:1px #ddd solid; ">
+                                            <td class="name">admin</td>
+                                            <td class="process">xxxxx</td>
+                                            <td class="node">12345678978</td>
+                                            <td class="time">超级管理员</td>
+                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
+                                        </tr>
+                                        <tr style="border-bottom:1px #ddd solid; ">
+                                            <td class="name">admin</td>
+                                            <td class="process">xxxxx</td>
+                                            <td class="node">12345678978</td>
+                                            <td class="time">超级管理员</td>
+                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="clear"></div>
                 </div>
             </div>
         </div>
@@ -133,4 +178,11 @@
             if (err.phone) alert(err.phone);
         });
     });
+    $(".title-list ul").on("click", "li", function () {
+        var aIndex = $(this).index();
+        $(this).addClass("current").siblings().removeClass("current");
+        $(".matter-content").removeClass("current").eq(aIndex).addClass("current");
+    });
+
+    $(".duty").find("tbody").find("tr:even").css("backgroundColor", "#eff6fa");
 </script>

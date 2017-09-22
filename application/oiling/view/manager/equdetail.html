@@ -203,34 +203,27 @@
                     <td class="process">*{$v.work_hour}</td>
                     <td class="process">*{$v.oil_no}</td>
                     <td class="num" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
-                        style="color: red;font-weight: 600;" *{
-                    /if}>*{$v.Fe}</td>
+                        style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
                     <td class="num" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" }
-                        style="color: red;font-weight: 600;" *{
-                    /if}>*{$v.Cu}</td>
+                        style="color: red;font-weight: 600;" *{/if}>*{$v.Cu}</td>
                     <td class="num" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$c.Al" }
-                        style="color: red;font-weight: 600;" *{
-                    /if}>*{$v.Al}</td>
+                        style="color: red;font-weight: 600;" *{/if}>*{$v.Al}</td>
                     <td class="num" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$c.Si" }
-                        style="color: red;font-weight: 600;" *{
-                    /if}>*{$v.Si}</td>
+                        style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
                     <td class="num" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$c.Na" }
-                        style="color: red;font-weight: 600;" *{
-                    /if}>*{$v.Na}</td>
+                        style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
                     <td class="num" data-id="*{$v.id}" data-key="pq" *{if condition="$v.pq>$c.pq" }
-                        style="color: red;font-weight: 600;" *{
-                    /if}>*{$v.pq}</td>
+                        style="color: red;font-weight: 600;" *{/if}>*{$v.pq}</td>
                     <td class="num" data-id="*{$v.id}" data-key="viscosity" *{if
                         condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
-                        style="color: red;font-weight: 600;" *{
-                    /if}>*{$v.viscosity}</td>
+                        style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
                     <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
                     <td class="operate table-operate del-td" data-id="*{$v.id}" data-type="analysis"></td>
                     </tr>
                     *{/foreach}
                     </tbody>
                 </table>
-                <div class="add-oil-analysis-box">
+                <div class="add-oil-analysis-box addoilanalysis">
                     <div class="oil-analysis-window">
                         <h3>
                             添加油脂分析记录
@@ -532,7 +525,6 @@
     });
     //删除
     $('.rhd_xqb table tbody tr:first-child td.operate').html('<a href="javascript:;" class="del">删除</a>');
-
     $('.del-td').on('click', 'a', function () {
         $('.hintl').show(100);
         var _this = $(this),
@@ -541,7 +533,7 @@
         $('.confirm-del').click(function (e) {
             e.stopPropagation();
             var params = {
-                url: 'oiling/' + type + '/del/' + id+'?XDEBUG_SESSION_START=11353',
+                url: 'oiling/' + type + '/del/' + id + '?XDEBUG_SESSION_START=11353',
                 type: 'delete',
                 sCallback: function (data) {
                     _this.parent().parent().hide(200).remove();
@@ -559,7 +551,7 @@
     $('#addOilAnalysisItem').click(function (e) {
         e.stopPropagation();
         $('.add-oil-analysis-box #samplingTime').val(formatDate(new Date(), 'yyyy年MM月dd日'));
-        $('.add-oil-analysis-box').show(100);
+        $('.addoilanalysis').show(100);
         var equNo = $(this).data('equ_no'),
             equOilNo = $(this).data('equ_oil_no'),
             equName = $(this).data('equ_name'),
