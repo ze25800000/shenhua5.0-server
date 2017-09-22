@@ -38,9 +38,7 @@ class Search extends BaseController {
                 break;
         }
         if (!$result) {
-            throw new DocumentException([
-                'msg' => '通过关键字获取列表信息失败'
-            ]);
+            return $this->ajaxReturn('没有找到相应内容', 1);
         }
         return $this->ajaxReturn('通过关键字获取列表信息成功', 0, $result);
     }
