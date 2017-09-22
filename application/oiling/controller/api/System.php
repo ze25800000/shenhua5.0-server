@@ -80,7 +80,13 @@ class System extends BaseController {
 
     public function addUser() {
         (new UserValidate())->goCheck();
-        $model  = new User();
+        $model = new User();
+        $item  = $model->where('account', '=', $_POST['account'])->find();
+        if ($item) {
+            throw new DocumentException([
+                'msg' => '该账号已经存在'
+            ]);
+        }
         $result = $model->save($_POST);
         if (!$result) {
             throw new DocumentException([

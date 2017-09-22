@@ -75,7 +75,7 @@ Route::group('oiling/oildetail', function () {
 //润滑点详情页
 Route::get('oiling/equdetail/:equ_key_no', 'oiling/Manager/equdetail', [], ['equ_key_no' => '\d+']);
 
-
+//用户和系统管理
 Route::group('user', function () {
     Route::post('center/edit/:id', 'oiling/api.Center/editUserDetailById');
     Route::post('center/modpwd', 'oiling/api.Center/modifyPasswordById');

@@ -213,5 +213,6 @@ body {
 
 .matter-content .main table tr td {
     border-left:none;
+    padding-left: 20px;
 }
 

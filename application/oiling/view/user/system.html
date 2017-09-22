@@ -51,29 +51,58 @@
                                 <div class="main" style=" border:none; padding:20px; ">
                                     <table>
                                         <tr>
-                                            <th>账 号：</th>
-                                            <td class="edit-item">uimaker</td>
+                                            <th>临近状态时长：</th>
+                                            <td class="edit-item" data-id="1" data-key="postpone">*{$config.postpone}
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <th>姓 名：</th>
-                                            <td class="edit-item">uimaker</td>
+                                            <th>Fe：</th>
+                                            <td class="edit-item" data-id="1" data-key="Fe">*{$config.Fe}</td>
                                         </tr>
                                         <tr>
-                                            <th>电 话：</th>
-                                            <td class="edit-item">uimaker</td>
+                                            <th>Cu：</th>
+                                            <td class="edit-item" data-id="1" data-key="Cu">*{$config.Cu}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Al：</th>
+                                            <td class="edit-item" data-id="1" data-key="Al">*{$config.Al}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Si：</th>
+                                            <td class="edit-item" data-id="1" data-key="Si">*{$config.Si}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Na：</th>
+                                            <td class="edit-item" data-id="1" data-key="Na">*{$config.Na}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>PQ：</th>
+                                            <td class="edit-item" data-id="1" data-key="pq">*{$config.pq}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>粘度最小值：</th>
+                                            <td class="edit-item" data-id="1" data-key="viscosity_min">
+                                                *{$config.viscosity_min}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>粘度最大值：</th>
+                                            <td class="edit-item" data-id="1" data-key="viscosity_max">
+                                                *{$config.viscosity_max}
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
                             <div class="matter-content ue-clear">
-
                                 <div class="table-operate ue-clear">
-                                    <a href="javascript:;" class="add">添加</a>
+                                    <a href="javascript:;" class="add addMember">添加</a>
                                 </div>
                                 <div class="table-box">
                                     <table style=" border:none;  ">
                                         <thead>
                                         <tr>
+                                            <th class="name" style="width: 10px;text-align: center;">ID</th>
                                             <th class="name">账号</th>
                                             <th class="process">用户名</th>
                                             <th class="node">电话</th>
@@ -82,52 +111,26 @@
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        *{foreach $users as $k=> $user}
                                         <tr style="border-bottom:1px #ddd solid; ">
-                                            <td class="name">admin</td>
-                                            <td class="process">xxxxx</td>
-                                            <td class="node">12345678978</td>
-                                            <td class="time"><select name="">
-                                                <option value="1">超级管理员</option>
-                                                <option value="2">管理员</option>
-                                                <option>管理员</option>
-                                            </select></td>
-                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
+                                            <td class="name" style="width: 10px;text-align: center;">*{$k+1}</td>
+                                            <td class="name">*{$user.account}</td>
+                                            <td class="process">*{$user.name}</td>
+                                            <td class="node">*{$user.phone}</td>
+                                            <td class="time">
+                                                *{if condition="$user.scope==36"}
+                                                超级管理员
+                                                *{else/}
+                                                <select>
+                                                    <option value="18" *{if condition="$user.scope==18" }selected*{/if}>系统维护员</option>
+                                                    <option value="9" *{if condition="$user.scope==9" }selected*{/if}>普通工作人员</option>
+                                                </select>
+                                                *{/if}
+                                            </td>
+                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a>
+                                            </td>
                                         </tr>
-                                        <tr style="border-bottom:1px #ddd solid; ">
-                                            <td class="name">admin</td>
-                                            <td class="process">xxxxx</td>
-                                            <td class="node">12345678978</td>
-                                            <td class="time">超级管理员</td>
-                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
-                                        </tr>
-                                        <tr style="border-bottom:1px #ddd solid; ">
-                                            <td class="name">admin</td>
-                                            <td class="process">xxxxx</td>
-                                            <td class="node">12345678978</td>
-                                            <td class="time">超级管理员</td>
-                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
-                                        </tr>
-                                        <tr style="border-bottom:1px #ddd solid; ">
-                                            <td class="name">admin</td>
-                                            <td class="process">xxxxx</td>
-                                            <td class="node">12345678978</td>
-                                            <td class="time">超级管理员</td>
-                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
-                                        </tr>
-                                        <tr style="border-bottom:1px #ddd solid; ">
-                                            <td class="name">admin</td>
-                                            <td class="process">xxxxx</td>
-                                            <td class="node">12345678978</td>
-                                            <td class="time">超级管理员</td>
-                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
-                                        </tr>
-                                        <tr style="border-bottom:1px #ddd solid; ">
-                                            <td class="name">admin</td>
-                                            <td class="process">xxxxx</td>
-                                            <td class="node">12345678978</td>
-                                            <td class="time">超级管理员</td>
-                                            <td class="operate table-operate"><a href="javascript:;" class="del">删除</a></td>
-                                        </tr>
+                                        *{/foreach}
                                         </tbody>
                                     </table>
                                 </div>
@@ -135,6 +138,62 @@
                         </div>
                     </div>
                     <div class="clear"></div>
+                </div>
+            </div>
+            <div class="tanchuang">
+                <div class="hint add-member">
+                    <div class="hint-in1">
+                        <div class="hint1"></div>
+                        <div class="hint2">添加员工</div>
+                        <div class="hint3"></div>
+                    </div>
+                    <div class="hint-in2">
+                        <div class="hint-in2a">
+                            <span class="hint-in2a1">账号：</span>
+                            <span class="hint-in2a2"><input id="account"
+                                                            name=""
+                                                            type="text"
+                                                            placeholder="请输入账号"
+                                                            class="account">
+                                </span>
+                        </div>
+                        <div class="hint-in2a">
+                            <span class="hint-in2a1">用户名：</span>
+                            <span class="hint-in2a2"><input id="name"
+                                                            name=""
+                                                            type="text"
+                                                            placeholder="请输入用户名"
+                                                            class="name"></span>
+                        </div>
+
+                        <div class="hint-in2a">
+                            <span class="hint-in2a1">手机：</span>
+                            <span class="hint-in2a2"><input id="phone"
+                                                            name=""
+                                                            type="text"
+                                                            placeholder="请输入手机号（选填）"
+                                                            class=""></span>
+                        </div>
+                        <div class="hint-in2a">
+                            <span class="hint-in2a1">密码：</span>
+                            <span class="hint-in2a2"><input id="pwd"
+                                                            name=""
+                                                            type="text"
+                                                            placeholder="请输入密码"
+                                                            class="pwd"></span>
+                        </div>
+                        <div class="hint-in2a">
+                            <span class="hint-in2a1">权限：</span>
+                            <span class="hint-in2a2 scope">
+                                <label for="secondMember">系统维护员</label>
+                                <input type="radio" id="secondMember" name="member" class="radio" value="18">
+                                <label for="thirdMember" style="padding-left: 10px">普通工作人员</label>
+                                <input type="radio" id="thirdMember" name="member" class="radio" value="9">
+                            </span>
+                        </div>
+
+                    </div>
+                    <a class="hint-in3 member-confirm" href="#">确定</a>
                 </div>
             </div>
         </div>
@@ -185,4 +244,55 @@
     });
 
     $(".duty").find("tbody").find("tr:even").css("backgroundColor", "#eff6fa");
+
+    //添加员工
+    $('.addMember').click(function () {
+        $('.hint').show(100);
+        var flag = true;
+        $('.member-confirm').click(function (e) {
+            e.stopPropagation();
+            var account = $('#account').val(),
+                name = $('#name').val(),
+                phone = $('#phone').val(),
+                password = $('#pwd').val(),
+                scope = 0;
+
+            $('.radio').each(function (i, v) {
+                if ($(this).attr('checked')) {
+                    scope = $(this).val();
+                    console.log(scope);
+                }
+            });
+            var params = {
+                url: 'user/system/addUser?XDEBUG_SESSION_START=16433',
+                type: 'post',
+                data: {
+                    account: account,
+                    name: name,
+                    password: password,
+                    phone: phone,
+                    scope: scope
+                },
+                sCallback: function (data) {
+                    alert(data.msg);
+                    window.location.reload();
+                },
+                eCallback: function (err) {
+                    console.log(err);
+                    if (err.errcode == 2) {
+                        err.msg.account && alert(err.msg.account);
+                        err.msg.password && alert(err.msg.password);
+                        err.msg.phone && alert(err.msg.phone);
+                    } else if (err.errcode == 1) {
+                        alert(err.msg);
+                    }
+                }
+            };
+            if (flag) {
+                window.base.getData(params);
+                flag = false;
+            }
+        });
+
+    });
 </script>

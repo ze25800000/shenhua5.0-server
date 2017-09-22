@@ -31,7 +31,7 @@ class User extends BaseController {
 
     public function system() {
         $config = OilConfig::get(1);
-        $users  = UserModel::select();
+        $users  = UserModel::order('scope desc')->select();
         $this->assign([
             'users'    => $users,
             'config'   => $config,

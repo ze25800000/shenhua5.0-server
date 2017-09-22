@@ -742,6 +742,26 @@ button {
     box-shadow: #999 0px 0px 5px;
 }
 
+.add-member {
+    height: 470px;
+}
+
+.add-member .hint-in3 {
+    bottom: 35px;
+}
+
+.add-member .scope * {
+    float: left;
+    font-size: 16px;
+}
+
+.add-member .scope input {
+    display: block;
+    width: 15px;
+    height: 15px;
+    margin-top: 10px;
+}
+
 .hint-in1 {
     width: 500px;
     height: 70px;
@@ -1397,8 +1417,6 @@ button {
     text-indent: 20px;
 }
 
-
-
 .add-oil-analysis-box .oil-analysis-window .box-bottom a {
     color: #ffffff;
     float: right;
@@ -1417,6 +1435,7 @@ button {
     margin-left: -200px;
     margin-top: -90px;
 }
+
 .workhour .oil-analysis-window .content p {
     padding-left: 30px;
     padding-top: 25px;
