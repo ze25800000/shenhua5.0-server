@@ -256,7 +256,7 @@
             oldVal = _this.html(),
             url = 'user/system/varedit/';
         oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
-        var long = oldVal.length * 12;
+        var long = oldVal.length?(oldVal.length * 12):'20';
         if (!/input/.test(oldVal)) {
             _this.html('<input type="text" value="' + oldVal + '" style="width: 30px;height:16px;outline: none">');
         }

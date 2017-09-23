@@ -265,7 +265,7 @@
                 oldVal = _this.html(),
                 url = '/oiling/oildetail/edit/';
             oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
-            var long = oldVal.length * 12;
+            var long = oldVal.length ? (oldVal.length * 12) : '20';
             if (!/input/.test(oldVal)) {
                 _this.html('<input type="text" value="' + oldVal + '" style="width: ' + long + 'px">');
             }
@@ -319,23 +319,28 @@
         });
         //搜索
         $(document).on("keyup", '.search-input', function (e) {
-            var val = $(this).val(),
-                _this = $(this),
-                params = {
-                    url: 'oiling/oildetail/search/' + val,
-                    sCallback: function (list) {
+            var val = $(this).val();
+            if (e.keyCode == 8 && !val) {
+                document.getElementById('costTbody').innerHTML = oldHtml;
+                var newHtml = $('#costTbody').html();
+                return false;
+            }
+            var params = {
+                url: 'oiling/oildetail/search/' + val,
+                sCallback: function (list) {
+                    if (newHtml == oldHtml) {
+                        return false;
+                    } else {
                         if (list.errcode === 0) {
                             $('#costTbody').html('');
                             $('#costTemplate').tmpl(list).appendTo('#costTbody');
                             $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
                         }
                     }
-                };
+                }
+            };
             if (val) {
                 window.base.getData(params);
-            }
-            if (e.keyCode == 8 && !val) {
-                document.getElementById('costTbody').innerHTML = oldHtml;
             }
         });
     });

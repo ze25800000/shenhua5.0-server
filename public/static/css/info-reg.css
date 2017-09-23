@@ -42,6 +42,7 @@ body {
 
 .main p input {
     float: left;
+    text-indent: 10px;
 }
 
 .main p input[type="text"] {

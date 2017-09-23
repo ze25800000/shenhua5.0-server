@@ -8,6 +8,8 @@ body{ font-family:'微软雅黑';}
 h1{ float:left; margin:14px 0 0 24px; width:360px; height:54px; background:url(../images/logo.png);position:relative;top:1;}
 .login-info{ float:left; margin:38px 0 0 23px; height:18px;}
 .login-info .welcome{ float:left; padding-left:20px; width:150px; height:18px; line-height:18px; background:url(../images/topuser.png) no-repeat left bottom; font-size:14px; color:#fff;}
+.login-info .welcome a{color:#fff;cursor: pointer}
+.login-info .welcome a:hover{color: #c2e5ff}
 .login-info .welcome span{ float:left;}
 .login-info .welcome .user-name{ float:left; color:#fff;}
 .login-info .login-msg{ float:left; margin-left:22px;}

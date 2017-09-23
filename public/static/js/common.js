@@ -38,54 +38,6 @@ window.base = {
             }
         })
     },
-    getEquipmentList: function (Callback) {
-        var params = {
-            url: 'document/equipment/getlist',
-            sCallback: function (data) {
-                Callback && Callback(data.data);
-            },
-            eCallback: function (err) {
-                alert(err.msg);
-            }
-        };
-        this.getData(params);
-    },
-    getOilStandardList: function (callback) {
-        var params = {
-            url: 'document/oilstandard/getlist',
-            sCallback: function (data) {
-                callback && callback(data.data);
-            },
-            eCallback: function (err) {
-                alert(err.msg);
-            }
-        };
-        this.getData(params);
-    },
-    getAnalysisList: function (callback) {
-        var params = {
-            url: 'document/oilanalysis/getlist',
-            sCallback: function (data) {
-                callback && callback(data.data);
-            },
-            eCallback: function (err) {
-                alert(err.msg);
-            }
-        };
-        this.getData(params);
-    },
-    getOilDetailList: function (callback) {
-        var params = {
-            url: 'document/oildetail/getlist',
-            sCallback: function (data) {
-                callback && callback(data.data);
-            },
-            eCallback: function (err) {
-                alert(err.msg);
-            }
-        };
-        this.getData(params);
-    },
     editItemByDblClick: function (_this, input, oldVal, url, sCallback, eCallback) {
         $(window).keydown(function (e) {
             if (e.keyCode == 27) {
@@ -107,7 +59,7 @@ window.base = {
                 key = input.parent().data('key');
             _this.html(newVal);
             var params = {
-                url: url + id + '?XDEBUG_SESSION_START=10828',
+                url: url + id,
                 type: 'post',
                 data: {[key]: newVal},
                 sCallback: function (data) {
@@ -115,7 +67,6 @@ window.base = {
                     sCallback && sCallback(data);
                 },
                 eCallback: function (err) {
-                    // alert(JSON.stringify(err.msg));
                     _this.html(oldVal);
                     eCallback && eCallback(err.msg);
                 }
