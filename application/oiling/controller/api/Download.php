@@ -96,7 +96,7 @@ class Download extends BaseController {
                 ];
                 break;
             case 'oilanalysis':
-                $excelTypeCh = '油脂化验指标分析';
+                $excelTypeCh = '油脂化验指标';
                 $data        = [
                     ['设备编号', '润滑点编号', '设备名称', '润滑点(全称)', '物料编号', '用量', '单位', '首保周期', '最长保养周期', '采样间隔'],
                     ['100', '1', '一号破碎站', '一号破碎站板式给料机左侧电动机前端轴承', '1071231', '100', 'KG', '500', '3500', '500'],
@@ -105,7 +105,7 @@ class Download extends BaseController {
                 ];
                 break;
             case 'oildetail':
-                $excelTypeCh = '润滑保养成本管理';
+                $excelTypeCh = '润滑保养成本';
                 $data        = [
                     ['物料编号', '名称', '物料描述', '单位', '单价(元)'],
                     ['10209358', '抗磨液压油', 'DTE 25;VG46;1×208L\美孚', 'L ', '20.56'],

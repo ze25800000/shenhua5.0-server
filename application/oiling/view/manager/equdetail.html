@@ -2,7 +2,7 @@
 <style>
     .operate {
         width: 30px !important;
-        text-align: center;
+        /*text-align: center;*/
     }
 </style>
 <div id="hd">
@@ -28,14 +28,20 @@
                 <div class="rhd_xqb1">
                     <table>
                         <tr class="rhd_xqb1a">
+                            <th>设备编号：</th>
+                            <td class="" data-id="*{$detail.equ_no}" data-key="oil_no">*{$detail.equ_no}</td>
+
+                            <th>润滑点编号：</th>
+                            <td class="edit-item" data-id="*{$detail.equ_oil_no}" data-key="oil_no">*{$detail.equ_oil_no}</td>
+
                             <th>物料编码：</th>
                             <td class="edit-item" data-id="*{$detail.id}" data-key="oil_no">*{$detail.oil_no}</td>
                             <th>用量：</th>
                             <td class="edit-item" data-id="*{$detail.id}" data-key="quantity">*{$detail.quantity}</td>
-                            <th>单位：</th>
-                            <td class="edit-item" data-id="*{$detail.id}" data-key="unit">*{$detail.unit}</td>
                         </tr>
                         <tr class="rhd_xqb1a">
+                            <th>单位：</th>
+                            <td class="edit-item" data-id="*{$detail.id}" data-key="unit">*{$detail.unit}</td>
                             <th>更换最长周期：</th>
                             <td class="edit-item" data-id="*{$detail.id}" data-key="period">*{$detail.period}</td>
                             <th>首保周期：</th>
@@ -139,7 +145,7 @@
                     <thead>
                     <tr>
                         <th class="num">ID</th>
-                        <th class="process">上次消警时间</th>
+                        <th class="name">上次消警时间</th>
                         <th class="process">消警类型</th>
                         <th class="process">运行时长</th>
                         <th class="process">状态</th>
@@ -147,8 +153,8 @@
                         <th class="process">用量</th>
                         <th class="process">延期时长</th>
                         <th class="process">延期原因</th>
-                        <th class="operate">是否首保</th>
-                        <th class="operate">操作人员</th>
+                        <th class="process">是否首保</th>
+                        <th class="process">操作人员</th>
                         *{if condition="$scope>=18"}
                         <th class="operate">操作</th>
                         *{/if}
@@ -158,8 +164,8 @@
                     *{foreach $detail.info_warning_detail as $k=>$v}
                     <tr>
                         <td class="num">*{$k+1}</td>
-                        <td class="time">*{$v.del_warning_time|date="Y年m月d日",###}</td>
-                        <td class="time">*{$v.warning_type?"润滑":"延期"}</td>
+                        <td class="name">*{$v.del_warning_time|date="Y年m月d日",###}</td>
+                        <td class="process">*{$v.warning_type?"润滑":"延期"}</td>
                         <td class="process">*{$v.how_long}</td>
                         <td class="process">*{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
                         <td class="process">*{$v.oil_no}</td>
@@ -194,7 +200,7 @@
                     <thead>
                     <tr>
                         <th class="num">ID</th>
-                        <th class="process">采样日期</th>
+                        <th class="name">采样日期</th>
                         <th class="process">运行时长</th>
                         <th class="process">物料编号</th>
                         <th class="num">Fe</th>
@@ -213,7 +219,7 @@
                     <tbody id="analysisBody">
                     *{foreach $detail.oil_analysis_list as $k=>$v}
                     <td class="num">*{$k+1}</td>
-                    <td class="time" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}</td>
+                    <td class="name" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}</td>
                     <td class="process">*{$v.work_hour}</td>
                     <td class="process">*{$v.oil_no}</td>
                     <td class="num" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
@@ -295,7 +301,7 @@
                     <thead>
                     <tr>
                         <th class="num">ID</th>
-                        <th class="time">运行起始时间</th>
+                        <th class="process">运行起始时间</th>
                         <th class="process">运行时长</th>
                         *{if condition="$scope>=18"}
                         <th class="operate">操作</th>
@@ -306,7 +312,7 @@
                     *{foreach $detail.time_list as $k=>$v}
                     <tr>
                         <td class="num">*{$k+1}</td>
-                        <td class="time">*{$v.start_time|date="Y年m月d日",###}</td>
+                        <td class="process">*{$v.start_time|date="Y年m月d日",###}</td>
                         <td class="process">*{$v.working_hour}</td>
                         *{if condition="$scope>=18"}
                         <td style="width: 30px; text-align: center;" class="operate table-operate del-td" data-id="*{$v.id}" data-type="workhour"></td>
@@ -374,7 +380,23 @@
                     <span class="hint-in2a2"><input value="100" name="" type="text"
                                                     class="quantity"></span>
                 </div>
+                <div class="hint-in2a">
+                    <span class="hint-in2a1">是否首保</span>
+                    <span class="hint-in2a2 radio">
+                                    <label style="margin-left: 26px" for="RunHuaRadioYes">是:</label>
+                                    <input value=""
+                                           name="ruanhua-is-first-period"
+                                           type="radio"
+                                           id="RunHuaRadioYes">
+                                    <label for="RunHuaRadioNo">否:</label>
+                                    <input value=""
+                                           name="ruanhua-is-first-period"
+                                           type="radio"
+                                           checked="checked"
+                                           id="RunHuaRadioNo">
+                                </span>
 
+                </div>
             </div>
             <a class="hint-in3 confirm" href="#">确定</a>
         </div>
@@ -417,7 +439,23 @@
                                     >
                                 </span>
                 </div>
+                <div class="hint-in2a">
+                    <span class="hint-in2a1">是否首保</span>
+                    <span class="hint-in2a2 radio">
+                                    <label style="margin-left: 26px" for="YanQiRadioYes">是:</label>
+                                    <input value=""
+                                           name="is-first-period"
+                                           type="radio"
+                                           id="YanQiRadioYes">
+                                    <label for="YanQiRadioNo">否:</label>
+                                    <input value=""
+                                           name="is-first-period"
+                                           type="radio"
+                                           checked="checked"
+                                           id="YanQiRadioNo">
+                                </span>
 
+                </div>
             </div>
             <a class="hint-in3 confirm" href="#">确定</a>
         </div>
@@ -453,10 +491,11 @@
             equOilNo = $(this).data('equ_oil_no'),
             equName = $(this).data('equ_name'),
             equOilName = $(this).data('equ_oil_name');
-        $('.oiling .confirm').click(function (e) {
+        $('.oiling .confirm').unbind('click').click(function (e) {
             e.stopPropagation();
             var quantity = $('.quantity').val(),
                 oilNo = $('.oilNo').val(),
+                isFirstPeriod = $('#RunHuaRadioYes').attr('checked') ? 1 : 0,
                 delWarningTime = $('.oiling-time').val().replace(/^\s+|\s+$/gm, '');
             var params = {
                 url: 'oiling/info/lubricate?XDEBUG_SESSION_START=11295',
@@ -468,7 +507,7 @@
                     equ_oil_no: equOilNo,
                     equ_name: equName,
                     equ_oil_name: equOilName,
-                    is_first_period: 0,
+                    is_first_period: isFirstPeriod,
                     warning_type: 1,
                     del_warning_time: delWarningTime,
                     oil_no: oilNo,
@@ -496,10 +535,11 @@
             equName = $(this).data('equ_name'),
             howLong = $(this).data('how_long'),
             equOilName = $(this).data('equ_oil_name');
-        $('.postpone .confirm').click(function (e) {
+        $('.postpone .confirm').unbind('click').click(function (e) {
             e.stopPropagation();
             var postponeDate = $('.postpone-date').val().replace(/^\s+|\s+$/gm, ''),
                 postponeHours = $('.postpone-hours').val(),
+                isFirstPeriod = $('#YanQiRadioYes').attr('checked') ? 1 : 0,
                 postponeReason = $('.postpone-reason').val();
             var params = {
                 url: 'oiling/info/postpone?XDEBUG_SESSION_START=11295',
@@ -511,7 +551,7 @@
                     equ_oil_no: equOilNo,
                     equ_name: equName,
                     equ_oil_name: equOilName,
-                    is_first_period: 0,
+                    is_first_period: isFirstPeriod,
                     warning_type: 0,
                     how_long: howLong,
                     del_warning_time: postponeDate,

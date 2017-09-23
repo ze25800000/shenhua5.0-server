@@ -53,7 +53,7 @@
                         <div class="temp-btn-group">
                             下载模板：
                             <a class="excel-temp-btn"
-                               href="info/download/template?exceltype=oilstandard">设备润滑excel模板</a>
+                               href="/download/template?exceltype=oilstandard">设备润滑excel模板</a>
                         </div>
                         *{/if}
                     </div>
@@ -262,14 +262,13 @@
             var equNoVal = $('.equ_no_val').val(),
                 equNameVal = $('.equ_name_val').val(),
                 params = {
-                    url: 'oiling/standard/add?XDEBUG_SESSION_START=19426',
+                    url: 'oiling/standard/add',
                     type: 'post',
                     data: {
                         'equ_no': equNoVal,
                         'equ_name': equNameVal
                     },
                     sCallback: function (data) {
-                        console.log(data);
                         location.reload();
                     },
                     eCallback: function (err) {
@@ -289,12 +288,12 @@
         $(".box").show(100);
         var id = $(this).data('id'),
             _this = $(this);
-        $('.confirm-del').on('click', function (event) {
+        $('.confirm-del').unbind('click').on('click', function (event) {
             var params = {
                 url: 'oiling/equipment/del/' + id,
                 type: 'delete',
                 sCallback: function (data) {
-                    location.reload();
+                    location.reload()
                 },
                 eCallback: function (err) {
                     alert('删除失败')
@@ -310,7 +309,7 @@
         $(".box").show(100);
         var id = $(this).data('id'),
             _this = $(this);
-        $('.confirm-del').click(function (e) {
+        $('.confirm-del').unbind('click').click(function (e) {
             e.stopPropagation();
             var params = {
                 url: 'oiling/standard/del/' + id,
@@ -345,7 +344,6 @@
     *{/if}
     //上传excel
     $(document).on('click', '.upload', function () {
-        console.log(new FormData($(this).parent()[0]))
         var param = $(this).data('param');
         var params = {
             url: 'oiling/upload?' + param + '&XDEBUG_SESSION_START=14788',

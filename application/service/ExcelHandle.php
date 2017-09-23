@@ -35,9 +35,9 @@ class ExcelHandle {
             throw new UploadException();
         }
         //获取文件名
-        $exclePath = $info->getSaveName();
+        $excelPath = $info->getSaveName();
         //上传文件的地址
-        $filename = ROOT_PATH . 'public' . DS . 'upload' . DS . 'oilStandard' . DS . $exclePath;
+        $filename = ROOT_PATH . 'public' . DS . 'upload' . DS . $excelPath;
 
         //判断截取文件
         $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));

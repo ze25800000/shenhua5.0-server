@@ -126,8 +126,8 @@
                             <td class="num">
                                 <input type="checkbox" data-id="*{$v.id}" *{if condition="$v.status>=2" }checked*{/if}>
                             </td>
-                            <td class="process">*{$v.equ_oil_name}</td>
-                            <td class="time">*{$v.del_warning_time|date="Y年m月d日",###}</td>
+                            <td class="time">*{$v.equ_oil_name}</td>
+                            <td class="process">*{$v.del_warning_time|date="Y年m月d日",###}</td>
                             <td class="process">*{$v.warning_type?'润滑':'延期'}</td>
                             <td class="process">*{$v.how_long}</td>
                             <td class="process">*{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
@@ -208,13 +208,28 @@
                                     </select>
                                 </span>
                             </div>
-
                             <div class="hint-in2a">
                                 <span class="hint-in2a1">用量</span>
                                 <span class="hint-in2a2"><input value="100" name="" type="text"
                                                                 class="quantity"></span>
                             </div>
+                            <div class="hint-in2a">
+                                <span class="hint-in2a1">是否首保</span>
+                                <span class="hint-in2a2 radio">
+                                    <label style="margin-left: 26px" for="RunHuaRadioYes">是:</label>
+                                    <input value=""
+                                           name="runhua-is-first-period"
+                                           type="radio"
+                                           id="RunHuaRadioYes">
+                                    <label for="RunHuaRadioNo">否:</label>
+                                    <input value=""
+                                           name="runhua-is-first-period"
+                                           type="radio"
+                                           checked
+                                           id="RunHuaRadioNo">
+                                </span>
 
+                            </div>
                         </div>
                         <a class="hint-in3 confirm" href="#">确定</a>
                     </div>
@@ -257,7 +272,23 @@
                                     >
                                 </span>
                             </div>
+                            <div class="hint-in2a">
+                                <span class="hint-in2a1">是否首保</span>
+                                <span class="hint-in2a2 radio">
+                                    <label style="margin-left: 26px" for="YanQiRadioYes">是:</label>
+                                    <input value=""
+                                           name="is-first-period"
+                                           type="radio"
+                                           id="YanQiRadioYes">
+                                    <label for="YanQiRadioNo">否:</label>
+                                    <input value=""
+                                           name="is-first-period"
+                                           type="radio"
+                                           checked
+                                           id="YanQiRadioNo">
+                                </span>
 
+                            </div>
                         </div>
                         <a class="hint-in3 confirm" href="#">确定</a>
                     </div>
@@ -297,8 +328,8 @@
         <td class="num">
             <input type="checkbox" data-id="${item.id}">
         </td>
-        <td class="process">${item.equ_oil_name}</td>
-        <td class="time">${item.del_warning_time}</td>
+        <td class="time">${item.equ_oil_name}</td>
+        <td class="process">${item.del_warning_time}</td>
         <td class="process">{{if item.warning_type==1}}润滑{{else}}延期{{/if}}</td>
         <td class="process">${item.how_long}</td>
         <td class="process">{{if item.status==3}}超期{{else item.status==2}}临近{{else}}正常{{/if}}</td>
@@ -373,13 +404,14 @@
                 equOilNo = $(this).data('equ_oil_no'),
                 equName = $(this).data('equ_name'),
                 equOilName = $(this).data('equ_oil_name');
-            $('.oiling .confirm').click(function (e) {
+            $('.oiling .confirm').unbind('click').click(function (e) {
                 e.stopPropagation();
                 var quantity = $('.quantity').val(),
                     oilNo = $('.oilNo').val(),
+                    isFirstPeriod = $('#RunHuaRadioYes').attr('checked') ? 1 : 0,
                     delWarningTime = $('.oiling-time').val().replace(/^\s+|\s+$/gm, '');
                 var params = {
-                    url: 'oiling/info/lubricate?XDEBUG_SESSION_START=15134',
+                    url: 'oiling/info/lubricate',
                     type: 'post',
                     data: {
                         id: id,
@@ -388,7 +420,7 @@
                         equ_oil_no: equOilNo,
                         equ_name: equName,
                         equ_oil_name: equOilName,
-                        is_first_period: 0,
+                        is_first_period: isFirstPeriod,
                         warning_type: 1,
                         del_warning_time: delWarningTime,
                         oil_no: oilNo,
@@ -420,9 +452,10 @@
                 e.stopPropagation();
                 var postponeDate = $('.postpone-date').val().replace(/^\s+|\s+$/gm, ''),
                     postponeHours = $('.postpone-hours').val(),
+                    isFirstPeriod = $('#YanQiRadioYes').attr('checked') ? 1 : 0,
                     postponeReason = $('.postpone-reason').val();
                 var params = {
-                    url: 'oiling/info/postpone?XDEBUG_SESSION_START=19741',
+                    url: 'oiling/info/postpone',
                     type: 'post',
                     data: {
                         id: id,
@@ -431,7 +464,7 @@
                         equ_oil_no: equOilNo,
                         equ_name: equName,
                         equ_oil_name: equOilName,
-                        is_first_period: 0,
+                        is_first_period: isFirstPeriod,
                         warning_type: 0,
                         how_long: howLong,
                         del_warning_time: postponeDate,
@@ -517,13 +550,13 @@
             var val = $(this).val();
             if (e.keyCode == 8 && !val) {
                 document.getElementById('infoTbody').innerHTML = oldHtml;
-                var newHtml=$('#infoTbody').html();
+                var newHtml = $('#infoTbody').html();
                 return false;
             }
             var params = {
                 url: 'oiling/info/search/' + val,
                 sCallback: function (list) {
-                    if (newHtml==oldHtml) {
+                    if (newHtml == oldHtml) {
                         return false;
                     }
                     if (list.errcode === 0) {
