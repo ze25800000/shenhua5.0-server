@@ -511,6 +511,31 @@
                 window.base.getData(params);
             });
         });
-
+        //搜索
+        oldHtml = $('#infoTbody').html();
+        $(document).on("keyup", '.search-input', function (e) {
+            var val = $(this).val(),
+                _this = $(this),
+                params = {
+                    url: 'oiling/info/search/' + val,
+                    sCallback: function (list) {
+                        console.log(list);
+                        if (list.errcode === 0) {
+                            $('#infoTbody').html('');
+                            $('#infoListTemplate').tmpl(list).appendTo('#infoTbody');
+                            $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
+                        }
+                    }
+                };
+            if (val) {
+                window.base.getData(params);
+            }
+            if (e.keyCode == 8 && !val) {
+                document.getElementById('infoTbody').innerHTML = oldHtml;
+            }
+        });
     });
+</script>
+<script type="text/html">
+
 </script>

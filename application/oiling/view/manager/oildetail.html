@@ -86,7 +86,7 @@
                         </div>
                         <div class="search-box">
                             <span class="search-info">搜索润滑保养成本管理：</span>
-                            <input class="search-input" type="text" placeholder="输入油品名称或物料编号">
+                            <input class="search-input" type="text" placeholder="可以通过物料编号、油品名称或物料描述搜索">
                         </div>
                     </div>
                 </div>
@@ -202,6 +202,7 @@
 <script src="__JS__/jquery.monthpicker.js"></script>
 <script>
     $(function () {
+        var oldHtml = '';
         $('title').html('润滑保养成本管理');
         var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
         $('.scroll-box').css('height', scrollHeight);
@@ -236,6 +237,7 @@
                     $(document).find('#costTbody').html('');
                     $('#costTemplate').tmpl(list).appendTo('#costTbody');
                     $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
+                    oldHtml = $(document).find('#costTbody').html();
                     var totalPrice = 0;
                     $(document).find('.total').each(function (index, value) {
                         totalPrice += parseFloat($(value).text());
@@ -245,7 +247,7 @@
                         "<span class=\"num\">" + totalPrice + "元</span>";
                     $('.total-box').html(html);
                 },
-                eCallback:function (err) {
+                eCallback: function (err) {
                     alert()
                 }
             };
@@ -314,6 +316,27 @@
                 }
             }
             window.base.uploadFile(params);
+        });
+        //搜索
+        $(document).on("keyup", '.search-input', function (e) {
+            var val = $(this).val(),
+                _this = $(this),
+                params = {
+                    url: 'oiling/oildetail/search/' + val,
+                    sCallback: function (list) {
+                        if (list.errcode === 0) {
+                            $('#costTbody').html('');
+                            $('#costTemplate').tmpl(list).appendTo('#costTbody');
+                            $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
+                        }
+                    }
+                };
+            if (val) {
+                window.base.getData(params);
+            }
+            if (e.keyCode == 8 && !val) {
+                document.getElementById('costTbody').innerHTML = oldHtml;
+            }
         });
     });
 </script>

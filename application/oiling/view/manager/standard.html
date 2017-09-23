@@ -246,6 +246,7 @@
                     }
                     sflag = false;
                     $("tbody").find("tr:odd").css("backgroundColor", "#eff6fa");
+                    oldHtml = $(document).find('#oilStandardTbody').html();
                     var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
                     $('.scroll-box').css('height', scrollHeight);
                 }
@@ -366,26 +367,19 @@
             params = {
                 url: 'oiling/standard/search/' + val,
                 sCallback: function (list) {
-                    console.log(list)
                     if (list.errcode === 0) {
                         $('#oilStandardTbody').html('');
                         $('#standardTemp').tmpl(list).appendTo('#oilStandardTbody');
-                    } else {
-                        $('.search-result').hide().html('')
+                        $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
                     }
                 }
             };
         if (val) {
             window.base.getData(params);
-        } else {
-            $('.search-result').hide().html('');
         }
-        $(document).on('blur', '.search', function () {
-            setTimeout(function () {
-            $('.search-result').hide(100).html('');
-            },300)
-
-        })
+        if (e.keyCode == 8 && !val) {
+            document.getElementById('oilStandardTbody').innerHTML = oldHtml;
+        }
     });
 </script>
 <script type="text/html" id="standardTemp">

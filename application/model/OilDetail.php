@@ -36,6 +36,7 @@ class OilDetail extends BaseModel {
     public static function getOilDetailListByKeyword($keyword) {
         $result = self::where('oil_name', 'like', "%$keyword%")
             ->whereOr('oil_no', 'like', "%$keyword%")
+            ->whereOr('detail','like',"%$keyword%")
             ->select();
         return $result;
     }

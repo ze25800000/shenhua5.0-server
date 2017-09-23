@@ -291,7 +291,7 @@ body {
 
 .query .total-box {
     position: absolute;
-    right: 700px;
+    right: 35%;
     top: 0;
     line-height: 46px;
 }
