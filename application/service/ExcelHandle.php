@@ -29,7 +29,7 @@ class ExcelHandle {
     public function excelToArray() {
         vendor('PHPExcel');
         $file = Request::instance()->file('excel');
-        $info = $file->validate(['ext' => 'xlsx,xls'])->move(ROOT_PATH . 'public' . DS . 'upload' . DS . 'oilStandard');
+        $info = $file->validate(['ext' => 'xlsx,xls'])->move(ROOT_PATH . 'public' . DS . 'upload');
         //数据为空返回错误
         if (empty($info)) {
             throw new UploadException();
@@ -59,16 +59,16 @@ class ExcelHandle {
     public function downloadExcel($data, $type = 'test.xls') {
         ini_set('max_execution_time', '0');
         vendor('PHPExcel');
-        $filename = str_replace('.xls', '', $type) . '.xls';
+        $filename = str_replace('.xls', '', $type) . '.xlsx';
         $phpexcel = new \PHPExcel();
-        $phpexcel->getProperties()
-            ->setCreator(session('userName'))
-            ->setLastModifiedBy(session('userName'))
-            ->setTitle("Office 2007 XLSX Test Document")
-            ->setSubject("Office 2007 XLSX Test Document")
-            ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
-            ->setKeywords("office 2007 openxml php")
-            ->setCategory("Test result file");
+        $phpexcel->getProperties();
+//            ->setCreator(session('userName'))
+//            ->setLastModifiedBy(session('userName'))
+//            ->setTitle("Office 2007 XLSX Test Document")
+//            ->setSubject("Office 2007 XLSX Test Document")
+//            ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+//            ->setKeywords("office 2007 openxml php")
+//            ->setCategory("Test result file");
         $phpexcel->getActiveSheet()->fromArray($data);
         $phpexcel->getActiveSheet()->setTitle('Sheet1');
         $phpexcel->setActiveSheetIndex(0);
@@ -80,7 +80,7 @@ class ExcelHandle {
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
         header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
         header('Pragma: public'); // HTTP/1.0 PHPExcel_IOFactory
-        $objwriter = \PHPExcel_IOFactory::createWriter($phpexcel, 'Excel5');
+        $objwriter = \PHPExcel_IOFactory::createWriter($phpexcel, 'Excel2007');
         $objwriter->save('php://output');
         exit;
     }

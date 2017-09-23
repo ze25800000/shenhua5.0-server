@@ -30,21 +30,21 @@
                     </ul>
                 </div>
 
+                *{if condition="!empty($warningMessage)"}
                 <div class="box" id="navbox" style="height:0px;opacity:0;overflow:hidden;">
                     <div class="cont" style="display:none;">
                         <ul class="sublist clearfix">
-                            *{if condition="!empty($warningMessage)"}
                             *{foreach $warningMessage as $v}
                             <li>
                                 <p><a href="/oiling/equdetail/*{$v.equ_key_no}" target="_blank" *{if condition="$v.status==3"} style="color: #ee6b0c;"*{/if}>【*{$v.equ_name}】*{$v.equ_oil_name} 当前状态：*{if condition="$v.status===2"}临近*{else/}超期*{/if}</a></p>
 
                             </li>
                             *{/foreach}
-                            *{/if}
                             <div class="clear"></div>
                         </ul>
                     </div>
                 </div>
+                *{/if}
             </div>
         </div>
 
