@@ -1,2 +1,2 @@
 <?php
-echo md5(123456);
+var_dump(preg_match('/^润滑$/', '润滑延期'));

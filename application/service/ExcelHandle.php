@@ -17,6 +17,9 @@ use app\model\OilAnalysis;
 use app\model\OilDetail;
 use app\model\OilStandard;
 use app\model\WorkHour;
+use app\validate\excelArray\ExcelArrayValidate;
+use app\validate\excelArray\InfoWarningValidate;
+use app\validate\excelArray\WorkHourValidate;
 use think\Request;
 
 class ExcelHandle {
@@ -211,6 +214,7 @@ class ExcelHandle {
         $equNoArr       = $this->listMoveToArray($equipmentModel, 'equ_no');
         $workHourModel  = new WorkHour();
         $arr            = [];
+        $validate       = new ExcelArrayValidate();
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
                 $arr[$k]['equ_no']       = $v[0];
@@ -219,7 +223,8 @@ class ExcelHandle {
                 $arr[$k]['equ_oil_name'] = $v[2];
                 $arr[$k]['working_hour'] = $v[3];
                 $arr[$k]['start_time']   = $this->getTimestamp($v[4]);
-                $item                    = $workHourModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and start_time={$arr[$k]['start_time']}")->find();
+                (new WorkHourValidate())->checkExcel($arr[$k], $k);
+                $item = $workHourModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and start_time={$arr[$k]['start_time']}")->find();
                 if ($item) {
                     $arr[$k]['id'] = $item->id;
                 }
@@ -236,14 +241,16 @@ class ExcelHandle {
                     ->order("del_warning_time DESC")
                     ->limit(1)
                     ->find();
-                $howLong      = $this->howLong($infoWarnItem->equ_key_no, $infoWarnItem->del_warning_time);
-                $infoWarningModel
-                    ->where('equ_key_no', '=', $equKeyNo)
-                    ->update([
-                        'how_long' => $howLong,
-                        'status'   => $this->getStatus($infoWarnItem, $howLong),
-                        'deadline' => $this->getDeadline($infoWarnItem, $howLong)
-                    ]);
+                if ($infoWarnItem) {
+                    $howLong = $this->howLong($infoWarnItem->equ_key_no, $infoWarnItem->del_warning_time);
+                    $infoWarningModel
+                        ->where('equ_key_no', '=', $equKeyNo)
+                        ->update([
+                            'how_long' => $howLong,
+                            'status'   => $this->getStatus($infoWarnItem, $howLong),
+                            'deadline' => $this->getDeadline($infoWarnItem, $howLong)
+                        ]);
+                }
             }
         }
 
@@ -269,17 +276,18 @@ class ExcelHandle {
                 $arr[$k]['equ_name']         = $v[2];
                 $arr[$k]['equ_oil_name']     = $v[3];
                 $arr[$k]['del_warning_time'] = $this->getTimestamp($v[4]);
-                $arr[$k]['is_first_period']  = preg_match('/是/', $v[5]) ? 1 : 0;
-                $arr[$k]['warning_type']     = preg_match('/润滑/', $v[6]) ? 1 : 0;
+                $arr[$k]['is_first_period']  = preg_match('/^是$/', $v[5]) ? 1 : (preg_match('/^否$/', $v[5]) ? 0 : null);
+                $arr[$k]['warning_type']     = preg_match('/^润滑$/', $v[6]) ? 1 : (preg_match('/^延期$/', $v[6]) ? 0 : null);
                 $arr[$k]['postpone']         = empty($v[7]) ? null : $v[7];
-                $arr[$k]['how_long']         = $this->howLong($arr[$k]['equ_key_no'], $arr[$k]['del_warning_time']);
-                $arr[$k]['status']           = $this->getStatus($arr[$k], $arr[$k]['how_long']);
-                $arr[$k]['deadline']         = $this->getDeadline($arr[$k], $arr[$k]['how_long']);
                 $arr[$k]['postpone_reason']  = empty($v[8]) ? null : $v[8];
-                $arr[$k]['user_id']          = session('user_id');
                 $arr[$k]['oil_no']           = empty($v[9]) ? null : $v[9];
                 $arr[$k]['quantity']         = empty($v[10]) ? null : $v[10];
-                $item                        = $infoWarningModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and del_warning_time={$arr[$k]['del_warning_time']}")->find();
+                (new InfoWarningValidate())->checkExcel($arr[$k], $k);
+                $arr[$k]['how_long'] = $this->howLong($arr[$k]['equ_key_no'], $arr[$k]['del_warning_time']);
+                $arr[$k]['status']   = $this->getStatus($arr[$k], $arr[$k]['how_long']);
+                $arr[$k]['deadline'] = $this->getDeadline($arr[$k], $arr[$k]['how_long']);
+                $arr[$k]['user_id']  = session('user_id');
+                $item                = $infoWarningModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and del_warning_time={$arr[$k]['del_warning_time']}")->find();
                 if ($item) {
                     $arr[$k]['id'] = $item->id;
                 }
@@ -299,7 +307,7 @@ class ExcelHandle {
      */
     public function howLong($equKeyNo, $time) {
         $maxDelTime = InfoWarning::where("equ_key_no={$equKeyNo} and warning_type=1")->max('del_warning_time');
-        if ($time > $maxDelTime || !$maxDelTime) {
+        if ($time > $maxDelTime || empty($maxDelTime)) {
             $maxDelTime = $time;
         }
         $howLong = WorkHour::where("equ_key_no={$equKeyNo} and start_time>{$maxDelTime}")->sum('working_hour');
