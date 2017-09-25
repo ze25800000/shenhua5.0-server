@@ -20,6 +20,7 @@ use app\model\WorkHour;
 use app\validate\excelArray\ExcelArrayValidate;
 use app\validate\excelArray\InfoWarningValidate;
 use app\validate\excelArray\OilAnalysisValidate;
+use app\validate\excelArray\OilDetailValidate;
 use app\validate\excelArray\WorkHourValidate;
 use think\Request;
 
@@ -257,15 +258,17 @@ class ExcelHandle {
     }
 
     public function oilDetail($excel_array) {
-        $oilDetailModel = new OilDetail();
-        $arr            = [];
+        $oilDetailModel    = new OilDetail();
+        $arr               = [];
+        $OilDetailValidate = new OilDetailValidate();
         foreach ($excel_array as $k => $v) {
             $arr[$k]['oil_no']   = $v[0];
             $arr[$k]['oil_name'] = $v[1];
             $arr[$k]['detail']   = $v[2];
             $arr[$k]['unit']     = $v[3];
             $arr[$k]['price']    = $v[4];
-            $item                = $oilDetailModel->field('id')->where("oil_no={$arr[$k]['oil_no']}")->find();
+            $OilDetailValidate->checkExcel($arr[$k], $k);
+            $item = $oilDetailModel->field('id')->where("oil_no={$arr[$k]['oil_no']}")->find();
             if ($item) {
                 $arr[$k]['id'] = $item->id;
             }
