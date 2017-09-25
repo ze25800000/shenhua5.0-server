@@ -19,6 +19,7 @@ use app\model\OilStandard;
 use app\model\WorkHour;
 use app\validate\excelArray\ExcelArrayValidate;
 use app\validate\excelArray\InfoWarningValidate;
+use app\validate\excelArray\OilAnalysisValidate;
 use app\validate\excelArray\WorkHourValidate;
 use think\Request;
 
@@ -122,99 +123,12 @@ class ExcelHandle {
         return true;
     }
 
-    public function oilAnalysis($excel_array) {
-        $equipmentEquNoList = Equipment::field('equ_no')->select();
-        $equNoArr           = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
-        $oilAnalysisModel   = new OilAnalysis();
-        $arr                = [];
-        foreach ($excel_array as $k => $v) {
-            if (in_array($v[0], $equNoArr)) {
-                $arr[$k]['equ_no']        = $v[0];
-                $arr[$k]['equ_oil_no']    = $v[1];
-                $arr[$k]['equ_key_no']    = $v[0] . config('salt') . $v[1];
-                $arr[$k]['equ_oil_name']  = $v[3];
-                $arr[$k]['sampling_time'] = $this->getTimestamp($v[4]);
-                $arr[$k]['work_hour']     = $this->howLong($arr[$k]['equ_key_no'], $arr[$k]['sampling_time']);
-                $arr[$k]['oil_no']        = $this->getOilNoFromInfo($arr[$k]['equ_key_no']);
-                $arr[$k]['Fe']            = $v[5];
-                $arr[$k]['Cu']            = $v[6];
-                $arr[$k]['Al']            = $v[7];
-                $arr[$k]['Si']            = $v[8];
-                $arr[$k]['Na']            = $v[9];
-                $arr[$k]['pq']            = $v[10];
-                $arr[$k]['viscosity']     = $v[11];
-                $arr[$k]['oil_status']    = implode('<br>', $this->getOilStatus($arr[$k]));
-                $arr[$k]['advise']        = empty($arr[$k]['oil_status']) ? 1 : 0;
-                $item                     = $oilAnalysisModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and sampling_time={$arr[$k]['sampling_time']}")->find();
-                if ($item) {
-                    $arr[$k]['id'] = $item->id;
-                }
-            }
-        }
-        $result = $oilAnalysisModel->saveAll($arr);
-        if (!$result) {
-            throw new UploadException([
-                'msg' => '上传油脂分析报告文件失败，未存入数据库'
-            ]);
-        }
-        return true;
-    }
-
-    public function getOilNoFromInfo($equKeyNo) {
-        $info = InfoWarning::where('equ_key_no', '=', $equKeyNo)
-            ->field('oil_no')
-            ->order('del_warning_time desc')
-            ->limit(1)
-            ->find();
-        return $info['oil_no'];
-    }
-
-    public function getOilStatus($OilAnalysisItem) {
-        $oilStatus = [];
-        if (!empty($OilAnalysisItem['Fe']) && $OilAnalysisItem['Fe'] > $this->config['Fe']) array_push($oilStatus, 'Fe元素超标');
-        if (!empty($OilAnalysisItem['Cu']) && $OilAnalysisItem['Cu'] > $this->config['Cu']) array_push($oilStatus, 'Cu元素超标');
-        if (!empty($OilAnalysisItem['Al']) && $OilAnalysisItem['Al'] > $this->config['Al']) array_push($oilStatus, 'Al元素超标');
-        if (!empty($OilAnalysisItem['Si']) && $OilAnalysisItem['Si'] > $this->config['Si']) array_push($oilStatus, 'Si元素超标');
-        if (!empty($OilAnalysisItem['Na']) && $OilAnalysisItem['Na'] > $this->config['Na']) array_push($oilStatus, 'Na元素超标');
-        if (!empty($OilAnalysisItem['pq']) && $OilAnalysisItem['pq'] > $this->config['pq']) array_push($oilStatus, 'PQ值超标');
-        if (!empty($OilAnalysisItem['viscosity']) && $OilAnalysisItem['viscosity'] < $this->config['viscosity_min']) {
-            array_push($oilStatus, '粘度偏低');
-        } elseif ($OilAnalysisItem['viscosity'] > $this->config['viscosity_max']) {
-            array_push($oilStatus, '粘度偏高');
-        }
-        return $oilStatus;
-    }
-
-    public function oilDetail($excel_array) {
-        $oilDetailModel = new OilDetail();
-        $arr            = [];
-        foreach ($excel_array as $k => $v) {
-            $arr[$k]['oil_no']   = $v[0];
-            $arr[$k]['oil_name'] = $v[1];
-            $arr[$k]['detail']   = $v[2];
-            $arr[$k]['unit']     = $v[3];
-            $arr[$k]['price']    = $v[4];
-            $item                = $oilDetailModel->field('id')->where("oil_no={$arr[$k]['oil_no']}")->find();
-            if ($item) {
-                $arr[$k]['id'] = $item->id;
-            }
-        }
-        $result = $oilDetailModel->saveAll($arr);
-        if (!$result) {
-            throw new DocumentException([
-                'msg' => '润滑保养成本管理 ，录入数据库失败'
-            ]);
-        }
-        return true;
-    }
-
-
     public function workHour($excel_array) {
-        $equipmentModel = Equipment::field('equ_no')->select();
-        $equNoArr       = $this->listMoveToArray($equipmentModel, 'equ_no');
-        $workHourModel  = new WorkHour();
-        $arr            = [];
-        $validate       = new ExcelArrayValidate();
+        $equipmentModel   = Equipment::field('equ_no')->select();
+        $equNoArr         = $this->listMoveToArray($equipmentModel, 'equ_no');
+        $workHourModel    = new WorkHour();
+        $WorkHourValidate = new WorkHourValidate();
+        $arr              = [];
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
                 $arr[$k]['equ_no']       = $v[0];
@@ -223,7 +137,7 @@ class ExcelHandle {
                 $arr[$k]['equ_oil_name'] = $v[2];
                 $arr[$k]['working_hour'] = $v[3];
                 $arr[$k]['start_time']   = $this->getTimestamp($v[4]);
-                (new WorkHourValidate())->checkExcel($arr[$k], $k);
+                $WorkHourValidate->checkExcel($arr[$k], $k);
                 $item = $workHourModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and start_time={$arr[$k]['start_time']}")->find();
                 if ($item) {
                     $arr[$k]['id'] = $item->id;
@@ -262,12 +176,12 @@ class ExcelHandle {
         return true;
     }
 
-
     public function infoWarning($excel_array) {
-        $equipmentEquNoList = Equipment::field('equ_no')->select();
-        $equNoArr           = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
-        $infoWarningModel   = new InfoWarning();
-        $arr                = [];
+        $equipmentEquNoList  = Equipment::field('equ_no')->select();
+        $equNoArr            = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
+        $infoWarningModel    = new InfoWarning();
+        $arr                 = [];
+        $InfoWarningValidate = new InfoWarningValidate();
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
                 $arr[$k]['equ_no']           = $v[0];
@@ -282,7 +196,7 @@ class ExcelHandle {
                 $arr[$k]['postpone_reason']  = empty($v[8]) ? null : $v[8];
                 $arr[$k]['oil_no']           = empty($v[9]) ? null : $v[9];
                 $arr[$k]['quantity']         = empty($v[10]) ? null : $v[10];
-                (new InfoWarningValidate())->checkExcel($arr[$k], $k);
+                $InfoWarningValidate->checkExcel($arr[$k], $k);
                 $arr[$k]['how_long'] = $this->howLong($arr[$k]['equ_key_no'], $arr[$k]['del_warning_time']);
                 $arr[$k]['status']   = $this->getStatus($arr[$k], $arr[$k]['how_long']);
                 $arr[$k]['deadline'] = $this->getDeadline($arr[$k], $arr[$k]['how_long']);
@@ -301,6 +215,95 @@ class ExcelHandle {
         }
         return true;
     }
+
+    public function oilAnalysis($excel_array) {
+        $equipmentEquNoList  = Equipment::field('equ_no')->select();
+        $equNoArr            = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
+        $oilAnalysisModel    = new OilAnalysis();
+        $arr                 = [];
+        $OilAnalysisValidate = new OilAnalysisValidate();
+        foreach ($excel_array as $k => $v) {
+            if (in_array($v[0], $equNoArr)) {
+                $arr[$k]['equ_no']        = $v[0];
+                $arr[$k]['equ_oil_no']    = $v[1];
+                $arr[$k]['equ_key_no']    = $v[0] . config('salt') . $v[1];
+                $arr[$k]['equ_oil_name']  = $v[3];
+                $arr[$k]['sampling_time'] = $this->getTimestamp($v[4]);
+                $arr[$k]['Fe']            = $v[5];
+                $arr[$k]['Cu']            = $v[6];
+                $arr[$k]['Al']            = $v[7];
+                $arr[$k]['Si']            = $v[8];
+                $arr[$k]['Na']            = $v[9];
+                $arr[$k]['pq']            = $v[10];
+                $arr[$k]['viscosity']     = $v[11];
+                $OilAnalysisValidate->checkExcel($arr[$k], $k);
+                $arr[$k]['oil_no']     = $this->getOilNoFromInfo($arr[$k]['equ_key_no']);
+                $arr[$k]['work_hour']  = $this->howLong($arr[$k]['equ_key_no'], $arr[$k]['sampling_time']);
+                $arr[$k]['oil_status'] = implode('<br>', $this->getOilStatus($arr[$k]));
+                $arr[$k]['advise']     = empty($arr[$k]['oil_status']) ? 1 : 0;
+                $item                  = $oilAnalysisModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and sampling_time={$arr[$k]['sampling_time']}")->find();
+                if ($item) {
+                    $arr[$k]['id'] = $item->id;
+                }
+            }
+        }
+        $result = $oilAnalysisModel->saveAll($arr);
+        if (!$result) {
+            throw new UploadException([
+                'msg' => '上传油脂分析报告文件失败，未存入数据库'
+            ]);
+        }
+        return true;
+    }
+
+    public function oilDetail($excel_array) {
+        $oilDetailModel = new OilDetail();
+        $arr            = [];
+        foreach ($excel_array as $k => $v) {
+            $arr[$k]['oil_no']   = $v[0];
+            $arr[$k]['oil_name'] = $v[1];
+            $arr[$k]['detail']   = $v[2];
+            $arr[$k]['unit']     = $v[3];
+            $arr[$k]['price']    = $v[4];
+            $item                = $oilDetailModel->field('id')->where("oil_no={$arr[$k]['oil_no']}")->find();
+            if ($item) {
+                $arr[$k]['id'] = $item->id;
+            }
+        }
+        $result = $oilDetailModel->saveAll($arr);
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '润滑保养成本管理 ，录入数据库失败'
+            ]);
+        }
+        return true;
+    }
+
+    public function getOilNoFromInfo($equKeyNo) {
+        $info = InfoWarning::where('equ_key_no', '=', $equKeyNo)
+            ->field('oil_no')
+            ->order('del_warning_time desc')
+            ->limit(1)
+            ->find();
+        return $info['oil_no'];
+    }
+
+    public function getOilStatus($OilAnalysisItem) {
+        $oilStatus = [];
+        if (!empty($OilAnalysisItem['Fe']) && $OilAnalysisItem['Fe'] > $this->config['Fe']) array_push($oilStatus, 'Fe元素超标');
+        if (!empty($OilAnalysisItem['Cu']) && $OilAnalysisItem['Cu'] > $this->config['Cu']) array_push($oilStatus, 'Cu元素超标');
+        if (!empty($OilAnalysisItem['Al']) && $OilAnalysisItem['Al'] > $this->config['Al']) array_push($oilStatus, 'Al元素超标');
+        if (!empty($OilAnalysisItem['Si']) && $OilAnalysisItem['Si'] > $this->config['Si']) array_push($oilStatus, 'Si元素超标');
+        if (!empty($OilAnalysisItem['Na']) && $OilAnalysisItem['Na'] > $this->config['Na']) array_push($oilStatus, 'Na元素超标');
+        if (!empty($OilAnalysisItem['pq']) && $OilAnalysisItem['pq'] > $this->config['pq']) array_push($oilStatus, 'PQ值超标');
+        if (!empty($OilAnalysisItem['viscosity']) && $OilAnalysisItem['viscosity'] < $this->config['viscosity_min']) {
+            array_push($oilStatus, '粘度偏低');
+        } elseif ($OilAnalysisItem['viscosity'] > $this->config['viscosity_max']) {
+            array_push($oilStatus, '粘度偏高');
+        }
+        return $oilStatus;
+    }
+
 
     /**计算距离上次消警的总时长
      *

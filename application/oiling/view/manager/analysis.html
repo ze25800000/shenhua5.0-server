@@ -225,6 +225,11 @@
                 data: new FormData($(this).parent()[0]),
                 sCallback: function () {
                     alert('上传成功');
+                },
+                eCallback:function (err) {
+                    if (err.errcode==2) {
+                        err.msg && alert(err.msg);
+                    }
                 }
             };
         window.base.uploadFile(params);
