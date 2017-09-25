@@ -21,6 +21,7 @@ use app\validate\excelArray\ExcelArrayValidate;
 use app\validate\excelArray\InfoWarningValidate;
 use app\validate\excelArray\OilAnalysisValidate;
 use app\validate\excelArray\OilDetailValidate;
+use app\validate\excelArray\OilStandardValidate;
 use app\validate\excelArray\WorkHourValidate;
 use think\Request;
 
@@ -91,10 +92,11 @@ class ExcelHandle {
     }
 
     public function oilStandard($excel_array) {
-        $equipmentEquNoList = Equipment::field('equ_no')->select();
-        $equNoArr           = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
-        $oilStandardModel   = new OilStandard();
-        $arr                = [];
+        $equipmentEquNoList  = Equipment::field('equ_no')->select();
+        $equNoArr            = $this->listMoveToArray($equipmentEquNoList, 'equ_no');
+        $oilStandardModel    = new OilStandard();
+        $arr                 = [];
+        $OilStandardValidate = new OilStandardValidate();
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
                 $arr[$k]['equ_no']       = $v[0];
@@ -108,7 +110,8 @@ class ExcelHandle {
                 $arr[$k]['first_period'] = $v[7];
                 $arr[$k]['period']       = $v[8];
                 $arr[$k]['interval']     = $v[9];
-                $item                    = $oilStandardModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']}")->find();
+                $OilStandardValidate->checkExcel($arr[$k], $k);
+                $item = $oilStandardModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']}")->find();
                 if ($item) {
                     $arr[$k]['id'] = $item->id;
                 }

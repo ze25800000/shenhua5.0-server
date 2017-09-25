@@ -353,7 +353,9 @@
                 window.location.reload();
             },
             eCallback: function (err) {
-                console.log(err);
+                if (err.errcode==2) {
+                    err.msg&&alert(err.msg);
+                }
             }
         };
         window.base.uploadFile(params);
