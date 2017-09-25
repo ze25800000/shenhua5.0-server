@@ -32,24 +32,24 @@
                             <td class="" data-id="*{$detail.equ_no}" data-key="oil_no">*{$detail.equ_no}</td>
 
                             <th>润滑点编号：</th>
-                            <td class="edit-item" data-id="*{$detail.equ_oil_no}" data-key="oil_no">*{$detail.equ_oil_no}</td>
+                            <td class="edit-item-standard" data-id="*{$detail.equ_oil_no}" data-key="oil_no">*{$detail.equ_oil_no}</td>
 
                             <th>物料编码：</th>
-                            <td class="edit-item" data-id="*{$detail.id}" data-key="oil_no">*{$detail.oil_no}</td>
+                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="oil_no">*{$detail.oil_no}</td>
                             <th>用量：</th>
-                            <td class="edit-item" data-id="*{$detail.id}" data-key="quantity">*{$detail.quantity}</td>
+                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="quantity">*{$detail.quantity}</td>
                         </tr>
                         <tr class="rhd_xqb1a">
                             <th>单位：</th>
-                            <td class="edit-item" data-id="*{$detail.id}" data-key="unit">*{$detail.unit}</td>
+                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="unit">*{$detail.unit}</td>
                             <th>更换最长周期：</th>
-                            <td class="edit-item" data-id="*{$detail.id}" data-key="period">*{$detail.period}</td>
+                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="period">*{$detail.period}</td>
                             <th>首保周期：</th>
-                            <td class="edit-item" data-id="*{$detail.id}" data-key="first_period">
+                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="first_period">
                                 *{$detail.first_period}
                             </td>
                             <th>油脂采样间隔：</th>
-                            <td class="edit-item" data-id="*{$detail.id}" data-key="interval">*{$detail.interval}</td>
+                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="interval">*{$detail.interval}</td>
                         </tr>
                     </table>
                 </div>
@@ -68,14 +68,11 @@
             <div class="rhd_xqb1">
                 <div class="rhd_xqb1">
                     <table class="status">
-                        *{if condition="$detail.info_warning_detail[0]['is_first_period']"}
-                        <tr class="rhd_xqb1a">
-                            <th colspan="4" style="color: red;padding-bottom: 10px;">设备处于首保周期</th>
-                        </tr>
-                        *{/if}
                         <tr class="rhd_xqb1a">
                             <th>上次消警日期：</th>
-                            <td>*{$detail.info_warning_detail[0]['del_warning_time']|date="Y年m月d日",###}</td>
+                            <td class="edit-item-info"
+                                data-id="*{$detail.info_warning_detail[0]['id']}"
+                                data-key="del_warning_time">*{$detail.info_warning_detail[0]['del_warning_time']|date="Y年m月d日",###}</td>
                             <th>消警类型：</th>
                             <td>*{$detail.info_warning_detail[0]['warning_type']?'润滑':'延期'}</td>
                             <th>运行时长：</th>
@@ -85,19 +82,33 @@
                         </tr>
                         *{if condition="$detail.info_warning_detail[0]['warning_type']"}
                         <tr class="rhd_xqb1a">
+                            <th>是否首保：</th>
+                            <td class="edit-item-info"
+                                *{if condition="$detail.info_warning_detail[0]['is_first_period']"} style="color: red;"*{/if}
+                                data-id="*{$detail.info_warning_detail[0]['id']}"
+                                data-key="is_first_period"
+                            >*{$detail.info_warning_detail[0]['is_first_period']?'是':'否'}</td>
                             <th>物料编号：</th>
-                            <td>*{$detail.info_warning_detail[0]['oil_no']}</td>
+                            <td  class="edit-item-info"
+                                 data-id="*{$detail.info_warning_detail[0]['id']}"
+                                 data-key="oil_no"
+                            >*{$detail.info_warning_detail[0]['oil_no']}</td>
                             <th>用量：</th>
-                            <td>*{$detail.info_warning_detail[0]['quantity']}</td>
+                            <td  class="edit-item-info"
+                                 data-id="*{$detail.info_warning_detail[0]['id']}"
+                                 data-key="quantity"
+                            >*{$detail.info_warning_detail[0]['quantity']}</td>
                             <th>操作人员：</th>
                             <td>*{$detail.info_warning_detail[0]['user']['name']}</td>
                         </tr>
                         *{else/}
                         <tr class="rhd_xqb1a">
+                            <th>是否首保：</th>
+                            <td class="edit-item-info" *{if condition="$detail.info_warning_detail[0]['is_first_period']"} style="color: red;"*{/if}>*{$detail.info_warning_detail[0]['is_first_period']?'是':'否'}</td>
                             <th>延期时长：</th>
-                            <td>*{$detail.info_warning_detail[0]['postpone']}</td>
+                            <td class="edit-item-info">*{$detail.info_warning_detail[0]['postpone']}</td>
                             <th>延期原因：</th>
-                            <td>*{$detail.info_warning_detail[0]['postpone_reason']}</td>
+                            <td class="edit-item-info">*{$detail.info_warning_detail[0]['postpone_reason']}</td>
                             <th>操作人员：</th>
                             <td>*{$detail.info_warning_detail[0]['user']['name']}</td>
                         </tr>
@@ -572,7 +583,7 @@
     });
     *{if condition="$scope==36"}
     //编辑润滑标准条目信息
-    $(document).on('dblclick', '.edit-item', function (e) {
+    $(document).on('dblclick', '.edit-item-standard', function (e) {
         var _this = $(this),
             oldVal = _this.html(),
             url = 'oiling/standard/edititem/';
@@ -586,6 +597,26 @@
         window.base.editItemByDblClick(_this, input, oldVal, url);
     });
     *{/if}
+    //编辑消警记录
+    $(document).on('dblclick', '.edit-item-info', function (e) {
+        var _this = $(this),
+            oldVal = _this.html(),
+            url = 'oiling/info/edititem/';
+        oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
+        var long = oldVal.length?(oldVal.length * 12):'20';
+        if (!/input/.test(oldVal)) {
+            _this.html('<input type="text" value="' + oldVal + '" style="width: ' + long + 'px">');
+        }
+        var input = _this.find('input');
+        input.select();
+        window.base.editItemByDblClick(_this, input, oldVal, url,function () {
+            location.reload();
+        },function (err) {
+            if (err.errcode==1) {
+               err.msg && alert(err.msg);
+            }
+        });
+    });
     //删除
     $('.rhd_xqb table tbody tr:first-child td.operate').html('<a href="javascript:;" class="del">删除</a>');
     $('.del-td').on('click', 'a', function () {

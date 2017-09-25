@@ -1418,7 +1418,7 @@ button {
     margin: 10px 0;
 }
 
-.edit-item:hover {
+.edit-item:hover,.edit-item-info:hover,.edit-item-standard:hover {
     background-color: #c8f0ff;
 }
 

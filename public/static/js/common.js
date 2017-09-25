@@ -68,7 +68,7 @@ window.base = {
                 },
                 eCallback: function (err) {
                     _this.html(oldVal);
-                    eCallback && eCallback(err.msg);
+                    eCallback && eCallback(err);
                 }
             };
             if (newVal != oldVal) {

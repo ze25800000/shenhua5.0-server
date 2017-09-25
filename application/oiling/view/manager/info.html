@@ -386,7 +386,7 @@
         $('.upload').click(function (e) {
             var exceltype = $('.select-type').val(),
                 params = {
-                    url: 'oiling/upload?' + exceltype + '&XDEBUG_SESSION_START=14627',
+                    url: 'oiling/upload?' + exceltype,
                     data: new FormData($(this).parent()[0]),
                     sCallback: function (data) {
                         alert('上传成功');
@@ -454,7 +454,7 @@
                 equName = $(this).data('equ_name'),
                 howLong = $(this).data('how_long'),
                 equOilName = $(this).data('equ_oil_name');
-            $('.postpone .confirm').click(function (e) {
+            $('.postpone .confirm').unbind('click').click(function (e) {
                 e.stopPropagation();
                 var postponeDate = $('.postpone-date').val().replace(/^\s+|\s+$/gm, ''),
                     postponeHours = $('.postpone-hours').val(),

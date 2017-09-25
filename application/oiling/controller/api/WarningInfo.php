@@ -15,6 +15,7 @@ use app\validate\IDMustBePositiveInt;
 use app\validate\LubricateValidate;
 use app\validate\PostponeValidate;
 use think\Config;
+use think\Validate;
 
 class WarningInfo extends BaseController {
     public function getWarningMessage() {
@@ -110,6 +111,48 @@ class WarningInfo extends BaseController {
             ]);
         }
         return $this->ajaxReturn('延期操作成功');
+    }
+
+    public function editInfoWarningDetailById($id) {
+        (new IDMustBePositiveInt())->goCheck();
+        $InfoWarningItem = InfoWarning::get($id);
+        $param           = input('post.');
+        if (!empty($param['del_warning_time'])) {
+            $validate = new Validate([
+                'del_warning_time' => '/^\d{4}年\d{1,2}月\d{1,2}日$/'
+            ]);
+            $re       = $validate->check($param);
+            if (!$re) {
+                throw new DocumentException([
+                    'msg' => '日期格式有误，请输入xxxx年xx月xx日格式的时间'
+                ]);
+            }
+            $param['del_warning_time'] = Tools::getTimestamp($param['del_warning_time']);
+        }
+        if (!empty($param['is_first_period'])) {
+            $validate = new Validate([
+                'is_first_period' => ['regex' => '/^(是|否)$/']
+            ]);
+            $re       = $validate->check($param);
+            if (!$re) {
+                throw new DocumentException([
+                    'msg' => '首保周期只能填写\'是\'或\'否\''
+                ]);
+            }
+            $param['is_first_period'] = preg_match('/^是$/', $param['is_first_period']) ? 1 : (preg_match('/^否$/', $param['is_first_period']) ? 0 : null);
+            $result1 = $InfoWarningItem->save($param);
+            $excelHandle              = new ExcelHandle();
+            $param['how_long']        = $excelHandle->howLong($InfoWarningItem->equ_key_no, $InfoWarningItem->del_warning_time);
+            $param['status']          = $excelHandle->getStatus($InfoWarningItem, $param['how_long']);
+            $param['deadline']        = $excelHandle->getDeadline($InfoWarningItem, $param['how_long']);
+        }
+        $result = $InfoWarningItem->save($param);
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '修改消警记录失败'
+            ]);
+        }
+        return $this->ajaxReturn('修改消警记录成功');
     }
 
     public function deleteInfoItemById($id) {

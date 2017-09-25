@@ -258,7 +258,7 @@
         $('.hint2').html('添加新设备');
         $(".hint").css({"display": "block"});
         $(".box").css({"display": "block"});
-        $('.confirm').click(function () {
+        $('.confirm').unbind('click').click(function () {
             var equNoVal = $('.equ_no_val').val(),
                 equNameVal = $('.equ_name_val').val(),
                 params = {

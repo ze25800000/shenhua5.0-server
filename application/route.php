@@ -40,7 +40,8 @@ Route::group('oiling/info', function () {
     Route::delete('del/:id', 'oiling/api.WarningInfo/deleteInfoItemById');
     Route::get('list/:before/:after', 'oiling/api.WarningInfo/getInfoListByDate');
     Route::get('getlist/:page', 'oiling/api.WarningInfo/getInfoList');
-    //润滑功能的实现
+    Route::post('edititem/:id', 'oiling/api.WarningInfo/editInfoWarningDetailById');
+//润滑功能的实现
     Route::post('lubricate', 'oiling/api.WarningInfo/lubricate');
     //延期功能的实现
     Route::post('postpone', 'oiling/api.WarningInfo/postpone');
