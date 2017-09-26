@@ -289,6 +289,8 @@
         var id = $(this).data('id'),
             _this = $(this);
         $('.confirm-del').unbind('click').on('click', function (event) {
+            $(".hintl").hide(100);
+            $(".box").hide(100);
             var params = {
                 url: 'oiling/equipment/del/' + id,
                 type: 'delete',
@@ -311,6 +313,8 @@
             _this = $(this);
         $('.confirm-del').unbind('click').click(function (e) {
             e.stopPropagation();
+            $(".hintl").hide(100);
+            $(".box").hide(100);
             var params = {
                 url: 'oiling/standard/del/' + id,
                 type: 'delete',

@@ -10,13 +10,16 @@ namespace app\oiling\controller\api;
 
 
 use app\lib\exception\DocumentException;
+use app\lib\tools\Tools;
 use app\model\Equipment;
+use app\model\InfoWarning;
 use app\model\OilStandard;
 use app\service\BaseController;
+use app\service\ExcelHandle;
 use app\validate\EquipmentNoValidate;
 use app\validate\EquipmentValidate;
 use app\validate\IDMustBePositiveInt;
-use app\validate\KeywordMustBeHanZiValidate;
+use think\Validate;
 
 class Standard extends BaseController {
     /** 获取设备润滑标准列表
@@ -98,12 +101,51 @@ class Standard extends BaseController {
      */
     public function editOilStandardDetailById($id) {
         (new IDMustBePositiveInt())->goCheck();
+        $excelHandle = new ExcelHandle();
+
+        $param       = input('post.');
         $OilStandard = OilStandard::get($id);
-        $result      = $OilStandard->save(input('post.'));
-        if (!$result) {
-            throw new DocumentException([
-                'msg' => '修改详细信息失败'
+        if (!empty($param['period']) || !empty($param['first_period'])) {
+            $validate = new Validate([
+                'period'       => 'number',
+                'first_period' => 'number'
             ]);
+            if (!$validate->check($param)) {
+                throw new DocumentException([
+                    'msg' => '周期必须为数字'
+                ]);
+            }
+            if (!empty($param['period'])) {
+                $isFirstPeriod = 0;
+            }
+            if (!empty($param['first_period'])) {
+                $isFirstPeriod = 1;
+            }
+            $OilStandard->save($param);
+            $equKeyNoList = OilStandard::field('equ_key_no')->select();
+            $equKeyNos    = Tools::listMoveToArray($equKeyNoList, 'equ_key_no');
+            foreach ($equKeyNos as $equKeyNo) {
+                $item = InfoWarning::where('equ_key_no', '=', $equKeyNo)
+                    ->where('is_first_period', '=', $isFirstPeriod)
+                    ->order('del_warning_time desc')
+                    ->limit(1)
+                    ->find();
+                if ($item) {
+                    $item->how_long = $excelHandle->howLong($item->equ_key_no, $item->del_warning_time);
+                    $item->status   = $excelHandle->getStatus($item, $item->how_long);
+                    $item->deadline = $excelHandle->getDeadline($item, $item->how_long);
+                    $item->save();
+                }
+            }
+
+        } else {
+
+            $result = $OilStandard->save($param);
+            if (!$result) {
+                throw new DocumentException([
+                    'msg' => '修改详细信息失败'
+                ]);
+            }
         }
         return $this->ajaxReturn('修改详细信息成功');
     }

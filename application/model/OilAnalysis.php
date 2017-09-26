@@ -26,8 +26,8 @@ class OilAnalysis extends BaseModel {
     }
 
     public static function getAnalysisList() {
-        $result    = OilAnalysis::field('equ_key_no')->select();
-        $equKeyNos = array_unique(array_column(collection($result)->toArray(), 'equ_key_no'));
+        $result    = OilStandard::field('equ_key_no')->select();
+        $equKeyNos = Tools::listMoveToArray($result, 'equ_key_no');
         $arr       = [];
         foreach ($equKeyNos as $k => $v) {
             $oil = self::where('equ_key_no', '=', $v)
@@ -36,8 +36,6 @@ class OilAnalysis extends BaseModel {
                 ->find();
             array_push($arr, $oil);
         }
-//        dump(collection($arr)->toArray());
-//        return collection($arr)->toArray();
         return $arr;
     }
 
@@ -69,7 +67,7 @@ class OilAnalysis extends BaseModel {
     }
 
     public static function getOilAnalysisListByKeyword($keyword) {
-        $equKeyNoLists = self::where('equ_oil_name', 'LIKE', "%$keyword%")
+        $equKeyNoLists = OilStandard::where('equ_oil_name', 'LIKE', "%$keyword%")
             ->field('equ_key_no')->select();
         $equKeyNos     = Tools::listMoveToArray($equKeyNoLists, 'equ_key_no');
         $result        = [];

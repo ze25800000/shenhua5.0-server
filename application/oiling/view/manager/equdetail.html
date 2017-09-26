@@ -610,11 +610,16 @@
         }
         var input = _this.find('input');
         input.select();
-        window.base.editItemByDblClick(_this, input, oldVal, url);
+        window.base.editItemByDblClick(_this, input, oldVal, url,function () {
+            location.reload();
+        },function (err) {
+            err.msg&&alert(err.msg)
+        });
     });
     *{/if}
     //编辑消警记录
-    $(document).on('dblclick', '.edit-item-info', function (e) {
+    *{if condition="$scope>=18"}
+        $(document).on('dblclick', '.edit-item-info', function (e) {
         var _this = $(this),
             oldVal = _this.html(),
             url = 'oiling/info/edititem/';
@@ -633,7 +638,8 @@
             }
         });
     });
-    //删除
+    *{/if}
+//删除
     $('.rhd_xqb table tbody tr:first-child td.operate').html('<a href="javascript:;" class="del">删除</a>');
     $('.del-td').on('click', 'a', function () {
         $('.hintl').show(100);

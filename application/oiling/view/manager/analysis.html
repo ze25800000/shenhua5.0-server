@@ -103,9 +103,11 @@
                                 <th class="num">
                                     选择
                                 </th>
+                                <th class="num">设备编号</th>
+                                <th class="num">润滑点编号</th>
                                 <th class="time">润滑点（全称）</th>
                                 <th class="process">采样日期</th>
-                                <th class="process">运行时长</th>
+                                <th class="num">运行时长</th>
                                 <th class="process">物料编号</th>
                                 <th class="num">Fe</th>
                                 <th class="num">Cu</th>
@@ -125,11 +127,13 @@
                             <td class="num"><input *{if condition="$v.advise==0" }checked*{/if} type="checkbox"
                                 data-id="*{$v.id}">
                             </td>
+                            <td class="num">*{$v.equ_no}</td>
+                            <td class="num">*{$v.equ_oil_no}</td>
                             <td class="time edit-item" data-id="*{$v.id}" data-key="equ_oil_name">*{$v.equ_oil_name}
                             </td>
                             <td class="process edit-item" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}
                             </td>
-                            <td class="process">*{$v.work_hour}</td>
+                            <td class="num">*{$v.work_hour}</td>
                             <td class="process">*{$v.oil_no}</td>
                             <td class="num edit-item" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
@@ -197,8 +201,10 @@
         <td class="num">
             <input type="checkbox" data-id="${item.id}">
         </td>
+        <td class="num">${item.equ_no}</td>
+        <td class="num">${item.equ_oil_no}</td>
         <td class="time" data-id="${item.id}" data-key="equ_oil_name">${item.equ_oil_name}</td>
-        <td class="time" data-id="${item.id}" data-key="sampling_time">${item.sampling_time}</td>
+        <td class="process" data-id="${item.id}" data-key="sampling_time">${item.sampling_time}</td>
         <td class="process">${item.work_hour}</td>
         <td class="process">${item.oil_no}</td>
         <td class="num">${item.Fe}</td>
@@ -218,6 +224,8 @@
 </script>
 <script>
     $('title').html('油脂化验指标分析');
+    var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
+    $('.scroll-box').css('height', scrollHeight);
     $('.upload').click(function () {
         var param = $(this).data('param'),
             params = {
@@ -336,7 +344,7 @@
                 }
             }
         };
-        if (val) {
+        if (val&&e.keyCode != 8) {
             window.base.getData(params);
         }
     });

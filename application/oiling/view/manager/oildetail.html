@@ -293,7 +293,8 @@
             $('.tanchuang .hintl').show(100);
             var id = $(this).data('id'),
                 _this = $(this);
-            $('.confirm-del').click(function (e) {
+            $('.confirm-del').unbind('click').click(function (e) {
+                $('.tanchuang .hintl').hide(100);
                 e.stopPropagation();
                 var params = {
                     url: 'oiling/oildetail/delete/' + id,

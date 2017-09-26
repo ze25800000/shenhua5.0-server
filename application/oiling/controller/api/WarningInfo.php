@@ -129,6 +129,10 @@ class WarningInfo extends BaseController {
                 ]);
             }
             $param['del_warning_time'] = Tools::getTimestamp($param['del_warning_time']);
+            $InfoWarningItem->how_long = $excelHandle->howLong($InfoWarningItem->equ_key_no, $param['del_warning_time']);
+            $InfoWarningItem->status   = $excelHandle->getStatus($InfoWarningItem, $InfoWarningItem->how_long);
+            $InfoWarningItem->deadline = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
+            $result                    = $InfoWarningItem->save($param);
         }
         if (!empty($param['is_first_period'])) {
             $validate = new Validate([
@@ -142,8 +146,9 @@ class WarningInfo extends BaseController {
             }
             $param['is_first_period'] = preg_match('/^是$/', $param['is_first_period']) ? 1 : (preg_match('/^否$/', $param['is_first_period']) ? 0 : null);
             $InfoWarningItem->save($param);
-            $param['status']          = $excelHandle->getStatus($InfoWarningItem, $InfoWarningItem->how_long);
-            $param['deadline']        = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
+            $InfoWarningItem->status   = $excelHandle->getStatus($InfoWarningItem, $InfoWarningItem->how_long);
+            $InfoWarningItem->deadline = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
+            $result                    = $InfoWarningItem->save($param);
         }
         if (!empty($param['postpone'])) {
             $validate = new Validate([
@@ -156,10 +161,10 @@ class WarningInfo extends BaseController {
                 ]);
             }
             $InfoWarningItem->save($param);
-            $param['status']          = $excelHandle->getStatus($InfoWarningItem, $InfoWarningItem->how_long);
-            $param['deadline']        = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
+            $param['status']   = $excelHandle->getStatus($InfoWarningItem, $InfoWarningItem->how_long);
+            $param['deadline'] = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
+            $result            = $InfoWarningItem->save($param);
         }
-        $result = $InfoWarningItem->save($param);
         if (!$result) {
             throw new DocumentException([
                 'msg' => '修改消警记录失败'

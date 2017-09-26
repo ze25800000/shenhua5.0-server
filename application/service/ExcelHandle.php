@@ -268,7 +268,7 @@ class ExcelHandle {
             $arr[$k]['oil_no']   = $v[0];
             $arr[$k]['oil_name'] = $v[1];
             $arr[$k]['detail']   = $v[2];
-            $arr[$k]['unit']     = $v[3];
+            $arr[$k]['unit']     = trim($v[3]);
             $arr[$k]['price']    = $v[4];
             $OilDetailValidate->checkExcel($arr[$k], $k);
             $item = $oilDetailModel->field('id')->where("oil_no={$arr[$k]['oil_no']}")->find();
@@ -286,7 +286,8 @@ class ExcelHandle {
     }
 
     public function getOilNoFromInfo($equKeyNo) {
-        $info = InfoWarning::where('equ_key_no', '=', $equKeyNo)
+        $info = InfoWarning::where('warning_type=1')
+            ->where('equ_key_no', '=', $equKeyNo)
             ->field('oil_no')
             ->order('del_warning_time desc')
             ->limit(1)
@@ -319,7 +320,7 @@ class ExcelHandle {
         if ($time > $maxDelTime || empty($maxDelTime)) {
             $maxDelTime = $time;
         }
-        $howLong = WorkHour::where("equ_key_no={$equKeyNo} and start_time>{$maxDelTime}")->sum('working_hour');
+        $howLong = WorkHour::where("equ_key_no={$equKeyNo} and start_time>={$maxDelTime}")->sum('working_hour');
         return $howLong ? $howLong : 0;
     }
 

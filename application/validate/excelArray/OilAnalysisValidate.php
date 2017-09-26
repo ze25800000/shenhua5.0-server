@@ -40,7 +40,7 @@ class OilAnalysisValidate extends ExcelArrayValidate {
         'Si'                       => 'Si元素必须为数字',
         'Na'                       => 'Na元素必须为数字',
         'pq'                       => 'pq元素必须为数字',
-        'viscosity'                => 'viscosity元素必须为数字',
+        'viscosity'                => '粘度必须为数字',
     ];
 
 }

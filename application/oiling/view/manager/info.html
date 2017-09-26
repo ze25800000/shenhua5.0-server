@@ -104,9 +104,9 @@
                         <table>
                             <thead>
                             <tr>
-                                <th class="num">
-                                    选择
-                                </th>
+                                <th class="num">选择</th>
+                                <th class="num">设备编号</th>
+                                <th class="num">润滑点编号</th>
                                 <th class="time">润滑点（全称）</th>
                                 <th class="process">上次消警时间</th>
                                 <th class="process">消警类型</th>
@@ -126,6 +126,8 @@
                             <td class="num">
                                 <input type="checkbox" data-id="*{$v.id}" *{if condition="$v.status>=2" }checked*{/if}>
                             </td>
+                            <td class="num">*{$v.equ_no}</td>
+                            <td class="num">*{$v.equ_oil_no}</td>
                             <td class="time">*{$v.equ_oil_name}</td>
                             <td class="process">*{$v.del_warning_time|date="Y年m月d日",###}</td>
                             <td class="process">*{$v.warning_type?'润滑':'延期'}</td>
@@ -328,6 +330,8 @@
         <td class="num">
             <input type="checkbox" data-id="${item.id}">
         </td>
+        <td class="num">${item.equ_no}</td>
+        <td class="num">${item.equ_oil_no}</td>
         <td class="time">${item.equ_oil_name}</td>
         <td class="process">${item.del_warning_time}</td>
         <td class="process">{{if item.warning_type==1}}润滑{{else}}延期{{/if}}</td>
@@ -344,6 +348,7 @@
     {{/each}}
 </script>
 <script>
+    var oldHtml = $('#infoTbody').html();
     $(function () {
         $('title').html('润滑提示与记录');
         var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
@@ -386,7 +391,7 @@
         $('.upload').click(function (e) {
             var exceltype = $('.select-type').val(),
                 params = {
-                    url: 'oiling/upload?' + exceltype,
+                    url: 'oiling/upload?' + exceltype+'?XDEBUG_SESSION_START=17145',
                     data: new FormData($(this).parent()[0]),
                     sCallback: function (data) {
                         alert('上传成功');
@@ -551,7 +556,6 @@
             });
         });
         //搜索
-        var oldHtml = $('#infoTbody').html();
         $(document).on("keyup", '.search-input', function (e) {
             var val = $(this).val();
             if (e.keyCode == 8 && !val) {
@@ -566,13 +570,17 @@
                         return false;
                     }
                     if (list.errcode === 0) {
+                        var data = list.data;
+                        for (var i = 0; i < data.length; i++) {
+                            list.data[i].del_warning_time = formatDate(new Date(list.data[i].del_warning_time * 1000), 'yyyy年MM月dd日');
+                        }
                         $('#infoTbody').html('');
                         $('#infoListTemplate').tmpl(list).appendTo('#infoTbody');
                         $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
                     }
                 }
             };
-            if (val) {
+            if (val&&e.keyCode != 8 ) {
                 window.base.getData(params);
             }
         });

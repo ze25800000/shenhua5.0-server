@@ -1,16 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2017/9/6 0006
- * Time: 9:36
- */
 
 namespace app\model;
 
 
 use app\lib\tools\Tools;
-use app\service\ExcelHandle;
+use think\Request;
 
 class InfoWarning extends BaseModel {
 //    protected $visible = ['equ_key_no','del_warning_time','status','how_long','warning_type','postpone','postpone_reason','oil_no','quantity','user'];
@@ -41,16 +35,19 @@ class InfoWarning extends BaseModel {
 
     public static function getInfoList() {
         //获得equ_key_no组成的数组
-        $infoWarningModel = self::field('equ_key_no')->select();
-        $excel            = new ExcelHandle();
-        $equKeyNos        = $excel->listMoveToArray($infoWarningModel, 'equ_key_no');
+        $OilStandardModel = OilStandard::field('equ_key_no')->select();
+        $equKeyNos        = Tools::listMoveToArray($OilStandardModel, 'equ_key_no');
         $result           = [];
         foreach ($equKeyNos as $v) {
-            $item = self::where('equ_key_no', '=', $v)->order('del_warning_time desc')->limit(1)->find();
-            array_push($result, $item);
+            $item = self::where('equ_key_no', '=', $v)
+                ->order('del_warning_time desc')
+                ->limit(1)
+                ->find();
+            if ($item) {
+                array_push($result, $item);
+            }
         }
-        $collection = collection($result)->toArray();
-        array_multisort(array_column($collection, 'equ_key_no'), SORT_ASC, $collection);
+
         return $result;
     }
 
@@ -72,7 +69,7 @@ class InfoWarning extends BaseModel {
     }
 
     public static function getInfoWarningListByKeyword($keyword) {
-        $equKeyNoLists = self::where('equ_oil_name', 'LIKE', "%$keyword%")
+        $equKeyNoLists = OilStandard::where('equ_oil_name', 'LIKE', "%$keyword%")
             ->field('equ_key_no')->select();
         $equKeyNos     = Tools::listMoveToArray($equKeyNoLists, 'equ_key_no');
         $result        = [];
