@@ -59,7 +59,7 @@ window.base = {
                 key = input.parent().data('key');
             _this.html(newVal);
             var params = {
-                url: url + id,
+                url: url + id+'?XDEBUG_SESSION_START=14348',
                 type: 'post',
                 data: {[key]: newVal},
                 sCallback: function (data) {

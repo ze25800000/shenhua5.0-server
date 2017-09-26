@@ -329,9 +329,9 @@ class ExcelHandle {
         //是否处于首保周期
         if ($infoWarn['is_first_period']) {
             //如果消警类型为延期，让保养周期和延期时长相加
-            $duration = $infoWarn['warning_type'] ? $oilStandardItem['first_period'] : $oilStandardItem['first_period'] + $infoWarn['postpone'];
+            $duration = $infoWarn['warning_type'] ? $oilStandardItem['first_period'] : ($oilStandardItem['first_period'] + $infoWarn['postpone']);
             if ($howLong < $duration) {
-                if ($duration - $howLong > $this->config['postpone']) {
+                if (($duration - $howLong) > $this->config['postpone']) {
                     //正常
                     return 1;
                 } else {
@@ -345,7 +345,7 @@ class ExcelHandle {
         } else {
             $duration = $infoWarn['warning_type'] ? $oilStandardItem['period'] : $oilStandardItem['period'] + $infoWarn['postpone'];
             if ($howLong < $duration) {
-                if ($duration - $howLong > $this->config['postpone']) {
+                if (($duration - $howLong) > $this->config['postpone']) {
                     //正常
                     return 1;
                 } else {
@@ -376,7 +376,7 @@ class ExcelHandle {
         $oilStandardItem = OilStandard::field('period,first_period')
             ->where("equ_key_no={$infoWarn['equ_key_no']}")->find();
         if ($infoWarn['is_first_period']) {
-            $long = $oilStandardItem['first_period'] + empty($infoWarn['postpone']) ? 0 : $infoWarn['postpone'] - $howLong;
+            $long = ($oilStandardItem['first_period'] + (empty($infoWarn['postpone']) ? 0 : $infoWarn['postpone'])) - $howLong;
         } else {
             $long = ($oilStandardItem['period'] + (empty($infoWarn['postpone']) ? 0 : $infoWarn['postpone'])) - $howLong;
 

@@ -29,10 +29,10 @@
                     <table>
                         <tr class="rhd_xqb1a">
                             <th>设备编号：</th>
-                            <td class="" data-id="*{$detail.equ_no}" data-key="oil_no">*{$detail.equ_no}</td>
+                            <td>*{$detail.equ_no}</td>
 
                             <th>润滑点编号：</th>
-                            <td class="edit-item-standard" data-id="*{$detail.equ_oil_no}" data-key="oil_no">*{$detail.equ_oil_no}</td>
+                            <td>*{$detail.equ_oil_no}</td>
 
                             <th>物料编码：</th>
                             <td class="edit-item-standard" data-id="*{$detail.id}" data-key="oil_no">*{$detail.oil_no}</td>
@@ -77,8 +77,13 @@
                             <td>*{$detail.info_warning_detail[0]['warning_type']?'润滑':'延期'}</td>
                             <th>运行时长：</th>
                             <td>*{$detail.info_warning_detail[0]['how_long']}</td>
+                            *{if condition="$detail.info_warning_detail[0]['deadline']>=0"}
                             <th>下次润滑剩余时间：</th>
                             <td>*{$detail.info_warning_detail[0]['deadline']}</td>
+                            *{else/}
+                            <th style="color: red">超期时长：</th>
+                            <td style="color: red">*{$detail.info_warning_detail[0]['deadline']<0?(-$detail.info_warning_detail[0]['deadline']):$detail.info_warning_detail[0]['deadline']}</td>
+                            *{/if}
                         </tr>
                         *{if condition="$detail.info_warning_detail[0]['warning_type']"}
                         <tr class="rhd_xqb1a">
@@ -104,11 +109,22 @@
                         *{else/}
                         <tr class="rhd_xqb1a">
                             <th>是否首保：</th>
-                            <td class="edit-item-info" *{if condition="$detail.info_warning_detail[0]['is_first_period']"} style="color: red;"*{/if}>*{$detail.info_warning_detail[0]['is_first_period']?'是':'否'}</td>
+                            <td class="edit-item-info"
+                                data-id="*{$detail.info_warning_detail[0]['id']}"
+                                data-key="is_first_period"
+                                *{if condition="$detail.info_warning_detail[0]['is_first_period']"} style="color: red;"*{/if}>*{$detail.info_warning_detail[0]['is_first_period']?'是':'否'}</td>
                             <th>延期时长：</th>
-                            <td class="edit-item-info">*{$detail.info_warning_detail[0]['postpone']}</td>
+                            <td class="edit-item-info"
+                                data-id="*{$detail.info_warning_detail[0]['id']}"
+                                data-key="postpone"
+
+                            >*{$detail.info_warning_detail[0]['postpone']}</td>
                             <th>延期原因：</th>
-                            <td class="edit-item-info">*{$detail.info_warning_detail[0]['postpone_reason']}</td>
+                            <td class="edit-item-info"
+                                data-id="*{$detail.info_warning_detail[0]['id']}"
+                                data-key="postpone_reason"
+
+                            >*{$detail.info_warning_detail[0]['postpone_reason']}</td>
                             <th>操作人员：</th>
                             <td>*{$detail.info_warning_detail[0]['user']['name']}</td>
                         </tr>

@@ -116,6 +116,7 @@ class WarningInfo extends BaseController {
     public function editInfoWarningDetailById($id) {
         (new IDMustBePositiveInt())->goCheck();
         $InfoWarningItem = InfoWarning::get($id);
+        $excelHandle     = new ExcelHandle();
         $param           = input('post.');
         if (!empty($param['del_warning_time'])) {
             $validate = new Validate([
@@ -140,11 +141,23 @@ class WarningInfo extends BaseController {
                 ]);
             }
             $param['is_first_period'] = preg_match('/^是$/', $param['is_first_period']) ? 1 : (preg_match('/^否$/', $param['is_first_period']) ? 0 : null);
-            $result1 = $InfoWarningItem->save($param);
-            $excelHandle              = new ExcelHandle();
-            $param['how_long']        = $excelHandle->howLong($InfoWarningItem->equ_key_no, $InfoWarningItem->del_warning_time);
-            $param['status']          = $excelHandle->getStatus($InfoWarningItem, $param['how_long']);
-            $param['deadline']        = $excelHandle->getDeadline($InfoWarningItem, $param['how_long']);
+            $InfoWarningItem->save($param);
+            $param['status']          = $excelHandle->getStatus($InfoWarningItem, $InfoWarningItem->how_long);
+            $param['deadline']        = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
+        }
+        if (!empty($param['postpone'])) {
+            $validate = new Validate([
+                'postpone' => 'number'
+            ]);
+            $re       = $validate->check($param);
+            if (!$re) {
+                throw new DocumentException([
+                    'msg' => '延期时长只能填写数字'
+                ]);
+            }
+            $InfoWarningItem->save($param);
+            $param['status']          = $excelHandle->getStatus($InfoWarningItem, $InfoWarningItem->how_long);
+            $param['deadline']        = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
         }
         $result = $InfoWarningItem->save($param);
         if (!$result) {
