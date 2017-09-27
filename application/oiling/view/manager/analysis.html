@@ -233,6 +233,7 @@
                 data: new FormData($(this).parent()[0]),
                 sCallback: function () {
                     alert('上传成功');
+                    location.reload();
                 },
                 eCallback:function (err) {
                     if (err.errcode==2) {

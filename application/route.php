@@ -36,6 +36,7 @@ Route::group('oiling/standard', function () {
 
 //润滑提示与记录
 Route::group('oiling/info', function () {
+    Route::get('delrecent', 'oiling/api.Admin/deleteRecentUploadData');
     Route::get('search/:keyword', 'oiling/api.Search/getListByKeyword');
     Route::delete('del/:id', 'oiling/api.WarningInfo/deleteInfoItemById');
     Route::get('list/:before/:after', 'oiling/api.WarningInfo/getInfoListByDate');
@@ -52,6 +53,7 @@ Route::group('oiling/info', function () {
 
 //油脂分析
 Route::group('oiling/analysis', function () {
+    Route::get('delrecent', 'oiling/api.Admin/deleteRecentUploadData');
     Route::get('search/:keyword', 'oiling/api.Search/getListByKeyword');
     Route::post('add', 'oiling/api.Analysis/addOilAnalysisItem');
     Route::get('list/:before/:after', 'oiling/api.Analysis/getOilAnalysisListByDate');
@@ -73,6 +75,7 @@ Route::group('oiling/oildetail', function () {
 
 //运行时间
 Route::group('oiling/workhour', function () {
+    Route::get('delrecent', 'oiling/api.Admin/deleteRecentUploadData');
     Route::delete('del/:id', 'oiling/api.WorkHour/deleteWorkHourItemById');
     Route::post('add', 'oiling/api.WorkHour/addWorkHourItem');
 });
@@ -101,5 +104,7 @@ Route::post('oiling/upload', 'oiling/api.Upload/uploadExcel');
 Route::get('download/template', 'oiling/api.Download/downloadTemplate');
 //test
 Route::get('detail/:equ_key_no', 'oiling/manager/detail');
+
+Route::get('delall', 'oiling/api.Admin/delAll');
 
 

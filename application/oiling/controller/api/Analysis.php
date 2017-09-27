@@ -17,6 +17,7 @@ use app\service\ExcelHandle;
 use app\validate\DetailDateValidate;
 use app\validate\IDMustBePositiveInt;
 use app\validate\OilAnalysisItemValidate;
+use think\Db;
 
 class Analysis extends BaseController {
     public function deleteOilAnalysisItemById($id) {

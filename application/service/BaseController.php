@@ -46,7 +46,7 @@ class BaseController extends Controller {
 
     protected function checkAdminScope() {
         if ($this->scope() < ScopeEnum::ADMIN) {
-            throw new ForbiddenException();
+            $this->error('权限不够');
         } else {
             return true;
         }
@@ -54,7 +54,7 @@ class BaseController extends Controller {
 
     protected function checkStaffScope() {
         if ($this->scope() < ScopeEnum::STAFF) {
-            throw new ForbiddenException();
+            $this->error('权限不够');
         } else {
             return true;
         }
@@ -62,7 +62,7 @@ class BaseController extends Controller {
 
     protected function checkCommonScope() {
         if ($this->scope() < ScopeEnum::COMMON) {
-            throw new ForbiddenException();
+            $this->error('权限不够');
         } else {
             return true;
         }

@@ -34,7 +34,9 @@ class OilAnalysis extends BaseModel {
                 ->order('sampling_time desc')
                 ->limit(1)
                 ->find();
-            array_push($arr, $oil);
+            if ($oil) {
+                array_push($arr, $oil);
+            }
         }
         return $arr;
     }
@@ -82,5 +84,21 @@ class OilAnalysis extends BaseModel {
             return null;
         }
         return $result;
+    }
+
+    public static function getRecentOilAnalysisIds() {
+        $equKeyNoList = self::field('equ_key_no')->select();
+        $equKeyNos = Tools::listMoveToArray($equKeyNoList, 'equ_key_no');
+        $arr = [];
+        foreach ($equKeyNos as $equKeyNo) {
+            $item = self::where('equ_key_no', $equKeyNo)
+                ->order('sampling_time desc')
+                ->limit(1)
+                ->find();
+            if ($item) {
+                array_push($arr, $item);
+            }
+        }
+        return Tools::listMoveToArray($arr,'id');
     }
 }

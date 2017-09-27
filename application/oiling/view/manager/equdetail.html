@@ -23,7 +23,7 @@
     <div class="rhd_xq">
         <h2>*{$detail.equ_oil_name}</h2>
         <div class="rhd_xqa">
-            <h3><span class="rhd_xqa1">设备润滑标准</span></h3>
+            <h3><span class="rhd_xqa1">设备润滑标准：</span></h3>
             <div class="rhd_xqb">
                 <div class="rhd_xqb1">
                     <table>
@@ -57,19 +57,23 @@
                 <div class="clear"></div>
             </div>
         </div>
-        *{if condition="$detail.info_warning_detail"}
+
         <div class="rhd_xqa">
             <h3>
-                当前状态：<span
+                当前状态：
+                *{if condition="$detail.info_warning_detail"}
+                <span
                     class="*{$detail.info_warning_detail[0]['status']==3?'rhd_xqa_red':($detail.info_warning_detail[0]['status']==2?'rhd_xqa_hs':'')}">*{$detail.info_warning_detail[0]['status']==3?'超期':($detail.info_warning_detail[0]['status']==2?'临近':'正常')}</span>（正常、<span
                     class="rhd_xqa_red">超期</span>、<span
                     class="rhd_xqa_hs">临近</span>）
+                *{/if}
             </h3>
             <div class="rhd_xqb1">
                 <div class="rhd_xqb1">
                     <table class="status">
+                        *{if condition="$detail.info_warning_detail"}
                         <tr class="rhd_xqb1a">
-                            <th>上次消警日期：</th>
+                            <th>消警日期：</th>
                             <td class="edit-item-info"
                                 data-id="*{$detail.info_warning_detail[0]['id']}"
                                 data-key="del_warning_time">*{$detail.info_warning_detail[0]['del_warning_time']|date="Y年m月d日",###}</td>
@@ -78,7 +82,7 @@
                             <th>运行时长：</th>
                             <td>*{$detail.info_warning_detail[0]['how_long']}</td>
                             *{if condition="$detail.info_warning_detail[0]['deadline']>=0"}
-                            <th>下次润滑剩余时间：</th>
+                            <th>剩余时间：</th>
                             <td>*{$detail.info_warning_detail[0]['deadline']}</td>
                             *{else/}
                             <th style="color: red">超期时长：</th>
@@ -129,6 +133,7 @@
                             <td>*{$detail.info_warning_detail[0]['user']['name']}</td>
                         </tr>
                         *{/if}
+                        *{/if}
                     </table>
                 </div>
             </div>
@@ -143,7 +148,6 @@
                        data-equ_oil_no="*{$detail.equ_oil_no}"
                        data-equ_name="*{$detail.equ_name}"
                        data-equ_oil_name="*{$detail.equ_oil_name}"
-                       data-del_warning_time="*{$detail.info_warning_detail[0]['del_warning_time']|date=" Y年m月d日",###}"
                                 data-equ_key_no="*{$detail.equ_key_no}"
                                 >润滑</a>
                 </span>
@@ -156,8 +160,6 @@
                        data-equ_oil_no="*{$detail.equ_oil_no}"
                        data-equ_name="*{$detail.equ_name}"
                        data-equ_oil_name="*{$detail.equ_oil_name}"
-                       data-how_long="*{$detail.info_warning_detail[0]['how_long']}"
-                       data-del_warning_time="*{$detail.info_warning_detail[0]['del_warning_time']|date=" Y年m月d日",###}"
                                 data-equ_key_no="*{$detail.equ_key_no}"
                                 >延期</a>
                 </span>
@@ -172,7 +174,7 @@
                     <thead>
                     <tr>
                         <th class="num">ID</th>
-                        <th class="name">上次消警时间</th>
+                        <th class="name">消警时间</th>
                         <th class="process">消警类型</th>
                         <th class="process">运行时长</th>
                         <th class="process">状态</th>
@@ -211,11 +213,11 @@
                 </table>
             </div>
         </div>
-        *{/if}
 
         <div class="rhd_xqa">
             <h3>
                 <span class="rhd_xqa1">油脂化验指标：</span>
+                *{if condition="$scope>=18"}
                 <span class="rhd_xqa2"><a href="javascript:;"
                                           id="addOilAnalysisItem"
                                           data-equ_no="*{$detail.equ_no}"
@@ -223,6 +225,7 @@
                                           data-equ_name="*{$detail.equ_name}"
                                           data-equ_oil_name="*{$detail.equ_oil_name}"
                 >【添加油脂化验指标】</a></span>
+                *{/if}
             </h3>
             <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
                 <table>
@@ -316,6 +319,7 @@
         <div class="rhd_xqa">
             <h3>
                 <span class="rhd_xqa1">运行时间：</span>
+                *{if condition="$scope>=18"}
                 <span class="rhd_xqa2"><a href="javascript:;"
                                           id="addWorkHour"
                                           data-equ_no="*{$detail.equ_no}"
@@ -323,6 +327,7 @@
                                           data-equ_name="*{$detail.equ_name}"
                                           data-equ_oil_name="*{$detail.equ_oil_name}"
                 >【添加运行时间】</a></span>
+                *{/if}
             </h3>
             <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
                 <table>

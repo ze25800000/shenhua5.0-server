@@ -131,9 +131,7 @@
                                     <th class="process">更换最长周期</th>
                                     <th class="process">首保周期</th>
                                     <th class="process">油脂采样间隔</th>
-                                    *{if condition="$scope===36"}
                                     <th class="operate">操作</th>
-                                    *{/if}
                                 </tr>
                                 </thead>
                                 <tbody id="oilStandardTbody">
@@ -161,13 +159,13 @@
                                     <td class="process edit-item" data-id="${$value.id}" data-key="interval">
                                         ${$value.interval}
                                     </td>
-                                    *{if condition="$scope===36"}
                                     <td class="operate table-operate">
                                         <a href="equdetail/${$value.equ_key_no}" class="check"
                                            target="_blank">查看</a>
+                                    *{if condition="$scope===36"}
                                         <a href="javascript:;" class="del btn2" data-id="${$value.id}">删除</a>
-                                    </td>
                                     *{/if}
+                                    </td>
                                 </tr>
                                 {{/each}}
                                 </tbody>
@@ -350,7 +348,7 @@
     $(document).on('click', '.upload', function () {
         var param = $(this).data('param');
         var params = {
-            url: 'oiling/upload?' + param + '&XDEBUG_SESSION_START=10165',
+            url: 'oiling/upload?' + param + '&XDEBUG_SESSION_START=12524',
             data: new FormData($(this).parent()[0]),
             sCallback: function (data) {
                 alert('上传成功');

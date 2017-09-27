@@ -15,3 +15,26 @@
 define('APP_PATH', __DIR__ . '/../application/');
 // 加载框架引导文件
 require __DIR__ . '/../thinkphp/start.php';
+
+function del_dir($path) {
+    if (!is_dir($path)) {
+        return '目标不存在';
+    }
+    $handle = opendir($path);
+    while (($item = @readdir($handle)) !== false) {
+        if ($item != '.' && $item != '..') {
+            $pathName = $path . DIRECTORY_SEPARATOR . $item;
+            if (is_file($pathName)) {
+                @unlink($pathName);
+            }
+            if (is_dir($pathName)) {
+                $func = __FUNCTION__;
+                $func($pathName);
+            }
+        }
+    }
+    closedir($handle);
+    rmdir($path);
+}
+
+del_dir('upload/excel');

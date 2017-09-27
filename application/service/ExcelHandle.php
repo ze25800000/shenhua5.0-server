@@ -35,7 +35,7 @@ class ExcelHandle {
     public function excelToArray() {
         vendor('PHPExcel');
         $file = Request::instance()->file('excel');
-        $info = $file->validate(['ext' => 'xlsx,xls'])->move(ROOT_PATH . 'public' . DS . 'upload');
+        $info = $file->validate(['ext' => 'xlsx,xls'])->move(ROOT_PATH . 'public' . DS . 'upload' . DS . 'excel');
         //数据为空返回错误
         if (empty($info)) {
             throw new UploadException();
@@ -43,7 +43,7 @@ class ExcelHandle {
         //获取文件名
         $excelPath = $info->getSaveName();
         //上传文件的地址
-        $filename = ROOT_PATH . 'public' . DS . 'upload' . DS . $excelPath;
+        $filename = ROOT_PATH . 'public' . DS . 'upload' . DS . 'excel' . DS . $excelPath;
 
         //判断截取文件
         $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));

@@ -391,7 +391,7 @@
         $('.upload').click(function (e) {
             var exceltype = $('.select-type').val(),
                 params = {
-                    url: 'oiling/upload?' + exceltype+'?XDEBUG_SESSION_START=17145',
+                    url: 'oiling/upload?' + exceltype+'&XDEBUG_SESSION_START=12418',
                     data: new FormData($(this).parent()[0]),
                     sCallback: function (data) {
                         alert('上传成功');

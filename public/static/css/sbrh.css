@@ -13,20 +13,19 @@ box-shadow: #999 0px 0px 5px;  }
 .sbrh_zt{ width:220px; position:absolute; top:4%; left:2%;background:#fff;height: auto; line-height:50px;font-size:18px; color:#FFF; text-align:center; }
 
 /* nav_menu */
-.nav_menu{ height:50px; background-color: #ee6b0c; width:300px; position:absolute; top:20px; left:0px; }
+.nav_menu{ height:50px; background-color: #ee6b0c; width:320px; position:absolute; top:20px; left:0px; }
 .nav{width:600px;height:50px;position:relative;margin:0 auto;}
 .nav .list li{float:left;}
-.nav .list a{float:left;display:block;width:300px;height:50px;text-align:center;font: 18px/50px "微软雅黑";color:#fff;}
+.nav .list a{float:left;display:block;width:340px;height:50px;text-align:center;font: 18px/50px "微软雅黑";color:#fff;}
 .nav .list a:hover{color:#fff;}
 .nav .list a:hover,.nav .list .now{}
 .nav .box{position:absolute;left:0px;top:50px;width: auto;background:#FFF;overflow:hidden;height:0;}
 .nav .cont{position:relative; height:auto; border:2px #ee6b0c solid;padding:20px;}
 /* sublist */
-.sublist { height:auto;}
+.sublist { max-height:364px; overflow-y:auto;}
 .sublist li{float:left;width:560px;height:36px;line-height:36px;border-bottom:1px dashed #ddd; display:block;}
 
 .sublist li p{font-family:'微软雅黑';font-size:14px;height:36px;line-height:36px;overflow:hidden;white-space: nowrap;width:560px;text-overflow: ellipsis;}
 .sublist li p a{ color:#666}
 .sublist li p a:hover{ color:#F60;}
 .nav .list a span{ display:block; float:left;}
-
