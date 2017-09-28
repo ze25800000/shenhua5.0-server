@@ -531,7 +531,7 @@
                 isFirstPeriod = $('#RunHuaRadioYes').attr('checked') ? 1 : 0,
                 delWarningTime = $('.oiling-time').val().replace(/^\s+|\s+$/gm, '');
             var params = {
-                url: 'oiling/info/lubricate?XDEBUG_SESSION_START=11295',
+                url: 'oiling/info/lubricate',
                 type: 'post',
                 data: {
                     id: id,
@@ -547,6 +547,7 @@
                     quantity: quantity
                 },
                 sCallback: function (data) {
+                    $('.tanchuang .oiling').hide(100);
                     window.location.reload();
                 },
                 eCallback: function (err) {
@@ -592,6 +593,7 @@
                     postpone_reason: postponeReason
                 },
                 sCallback: function (data) {
+                    $('.tanchuang .postpone').hide(100);
                     window.location.reload();
                 },
                 eCallback: function (err) {
