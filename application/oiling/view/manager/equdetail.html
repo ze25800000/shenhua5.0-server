@@ -315,6 +315,29 @@
                     </div>
                 </div>
             </div>
+            <div class="rhd_xqb">
+                <div class="warpbox">
+
+                    <div class="table_card">
+                        <ul class="tab" data-equ_key_no="*{$detail.equ_key_no}">
+                            <li class="activ" data-ele="Fe">Fe</li>
+                            <li data-ele="Cu">Cu</li>
+                            <li data-ele="Al">Al</li>
+                            <li data-ele="Si">Si</li>
+                            <li data-ele="Na">Na</li>
+                            <li data-ele="pq">PQ</li>
+                            <li data-ele="viscosity">粘度</li>
+                        </ul>
+                        <div class="tabCon">
+                            <div class="on">
+                                <canvas id="myChart" width="1028" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
         <div class="rhd_xqa">
             <h3>
@@ -773,4 +796,98 @@
             $('.add-oil-analysis-box').hide(100);
         });
     });
+
+    //图表
+
+    $('.table_card .tab li').click(function () {
+        var ele = $(this).data('ele');
+        var equKeyNo = $('.tab').data('equ_key_no');
+        var params = {
+            url: 'oiling/analysis/elements/' + equKeyNo+'?XDEBUG_SESSION_START=15408',
+            async: false,
+            sCallback: function (data) {
+                console.log(data)
+               var eleVal=data.data;
+                if(data!='viscosity') {
+                    var normal = [];
+                    for (var i = 0; i < eleVal[ele].value.length; i++) {
+                        normal.push(eleVal[ele].normal);
+                    }
+                    eleVal[ele].normal = normal;
+                    var chartData = {
+                        labels: eleVal[ele].date,
+                        datasets: [
+                            {
+                                fillColor: "rgba(220,220,220,0)",
+                                strokeColor: "red",
+//                pointColor: 'red',
+//                pointStrokeColor: "red",
+                                data: eleVal[ele].normal
+                            },
+                            {
+                                fillColor: "rgba(220,220,220,0)",
+                                strokeColor: "rgba(220,220,220,1)",
+                                pointColor: "rgba(220,220,220,1)",
+                                pointStrokeColor: "#fff",
+                                data: eleVal[ele].value
+                            }
+
+                        ]
+                    };
+                }
+                console.log(eleVal[ele])
+                if(eleVal[ele]=='viscosity') {
+                    var normalMin = [];
+                    var normalMax = [];
+                    for (var i = 0; i < eleVal[ele].value.length; i++) {
+                        normalMin.push(eleVal[ele].normal[0]);
+                        normalMax.push(eleVal[ele].normal[1]);
+                    }
+                    console.log(normalMin);
+                    console.log(normalMax);
+                    var chartData = {
+                        labels: eleVal[ele].date,
+                        datasets: [
+                            {
+                                fillColor: "rgba(220,220,220,0)",
+                                strokeColor: "red",
+//                pointColor: 'red',
+//                pointStrokeColor: "red",
+                                data: normalMin
+                            },
+                            {
+                                fillColor: "rgba(220,220,220,0)",
+                                strokeColor: "red",
+//                pointColor: 'red',
+//                pointStrokeColor: "red",
+                                data: normalMax
+                            },
+                            {
+                                fillColor: "rgba(220,220,220,0)",
+                                strokeColor: "rgba(220,220,220,1)",
+                                pointColor: "rgba(220,220,220,1)",
+                                pointStrokeColor: "#fff",
+                                data: eleVal[ele].value
+                            }
+
+                        ]
+                    };
+                }
+                chart(chartData)
+            }
+        };
+        window.base.getData(params);
+    });
+    function chart(chartData) {
+        var ctx = document.getElementById("myChart").getContext("2d");
+        var options = {
+            pointDot : true,
+            animation : false
+        };
+        new Chart(ctx).Line(chartData,options)
+    }
+    $('.table_card .tab li:eq(0)').trigger('click');
+
+
+
 </script>

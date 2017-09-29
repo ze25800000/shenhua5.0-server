@@ -4,11 +4,15 @@ window.base = {
         if (!params.type) {
             params.type = 'GET';
         }
+        if (!params.async&&params.async!==false) {
+            params.async=true;
+        }
         var that = this;
         $.ajax({
             url: that.g_restUrl + params.url,
             type: params.type,
             data: params.data,
+            async: params.async,
             success: function (data) {
                 params.sCallback && params.sCallback(data);
             },
@@ -59,7 +63,7 @@ window.base = {
                 key = input.parent().data('key');
             _this.html(newVal);
             var params = {
-                url: url + id+'?XDEBUG_SESSION_START=14348',
+                url: url + id + '?XDEBUG_SESSION_START=14348',
                 type: 'post',
                 data: {[key]: newVal},
                 sCallback: function (data) {

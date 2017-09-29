@@ -83,4 +83,11 @@ $(".a-upload").on("change", "input[type='file']", function () {
     }
 });
 
-
+$(".tab li").click(function () {
+    $(".tab li").eq($(this).index()).addClass("activ").siblings().removeClass("activ");
+    // $(".tabCon div").hide().eq($(this).index()).show();
+});
+function stops(){
+    return false;
+}
+document.oncontextmenu=stops;

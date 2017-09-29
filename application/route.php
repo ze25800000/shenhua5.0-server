@@ -53,6 +53,7 @@ Route::group('oiling/info', function () {
 
 //油脂分析
 Route::group('oiling/analysis', function () {
+    Route::get('elements/:equ_key_no','oiling/api.Analysis/getElementValues');
     Route::get('delrecent', 'oiling/api.Admin/deleteRecentUploadData');
     Route::get('search/:keyword', 'oiling/api.Search/getListByKeyword');
     Route::post('add', 'oiling/api.Analysis/addOilAnalysisItem');

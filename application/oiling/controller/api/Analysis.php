@@ -15,6 +15,7 @@ use app\model\OilAnalysis;
 use app\service\BaseController;
 use app\service\ExcelHandle;
 use app\validate\DetailDateValidate;
+use app\validate\EquipmentKeyNoValidate;
 use app\validate\IDMustBePositiveInt;
 use app\validate\OilAnalysisItemValidate;
 use think\Db;
@@ -88,5 +89,11 @@ class Analysis extends BaseController {
             ]);
         }
         return $this->ajaxReturn('新增油脂分析条目成功');
+    }
+
+    public function getElementValues($equ_key_no) {
+        (new EquipmentKeyNoValidate())->goCheck();
+        $result = OilAnalysis::getElementValues($equ_key_no);
+        return $this->ajaxReturn('获取元素成功', 0, $result);
     }
 }
