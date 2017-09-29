@@ -106,7 +106,7 @@ class OilAnalysis extends BaseModel {
         $elementList = self::where('equ_key_no', $equKeyNo)
             ->field('Fe,Cu,Al,Si,Na,pq,viscosity,sampling_time')
             ->select();
-        $collection = collection($elementList)->toArray();
+        $collection  = array_slice(collection($elementList)->toArray(), -12);
         $config      = OilConfig::get(1);
         $dates       = array_column($collection, 'sampling_time');
         $Fe          = [

@@ -4,15 +4,11 @@ window.base = {
         if (!params.type) {
             params.type = 'GET';
         }
-        if (!params.async&&params.async!==false) {
-            params.async=true;
-        }
         var that = this;
         $.ajax({
             url: that.g_restUrl + params.url,
             type: params.type,
             data: params.data,
-            async: params.async,
             success: function (data) {
                 params.sCallback && params.sCallback(data);
             },

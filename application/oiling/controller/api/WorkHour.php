@@ -28,15 +28,17 @@ class WorkHour extends BaseController {
                 'msg' => '删除运行时间失败'
             ]);
         }
-        $infoWarning           = InfoWarning::where('equ_key_no', '=', $workHourItem->equ_key_no)
+        $infoWarning = InfoWarning::where('equ_key_no', '=', $workHourItem->equ_key_no)
             ->order('del_warning_time desc')
             ->limit(1)
             ->find();
-        $howLong               = $excelHandle->howLong($workHourItem->equ_key_no, $infoWarning->del_warning_time);
-        $infoWarning->how_long = $howLong;
-        $infoWarning->status   = $excelHandle->getStatus($infoWarning, $howLong);
-        $infoWarning->deadline = $excelHandle->getDeadline($infoWarning, $howLong);
-        $infoWarning->save();
+        if ($infoWarning) {
+            $howLong               = $excelHandle->howLong($workHourItem->equ_key_no, $infoWarning->del_warning_time);
+            $infoWarning->how_long = $howLong;
+            $infoWarning->status   = $excelHandle->getStatus($infoWarning, $howLong);
+            $infoWarning->deadline = $excelHandle->getDeadline($infoWarning, $howLong);
+            $infoWarning->save();
+        }
         return $this->ajaxReturn('删除运行时间成功');
     }
 

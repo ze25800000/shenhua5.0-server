@@ -330,7 +330,7 @@
                         </ul>
                         <div class="tabCon">
                             <div class="on">
-                                <canvas id="myChart" width="1028" height="200"></canvas>
+                                <canvas id="myChart" width="1028" height="300"></canvas>
                             </div>
                         </div>
                     </div>
@@ -803,40 +803,36 @@
         var ele = $(this).data('ele');
         var equKeyNo = $('.tab').data('equ_key_no');
         var params = {
-            url: 'oiling/analysis/elements/' + equKeyNo+'?XDEBUG_SESSION_START=15408',
+            url: 'oiling/analysis/elements/' + equKeyNo,
             async: false,
             sCallback: function (data) {
-                console.log(data)
                var eleVal=data.data;
-                if(data!='viscosity') {
+                if(ele!='viscosity') {
                     var normal = [];
                     for (var i = 0; i < eleVal[ele].value.length; i++) {
                         normal.push(eleVal[ele].normal);
                     }
-                    eleVal[ele].normal = normal;
                     var chartData = {
                         labels: eleVal[ele].date,
                         datasets: [
                             {
                                 fillColor: "rgba(220,220,220,0)",
                                 strokeColor: "red",
-//                pointColor: 'red',
-//                pointStrokeColor: "red",
-                                data: eleVal[ele].normal
+                                pointColor: "red",
+                                data: normal
                             },
                             {
-                                fillColor: "rgba(220,220,220,0)",
-                                strokeColor: "rgba(220,220,220,1)",
-                                pointColor: "rgba(220,220,220,1)",
-                                pointStrokeColor: "#fff",
+                                fillColor: "rgba(42,131,207,0.2)",
+                                strokeColor: "#2A83CF",
+                                pointColor: "rgba(42,131,207,1)",
+                                pointStrokeColor: "#2A83CF",
                                 data: eleVal[ele].value
                             }
 
                         ]
                     };
                 }
-                console.log(eleVal[ele])
-                if(eleVal[ele]=='viscosity') {
+                if(ele=='viscosity') {
                     var normalMin = [];
                     var normalMax = [];
                     for (var i = 0; i < eleVal[ele].value.length; i++) {
@@ -851,24 +847,22 @@
                             {
                                 fillColor: "rgba(220,220,220,0)",
                                 strokeColor: "red",
-//                pointColor: 'red',
-//                pointStrokeColor: "red",
-                                data: normalMin
+                                pointColor: "red",
+                                data: normalMax
+                            },
+                            {
+                                fillColor: "rgba(42,131,207,0.2)",
+                                strokeColor: "#2A83CF",
+                                pointColor: "rgba(42,131,207,1)",
+                                pointStrokeColor: "#2A83CF",
+                                data: eleVal[ele].value
                             },
                             {
                                 fillColor: "rgba(220,220,220,0)",
                                 strokeColor: "red",
-//                pointColor: 'red',
-//                pointStrokeColor: "red",
-                                data: normalMax
+                                pointColor: "red",
+                                data: normalMin
                             },
-                            {
-                                fillColor: "rgba(220,220,220,0)",
-                                strokeColor: "rgba(220,220,220,1)",
-                                pointColor: "rgba(220,220,220,1)",
-                                pointStrokeColor: "#fff",
-                                data: eleVal[ele].value
-                            }
 
                         ]
                     };
@@ -881,7 +875,7 @@
     function chart(chartData) {
         var ctx = document.getElementById("myChart").getContext("2d");
         var options = {
-            pointDot : true,
+            pointDot : false,
             animation : false
         };
         new Chart(ctx).Line(chartData,options)

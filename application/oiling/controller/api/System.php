@@ -43,6 +43,7 @@ class System extends BaseController {
                 unset($oilAnalysisItem['oil_no']);
                 unset($oilAnalysisItem['oil_name']);
                 $oilAnalysisItem->oil_status = implode('<br>', $excelHandle->getOilStatus($oilAnalysisItem));
+                $oilAnalysisItem->advise     = empty($oilAnalysisItem->oil_status) ? 1 : 0;
                 $oilAnalysisItem->save();
             }
         }
