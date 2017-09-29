@@ -108,41 +108,43 @@ class OilAnalysis extends BaseModel {
             ->select();
         $collection  = array_slice(collection($elementList)->toArray(), -12);
         $config      = OilConfig::get(1);
-        $dates       = array_column($collection, 'sampling_time');
+        $dates       = Tools::listMoveToArray($collection, 'sampling_time', false);
+        $count       = count($collection);
         $Fe          = [
-            'normal' => $config->Fe,
-            'value'  => array_column($collection, 'Fe'),
+            'normal' => Tools::itemArray($config->Fe, $count),
+            'value'  => Tools::listMoveToArray($collection, 'Fe', false),
             'date'   => $dates
         ];
         $Cu          = [
-            'normal' => $config->Cu,
-            'value'  => array_column($collection, 'Cu'),
+            'normal' => Tools::itemArray($config->Cu, $count),
+            'value'  => Tools::listMoveToArray($collection, 'Cu', false),
             'date'   => $dates,
         ];
         $Si          = [
-            'normal' => $config->Si,
-            'value'  => array_column($collection, 'Si'),
+            'normal' => Tools::itemArray($config->Si, $count),
+            'value'  => Tools::listMoveToArray($collection, 'Si', false),
             'date'   => $dates,
         ];
         $Al          = [
-            'normal' => $config->Al,
-            'value'  => array_column($collection, 'Al'),
+            'normal' => Tools::itemArray($config->Al, $count),
+            'value'  => Tools::listMoveToArray($collection, 'Al', false),
             'date'   => $dates,
         ];
         $Na          = [
-            'normal' => $config->Na,
-            'value'  => array_column($collection, 'Na'),
+            'normal' => Tools::itemArray($config->Na, $count),
+            'value'  => Tools::listMoveToArray($collection, 'Na', false),
             'date'   => $dates,
         ];
         $pq          = [
-            'normal' => $config->pq,
-            'value'  => array_column($collection, 'pq'),
+            'normal' => Tools::itemArray($config->pq, $count),
+            'value'  => Tools::listMoveToArray($collection, 'pq', false),
             'date'   => $dates,
         ];
         $viscosity   = [
-            'normal' => [$config->viscosity_min, $config->viscosity_max],
-            'value'  => array_column($collection, 'viscosity'),
-            'date'   => $dates,
+            'normalMax' => Tools::itemArray($config->viscosity_max, $count),
+            'normalMin' => Tools::itemArray($config->viscosity_min, $count),
+            'value'     => Tools::listMoveToArray($collection, 'viscosity', false),
+            'date'      => $dates,
         ];
         return [
             'Fe'        => $Fe,

@@ -38,7 +38,7 @@ class System extends BaseController {
             !empty($_POST['viscosity_max']) ||
             !empty($_POST['viscosity_min'])
         ) {
-            $oilAnalysisList = OilAnalysis::getAnalysisList();
+            $oilAnalysisList = OilAnalysis::select();
             foreach ($oilAnalysisList as $oilAnalysisItem) {
                 unset($oilAnalysisItem['oil_no']);
                 unset($oilAnalysisItem['oil_name']);

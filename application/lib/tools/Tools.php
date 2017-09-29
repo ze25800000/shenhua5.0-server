@@ -15,11 +15,23 @@ class Tools {
 
     }
 
-    public static function listMoveToArray($arr, $str) {
+    public static function listMoveToArray($arr, $str, $isUnique = true) {
         $result = [];
         foreach ($arr as $k => $v) {
             array_push($result, $v[$str]);
         }
-        return array_unique($result);
+        if ($isUnique) {
+            return array_unique($result);
+        } else {
+            return $result;
+        }
+    }
+
+    public static function itemArray($item, $count) {
+        $arr = [];
+        for ($i = 0; $i < $count; $i++) {
+            array_push($arr, $item);
+        }
+        return $arr;
     }
 }

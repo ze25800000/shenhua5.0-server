@@ -808,10 +808,6 @@
             sCallback: function (data) {
                var eleVal=data.data;
                 if(ele!='viscosity') {
-                    var normal = [];
-                    for (var i = 0; i < eleVal[ele].value.length; i++) {
-                        normal.push(eleVal[ele].normal);
-                    }
                     var chartData = {
                         labels: eleVal[ele].date,
                         datasets: [
@@ -819,7 +815,7 @@
                                 fillColor: "rgba(220,220,220,0)",
                                 strokeColor: "red",
                                 pointColor: "red",
-                                data: normal
+                                data: eleVal[ele].normal
                             },
                             {
                                 fillColor: "rgba(42,131,207,0.2)",
@@ -833,14 +829,6 @@
                     };
                 }
                 if(ele=='viscosity') {
-                    var normalMin = [];
-                    var normalMax = [];
-                    for (var i = 0; i < eleVal[ele].value.length; i++) {
-                        normalMin.push(eleVal[ele].normal[0]);
-                        normalMax.push(eleVal[ele].normal[1]);
-                    }
-                    console.log(normalMin);
-                    console.log(normalMax);
                     var chartData = {
                         labels: eleVal[ele].date,
                         datasets: [
@@ -848,7 +836,7 @@
                                 fillColor: "rgba(220,220,220,0)",
                                 strokeColor: "red",
                                 pointColor: "red",
-                                data: normalMax
+                                data: eleVal[ele].normalMax
                             },
                             {
                                 fillColor: "rgba(42,131,207,0.2)",
@@ -861,7 +849,7 @@
                                 fillColor: "rgba(220,220,220,0)",
                                 strokeColor: "red",
                                 pointColor: "red",
-                                data: normalMin
+                                data: eleVal[ele].normalMin
                             },
 
                         ]
