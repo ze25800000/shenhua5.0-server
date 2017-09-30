@@ -10,6 +10,7 @@ namespace app\model;
 
 
 use app\lib\tools\Tools;
+use think\Db;
 
 class OilAnalysis extends BaseModel {
     protected $hidden = ['create_time', 'update_time'];
@@ -26,19 +27,15 @@ class OilAnalysis extends BaseModel {
     }
 
     public static function getAnalysisList() {
-        $result    = OilStandard::field('equ_key_no')->select();
-        $equKeyNos = Tools::listMoveToArray($result, 'equ_key_no');
-        $arr       = [];
-        foreach ($equKeyNos as $k => $v) {
-            $oil = self::where('equ_key_no', '=', $v)
-                ->order('sampling_time desc')
-                ->limit(1)
-                ->find();
-            if ($oil) {
-                array_push($arr, $oil);
-            }
-        }
-        return $arr;
+        $sql    = "SELECT *
+                FROM oil_analysis AS a
+                WHERE sampling_time = (SELECT max(a1.sampling_time)
+                                          FROM oil_analysis AS a1
+                                          WHERE a1.equ_key_no = a.equ_key_no
+                )
+                ORDER BY equ_key_no ASC";
+        $result = Db::query($sql);
+        return $result;
     }
 
     public static function getOilAnalysisByIds($ids) {

@@ -4,6 +4,7 @@ namespace app\model;
 
 
 use app\lib\tools\Tools;
+use think\Db;
 use think\Request;
 
 class InfoWarning extends BaseModel {
@@ -34,20 +35,14 @@ class InfoWarning extends BaseModel {
     }
 
     public static function getInfoList() {
-        //获得equ_key_no组成的数组
-        $OilStandardModel = OilStandard::field('equ_key_no')->select();
-        $equKeyNos        = Tools::listMoveToArray($OilStandardModel, 'equ_key_no');
-        $result           = [];
-        foreach ($equKeyNos as $v) {
-            $item = self::where('equ_key_no', '=', $v)
-                ->order('del_warning_time desc')
-                ->limit(1)
-                ->find();
-            if ($item) {
-                array_push($result, $item);
-            }
-        }
-
+        $sql    = "SELECT *
+                FROM info_warning AS a
+                WHERE del_warning_time = (SELECT max(a1.del_warning_time)
+                                          FROM info_warning AS a1
+                                          WHERE a1.equ_key_no = a.equ_key_no
+                )
+                ORDER BY status DESC, equ_key_no ASC;";
+        $result = Db::query($sql);
         return $result;
     }
 
@@ -88,8 +83,8 @@ class InfoWarning extends BaseModel {
 
     public static function getRecentInfoWarningIds() {
         $equKeyNoList = self::field('equ_key_no')->select();
-        $equKeyNos = Tools::listMoveToArray($equKeyNoList, 'equ_key_no');
-        $arr = [];
+        $equKeyNos    = Tools::listMoveToArray($equKeyNoList, 'equ_key_no');
+        $arr          = [];
         foreach ($equKeyNos as $equKeyNo) {
             $item = self::where('equ_key_no', $equKeyNo)
                 ->order('del_warning_time desc')
@@ -99,6 +94,6 @@ class InfoWarning extends BaseModel {
                 array_push($arr, $item);
             }
         }
-        return Tools::listMoveToArray($arr,'id');
+        return Tools::listMoveToArray($arr, 'id');
     }
 }
