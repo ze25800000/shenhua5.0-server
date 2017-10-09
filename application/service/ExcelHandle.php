@@ -23,6 +23,7 @@ use app\validate\excelArray\OilAnalysisValidate;
 use app\validate\excelArray\OilDetailValidate;
 use app\validate\excelArray\OilStandardValidate;
 use app\validate\excelArray\WorkHourValidate;
+use think\Db;
 use think\Request;
 
 class ExcelHandle {
@@ -104,7 +105,7 @@ class ExcelHandle {
                 $arr[$k]['equ_key_no']   = $v[0] . config('salt') . $v[1];
                 $arr[$k]['equ_name']     = $v[2];
                 $arr[$k]['equ_oil_name'] = $v[3];
-                $arr[$k]['oil_no']       = $v[4];
+                $this->saveOilNo($arr[$k]['equ_key_no'], $v[4]);
                 $arr[$k]['quantity']     = $v[5];
                 $arr[$k]['unit']         = $v[6];
                 $arr[$k]['first_period'] = $v[7];
@@ -125,6 +126,15 @@ class ExcelHandle {
             ]);
         }
         return true;
+    }
+
+    private function saveOilNo($equKeyNo, $oilNoStr) {
+        db('oil_no_list')->where(['equ_key_no' => $equKeyNo])->delete();
+        $oilNos = preg_split('/\\n/', $oilNoStr);
+        foreach ($oilNos as $oilNo) {
+            db('oil_no_list')->insert(['equ_key_no' => $equKeyNo, 'oil_no' => $oilNo]);
+        }
+        return $oilNos[0];
     }
 
     public function workHour($excel_array) {

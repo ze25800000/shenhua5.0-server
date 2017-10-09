@@ -23,7 +23,8 @@ class Equipment extends BaseModel {
         $result = self::with([
             'oilStandardList' => function ($query) {
                 $query->order('equ_oil_no asc');
-            }
+                $query->with(['oilNo']);
+            },
         ])->where('equ_no', '=', $equ_no)->find();
         return $result;
     }

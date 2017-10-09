@@ -117,7 +117,6 @@
                                 <th class="num">PQ</th>
                                 <th class="num">粘度</th>
                                 <th class="process">油脂状态</th>
-                                <th class="process">处理意见</th>
                                 <th class="operate">操作</th>
                             </tr>
                             </thead>
@@ -131,7 +130,7 @@
                             <td class="num">*{$v.equ_oil_no}</td>
                             <td class="time edit-item" data-id="*{$v.id}" data-key="equ_oil_name">*{$v.equ_oil_name}
                             </td>
-                            <td class="process edit-item" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}
+                            <td class="process edit-item" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time|date="Y年m月d日",###}
                             </td>
                             <td class="num">*{$v.work_hour}</td>
                             <td class="process">*{$v.oil_no}</td>
@@ -151,7 +150,6 @@
                                 condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
                             <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
-                            <td class="process">*{$v.advise?'正常使用':'建议更换'}</td>
                             <td class="operate table-operate">
                                 <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
                                 *{if condition="$scope>=18"}

@@ -6,6 +6,10 @@ namespace app\model;
 class OilStandard extends BaseModel {
     protected $hidden = ['create_time', 'update_time'];
 
+    public function oilNo() {
+        return $this->hasMany('OilNoList', 'equ_key_no', 'equ_key_no');
+    }
+
     public function infoWarningDetail() {
         return $this->hasMany('InfoWarning', 'equ_key_no', 'equ_key_no');
     }
