@@ -7,6 +7,7 @@ class Equipment extends BaseModel {
     protected $autoWriteTimestamp = true;
     protected $hidden = ['update_time'];
 
+
     public function oilStandardList() {
         return $this->hasMany('OilStandard', 'equ_no', 'equ_no');
     }
@@ -23,9 +24,13 @@ class Equipment extends BaseModel {
         $result = self::with([
             'oilStandardList' => function ($query) {
                 $query->order('equ_oil_no asc');
-                $query->with(['oilNo']);
             },
         ])->where('equ_no', '=', $equ_no)->find();
+        return $result;
+    }
+
+    public static function getOilNoListByEquNo($equ_no) {
+        $result = self::where(['equ_no' => $equ_no])->with(['oilStandardList.oilNos'])->find();
         return $result;
     }
 }

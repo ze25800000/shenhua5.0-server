@@ -38,6 +38,22 @@ class Standard extends BaseController {
         return $this->ajaxReturn('获取设备列表信息成功', 0, $result);
     }
 
+    public function getOilNoByEquNo($equNo) {
+        $result = Equipment::getOilNoListByEquNo($equNo);
+        return $result;
+    }
+
+    public function modifyOilNo() {
+        $OilStandard         = OilStandard::get(input('post.id'));
+        $OilStandard->oil_no = input('post.oil_no');
+        $result              = $OilStandard->save();
+        if (!$result) {
+            throw new DocumentException([
+                'msg' => '修改物料编号失败'
+            ]);
+        }
+        return $this->ajaxReturn('修改物料编号成功');
+    }
 
     /**删除设备润滑标准条目
      * @param $id

@@ -7,6 +7,13 @@
     .active {
         display: block;
     }
+
+    select {
+        border: 1px solid #ebebeb;
+        height: 30px;
+        line-height: 30px;
+        padding-left: 15px;
+    }
 </style>
 <div id="container">
     <div id="hd">
@@ -14,7 +21,8 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您, <a style="color: #fff;" href="/user/center">&nbsp;*{$account}</a></div>
+                <div class="welcome ue-clear">欢迎您, <a style="color: #fff;" href="/user/center">&nbsp;*{$account}</a>
+                </div>
             </div>
             <div class="toolbar ue-clear">
                 <a href="/" class="home-btn">首页</a>
@@ -141,7 +149,8 @@
                                     <td class="time edit-item" data-id="${$value.id}" data-key="equ_oil_name">
                                         ${$value.equ_oil_name}
                                     </td>
-                                    <td class="process edit-item" data-id="${$value.id}" data-key="oil_no">
+                                    <td class="process" id="oilNo-${$value.equ_key_no}" data-id="${$value.id}"
+                                        data-key="oil_no">
                                         ${$value.oil_no}
                                     </td>
                                     <td class="process edit-item" data-id="${$value.id}" data-key="quantity">
@@ -162,9 +171,9 @@
                                     <td class="operate table-operate">
                                         <a href="equdetail/${$value.equ_key_no}" class="check"
                                            target="_blank">查看</a>
-                                    *{if condition="$scope===36"}
+                                        *{if condition="$scope===36"}
                                         <a href="javascript:;" class="del btn2" data-id="${$value.id}">删除</a>
-                                    *{/if}
+                                        *{/if}
                                     </td>
                                 </tr>
                                 {{/each}}
@@ -247,8 +256,63 @@
                     oldHtml = $(document).find('#oilStandardTbody').html();
                     var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
                     $('.scroll-box').css('height', scrollHeight);
+                    isNeedSelect(equ_no);
                 }
             };
+        window.base.getData(params);
+    });
+
+    function isNeedSelect(equ_no) {
+        var arr = [];
+        var params = {
+            url: 'oiling/standard/oilno/' + equ_no,
+            sCallback: function (data) {
+                var list = data.oil_standard_list;
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].oil_nos.length > 1) {
+                        var obj = {};
+                        obj['id'] = 'oilNo-' + list[i].equ_key_no;
+                        obj['html'] = '<select>';
+                        for (var j = 0; j < list[i].oil_nos.length; j++) {
+                            if (list[i].oil_no == list[i].oil_nos[j].oil_no) {
+                                obj['html'] += '<option value="' + list[i].oil_nos[j].oil_no + '" selected>' + list[i].oil_nos[j].oil_no + '</option>';
+                            } else {
+                                obj['html'] += '<option value="' + list[i].oil_nos[j].oil_no + '">' + list[i].oil_nos[j].oil_no + '</option>';
+                            }
+                        }
+                        obj['html'] += '</select>';
+                        arr.push(obj);
+                    }
+                }
+                putSelectToHtml(arr)
+            }
+        }
+        window.base.getData(params);
+    }
+
+    function putSelectToHtml(arr) {
+//        console.log(arr)
+        for (var i = 0; i < arr.length; i++) {
+            var oilNoId = document.getElementById(arr[i].id);
+            oilNoId.innerHTML = arr[i].html
+        }
+    }
+
+    //修改物料编号
+    $(document).on('change', 'select', function () {
+        var oilNo = $(this).val();
+        var id = $(this).parent().data('id');
+        var params = {
+            url: 'oiling/standard/oilno',
+            type: 'post',
+            data: {
+                oil_no: oilNo,
+                id: id
+            },
+            sCallback: function (data) {
+                alert(data.msg)
+            }
+        }
         window.base.getData(params);
     });
     //添加新设备
@@ -328,14 +392,13 @@
             window.base.getData(params);
         });
     });
-    *{if condition="$scope==36"}
     //编辑润滑标准条目信息
     $(document).on('dblclick', '.edit-item', function (e) {
         var _this = $(this),
             oldVal = _this.html(),
             url = 'oiling/standard/edititem/';
         oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
-        var long = oldVal.length?(oldVal.length * 12):'20';
+        var long = oldVal.length ? (oldVal.length * 12) : '20';
         if (!/input/.test(oldVal)) {
             _this.html('<input type="text" value="' + oldVal + '" style="width: ' + long + 'px">');
         }
@@ -343,7 +406,6 @@
         input.select();
         window.base.editItemByDblClick(_this, input, oldVal, url);
     });
-    *{/if}
     //上传excel
     $(document).on('click', '.upload', function () {
         var param = $(this).data('param');
@@ -355,8 +417,8 @@
                 window.location.reload();
             },
             eCallback: function (err) {
-                if (err.errcode==2) {
-                    err.msg&&alert(err.msg);
+                if (err.errcode == 2) {
+                    err.msg && alert(err.msg);
                 }
             }
         };
@@ -365,16 +427,16 @@
     //搜索
     $(document).on("keyup", '.search-input', function (e) {
         var val = $(this).val();
-        if (!val&&e.keyCode == 8  ) {
+        if (!val && e.keyCode == 8) {
             document.getElementById('oilStandardTbody').innerHTML = oldHtml;
-            var newHtml=$('#oilStandardTbody').html();
+            var newHtml = $('#oilStandardTbody').html();
             return false;
         }
         var _this = $(this),
             params = {
                 url: 'oiling/standard/search/' + val,
                 sCallback: function (list) {
-                    if (newHtml==oldHtml) {
+                    if (newHtml == oldHtml) {
                         return false;
                     }
                     if (list.errcode === 0) {
@@ -396,7 +458,7 @@
         <td class="time edit-item" data-id="${$value.id}" data-key="equ_oil_name">
             ${$value.equ_oil_name}
         </td>
-        <td class="process edit-item" data-id="${$value.id}" data-key="oil_no">
+        <td class="process" id="oilNo-${$value.equ_key_no}" data-id="${$value.id}" data-key="oil_no">
             ${$value.oil_no}
         </td>
         <td class="process edit-item" data-id="${$value.id}" data-key="quantity">
