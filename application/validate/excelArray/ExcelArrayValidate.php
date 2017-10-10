@@ -23,4 +23,13 @@ class ExcelArrayValidate extends BaseValidate {
         }
         return true;
     }
+
+    protected function isDataExceedNow($value) {
+        $result = time() - $value;
+        if ($result > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

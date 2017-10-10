@@ -107,10 +107,9 @@ class ExcelHandle {
                 $arr[$k]['equ_oil_name'] = $v[3];
                 $arr[$k]['oil_no']       = $this->saveOilNo($arr[$k]['equ_no'], $arr[$k]['equ_key_no'], $v[4]);
                 $arr[$k]['quantity']     = $v[5];
-                $arr[$k]['unit']         = $v[6];
-                $arr[$k]['first_period'] = $v[7];
-                $arr[$k]['period']       = $v[8];
-                $arr[$k]['interval']     = $v[9];
+                $arr[$k]['first_period'] = $v[6];
+                $arr[$k]['period']       = $v[7];
+                $arr[$k]['interval']     = $v[8];
                 $OilStandardValidate->checkExcel($arr[$k], $k);
                 $item = $oilStandardModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']}")->find();
                 if ($item) {
@@ -146,45 +145,20 @@ class ExcelHandle {
         foreach ($excel_array as $k => $v) {
             if (in_array($v[0], $equNoArr)) {
                 $arr[$k]['equ_no']       = $v[0];
-                $arr[$k]['equ_oil_no']   = $v[1];
-                $arr[$k]['equ_key_no']   = $v[0] . config('salt') . $v[1];
-                $arr[$k]['equ_oil_name'] = $v[2];
-                $arr[$k]['working_hour'] = $v[3];
-                $arr[$k]['start_time']   = $this->getTimestamp($v[4]);
+                $arr[$k]['equ_name']     = $v[1];
+                $arr[$k]['working_hour'] = $v[2];
+                $arr[$k]['start_time']   = $this->getTimestamp($v[3]);
                 $WorkHourValidate->checkExcel($arr[$k], $k);
-                $item = $workHourModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and start_time={$arr[$k]['start_time']}")->find();
+                $item = $workHourModel->field('id')->where("equ_no={$arr[$k]['equ_no']} and start_time={$arr[$k]['start_time']}")->find();
                 if ($item) {
                     $arr[$k]['id'] = $item->id;
                 }
             }
         }
-        $result             = $workHourModel->saveAll($arr);
-        $equKeyNos          = $this->listMoveToArray($arr, 'equ_key_no');
-        $infoWarningModel   = new InfoWarning();
-        $isInfoWarningExist = $infoWarningModel::select();
-        if ($isInfoWarningExist) {
-            foreach ($equKeyNos as $k => $equKeyNo) {
-                $infoWarnItem = $infoWarningModel
-                    ->where("equ_key_no='{$equKeyNo}'")
-                    ->order("del_warning_time DESC")
-                    ->limit(1)
-                    ->find();
-                if ($infoWarnItem) {
-                    $howLong = $this->howLong($infoWarnItem->equ_key_no, $infoWarnItem->del_warning_time);
-                    $infoWarningModel
-                        ->where('equ_key_no', '=', $equKeyNo)
-                        ->update([
-                            'how_long' => $howLong,
-                            'status'   => $this->getStatus($infoWarnItem, $howLong),
-                            'deadline' => $this->getDeadline($infoWarnItem, $howLong)
-                        ]);
-                }
-            }
-        }
-
+        $result = $workHourModel->saveAll($arr);
         if (!$result) {
             throw new DocumentException([
-                'msg' => '上传运行时间文件失败，请检查excel文档'
+                'msg' => '保存运行时间失败'
             ]);
         }
         return true;
@@ -206,12 +180,12 @@ class ExcelHandle {
                 $arr[$k]['del_warning_time'] = $this->getTimestamp($v[4]);
                 $arr[$k]['is_first_period']  = preg_match('/^是$/', $v[5]) ? 1 : (preg_match('/^否$/', $v[5]) ? 0 : null);
                 $arr[$k]['warning_type']     = preg_match('/^润滑$/', $v[6]) ? 1 : (preg_match('/^延期$/', $v[6]) ? 0 : null);
-                $arr[$k]['postpone']         = empty($v[7]) ? null : $v[7];
-                $arr[$k]['postpone_reason']  = empty($v[8]) ? null : $v[8];
-                $arr[$k]['oil_no']           = empty($v[9]) ? null : $v[9];
-                $arr[$k]['quantity']         = empty($v[10]) ? null : $v[10];
+                $arr[$k]['oil_no']           = empty($v[7]) ? null : $v[7];
+                $arr[$k]['quantity']         = empty($v[8]) ? null : $v[8];
+                $arr[$k]['postpone']         = empty($v[9]) ? null : $v[9];
+                $arr[$k]['postpone_reason']  = empty($v[10]) ? null : $v[10];
                 $InfoWarningValidate->checkExcel($arr[$k], $k);
-                $arr[$k]['how_long'] = $this->howLong($arr[$k]['equ_key_no'], $arr[$k]['del_warning_time']);
+                $arr[$k]['how_long'] = $this->howLong($arr[$k]);
                 $arr[$k]['status']   = $this->getStatus($arr[$k], $arr[$k]['how_long']);
                 $arr[$k]['deadline'] = $this->getDeadline($arr[$k], $arr[$k]['how_long']);
                 $arr[$k]['user_id']  = session('user_id');
@@ -280,6 +254,16 @@ class ExcelHandle {
             $arr[$k]['detail']   = $v[2];
             $arr[$k]['unit']     = trim($v[3]);
             $arr[$k]['price']    = $v[4];
+            if ($arr[$k]['unit'] == 'L') {
+                $arr[$k]['Fe']            = $v[5];
+                $arr[$k]['Cu']            = $v[6];
+                $arr[$k]['Al']            = $v[7];
+                $arr[$k]['Si']            = $v[8];
+                $arr[$k]['Na']            = $v[9];
+                $arr[$k]['PQ']            = $v[10];
+                $arr[$k]['viscosity_max'] = $v[11];
+                $arr[$k]['viscosity_min'] = $v[12];
+            }
             $OilDetailValidate->checkExcel($arr[$k], $k);
             $item = $oilDetailModel->field('id')->where("oil_no={$arr[$k]['oil_no']}")->find();
             if ($item) {
@@ -325,13 +309,42 @@ class ExcelHandle {
     /**计算距离上次消警的总时长
      *
      */
-    public function howLong($equKeyNo, $time) {
-        $maxDelTime = InfoWarning::where("equ_key_no={$equKeyNo} and warning_type=1")->max('del_warning_time');
-        if ($time > $maxDelTime || empty($maxDelTime)) {
-            $maxDelTime = $time;
+    public function howLong($infoWarn) {
+        $OilDetail = OilDetail::field('unit')->where(['oil_no' => $infoWarn['oil_no']])->find();
+        if (!$OilDetail && $infoWarn['warning_type'] == 1) {
+            throw new DocumentException([
+                'msg' => '物料编号不存在'
+            ]);
         }
-        $howLong = WorkHour::where("equ_key_no={$equKeyNo} and start_time>={$maxDelTime}")->sum('working_hour');
-        return $howLong ? $howLong : 0;
+        $maxDelTime = InfoWarning::where("equ_key_no={$infoWarn['equ_key_no']} and warning_type=1")->max('del_warning_time');
+        if ($infoWarn['del_warning_time'] > $maxDelTime || empty($maxDelTime)) {
+            $maxDelTime = $infoWarn['del_warning_time'];
+        }
+        if ($infoWarn['warning_type'] == 1) {
+            if ($OilDetail->unit == 'L') {
+                $howLong = WorkHour::where("equ_no={$infoWarn['equ_no']} and start_time>={$maxDelTime}")->sum('working_hour');
+                return $howLong ? $howLong : 0;
+            } else {
+                $howLong = (time() - $maxDelTime)/60/60;
+                return $howLong > 0 ? $howLong : 0;
+            }
+        } else {
+            $infoWarning = InfoWarning::where("equ_key_no={$infoWarn['equ_key_no']}")->order('del_warning_time desc')->limit(1)->find();
+            if (!$infoWarning) {
+                return 0;
+            }
+            $OilDetail   = OilDetail::field('unit')->where(['oil_no' => $infoWarning->oil_no])->find();
+            if (!$OilDetail) {
+                return 0;
+            }
+            if ($OilDetail->unit == 'L') {
+                $howLong = WorkHour::where("equ_no={$infoWarn['equ_no']} and start_time>={$maxDelTime}")->sum('working_hour');
+                return $howLong ? $howLong : 0;
+            } else {
+                $howLong = (time() - $maxDelTime)/60/60;
+                return $howLong > 0 ? $howLong : 0;
+            }
+        }
     }
 
 //$equNo, $equOilNo, $howLong, $isFirstPeriod,$warningType,$postpone

@@ -15,7 +15,7 @@ class InfoWarningValidate extends ExcelArrayValidate {
         'equ_oil_no'       => 'integer|require',
         'equ_name'         => 'chsAlphaNum|require',
         'equ_oil_name'     => 'chsAlphaNum|require',
-        'del_warning_time' => 'integer|require',
+        'del_warning_time' => 'integer|require|isDataExceedNow',
         'is_first_period'  => 'integer|require',
         'warning_type'     => 'integer|require',
         'postpone'         => 'integer',
