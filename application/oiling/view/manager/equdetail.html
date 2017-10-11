@@ -213,7 +213,7 @@
                 </table>
             </div>
         </div>
-
+        *{if condition="$detail.unit=='L'"}
         <div class="rhd_xqa">
             <h3>
                 <span class="rhd_xqa1">油脂化验指标：</span>
@@ -254,20 +254,20 @@
                     <td class="name" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}</td>
                     <td class="process">*{$v.work_hour}</td>
                     <td class="process">*{$v.oil_no}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
+                    <td class="num" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$norms.Fe" }
                         style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" }
+                    <td class="num" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$norms.Cu" }
                         style="color: red;font-weight: 600;" *{/if}>*{$v.Cu}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$c.Al" }
+                    <td class="num" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$norms.Al" }
                         style="color: red;font-weight: 600;" *{/if}>*{$v.Al}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$c.Si" }
+                    <td class="num" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$norms.Si" }
                         style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$c.Na" }
+                    <td class="num" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$norms.Na" }
                         style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="pq" *{if condition="$v.pq>$c.pq" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.pq}</td>
+                    <td class="num" data-id="*{$v.id}" data-key="PQ" *{if condition="$v.PQ>$norms.PQ" }
+                        style="color: red;font-weight: 600;" *{/if}>*{$v.PQ}</td>
                     <td class="num" data-id="*{$v.id}" data-key="viscosity" *{if
-                        condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
+                        condition="$v.viscosity<$norms.viscosity_min OR $v.viscosity>$norms.viscosity_max" }
                         style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
                     <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
                     *{if condition="$scope>=18"}
@@ -325,7 +325,7 @@
                             <li data-ele="Al">Al</li>
                             <li data-ele="Si">Si</li>
                             <li data-ele="Na">Na</li>
-                            <li data-ele="pq">PQ</li>
+                            <li data-ele="PQ">PQ</li>
                             <li data-ele="viscosity">粘度</li>
                         </ul>
                         <div class="tabCon">
@@ -339,62 +339,7 @@
 
             </div>
         </div>
-        <div class="rhd_xqa">
-            <h3>
-                <span class="rhd_xqa1">运行时间：</span>
-                *{if condition="$scope>=18"}
-                <span class="rhd_xqa2"><a href="javascript:;"
-                                          id="addWorkHour"
-                                          data-equ_no="*{$detail.equ_no}"
-                                          data-equ_oil_no="*{$detail.equ_oil_no}"
-                                          data-equ_name="*{$detail.equ_name}"
-                                          data-equ_oil_name="*{$detail.equ_oil_name}"
-                >【添加运行时间】</a></span>
-                *{/if}
-            </h3>
-            <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
-                <table>
-                    <thead>
-                    <tr>
-                        <th class="num">ID</th>
-                        <th class="process">运行起始时间</th>
-                        <th class="process">运行时长</th>
-                        *{if condition="$scope>=18"}
-                        <th class="operate">操作</th>
-                        *{/if}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    *{foreach $detail.time_list as $k=>$v}
-                    <tr>
-                        <td class="num">*{$k+1}</td>
-                        <td class="process">*{$v.start_time|date="Y年m月d日",###}</td>
-                        <td class="process">*{$v.working_hour}</td>
-                        *{if condition="$scope>=18"}
-                        <td style="width: 30px; text-align: center;" class="operate table-operate del-td" data-id="*{$v.id}" data-type="workhour"></td>
-                        *{/if}
-                    </tr>
-                    *{/foreach}
-                    </tbody>
-                </table>
-            </div>
-            <div class="add-oil-analysis-box workhour">
-                <div class="oil-analysis-window">
-                    <h3>
-                        添加运行时间
-                    </h3>
-                    <div class="content">
-                        <p><span>起始日期：</span><input id="startTime" type="text" value=""></p>
-                        <p><span>运行时长：</span><input id="workingHour" type="text" value="360"></p>
-                    </div>
-                    <div class="box-bottom">
-                        <a href="javascript:;" class="workhour-confirm">确认</a>
-                        <a href="javascript:;" class="workhour-cancel">取消</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        *{/if}
     </div>
     <div class="tanchuang">
         <div class="hint oiling">
@@ -711,7 +656,7 @@
                 Al = $("#Al").val(),
                 Si = $("#Si").val(),
                 Na = $("#Na").val(),
-                pq = $("#PQ").val(),
+                PQ = $("#PQ").val(),
                 viscosity = $("#viscosity").val(),
                 params = {
                     url: 'oiling/analysis/add',
@@ -727,7 +672,7 @@
                         Al: Al,
                         Si: Si,
                         Na: Na,
-                        pq: pq,
+                        PQ: PQ,
                         viscosity: viscosity,
                     },
                     sCallback: function (data) {
@@ -741,7 +686,7 @@
                             err.msg.Al && alert(err.msg.Al);
                             err.msg.Si && alert(err.msg.Si);
                             err.msg.Na && alert(err.msg.Na);
-                            err.msg.pq && alert(err.msg.pq);
+                            err.msg.PQ && alert(err.msg.PQ);
                             err.msg.viscosity && alert(err.msg.viscosity);
                         }
                         if (err.errcode == 1) {

@@ -122,6 +122,8 @@
                             </thead>
                             <tbody id="analysisBody">
                             *{foreach $OilList as $v}
+                            *{foreach $norms as $vv}
+                            *{if condition="$v.oil_no==$vv.oil_no" }
                             <tr *{if condition="$v.advise==0" } style="background-color: #fffdcf" *{/if}>
                             <td class="num"><input *{if condition="$v.advise==0" }checked*{/if} type="checkbox"
                                 data-id="*{$v.id}">
@@ -134,20 +136,20 @@
                             </td>
                             <td class="num">*{$v.work_hour}</td>
                             <td class="process">*{$v.oil_no}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$c.Fe" }
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$vv.Fe" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$c.Cu" }
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$vv.Cu" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.Cu}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$c.Al" }
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$vv.Al" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.Al}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$c.Si" }
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$vv.Si" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$c.Na" }
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$vv.Na" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="pq" *{if condition="$v.pq>$c.pq" }
-                                style="color: red;font-weight: 600;" *{/if}>*{$v.pq}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="viscosity" *{if
-                                condition="$v.viscosity<$c.viscosity_min OR $v.viscosity>$c.viscosity_max" }
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="pq" *{if condition="$v.PQ>$vv.PQ" }
+                                style="color: red;font-weight: 600;" *{/if}>*{$v.PQ}</td>
+                            <td class="num edit-item" data-id="*{$v.id}" data-key="viscosity"
+                                *{if condition="$v.viscosity<$vv.viscosity_min OR $v.viscosity>$vv.viscosity_max" }
                                 style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
                             <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
                             <td class="operate table-operate">
@@ -157,6 +159,8 @@
                                 *{/if}
                             </td>
                             </tr>
+                            *{/if}
+                            *{/foreach}
                             *{/foreach}
 
                             </tbody>
@@ -210,7 +214,7 @@
         <td class="num">${item.Al}</td>
         <td class="num">${item.Si}</td>
         <td class="num">${item.Na}</td>
-        <td class="num">${item.pq}</td>
+        <td class="num">${item.PQ}</td>
         <td class="num">${item.viscosity}</td>
         <td class="process">{{if item.oil_status}}${item.oil_status}{{else}}良好{{/if}}</td>
         <td class="process">{{if item.advise==1}}正常使用{{else}}建议更换{{/if}}</td>
@@ -227,7 +231,7 @@
     $('.upload').click(function () {
         var param = $(this).data('param'),
             params = {
-                url: 'oiling/upload?' + param,
+                url: 'oiling/upload?' + param+'&XDEBUG_SESSION_START=18185',
                 data: new FormData($(this).parent()[0]),
                 sCallback: function () {
                     alert('上传成功');

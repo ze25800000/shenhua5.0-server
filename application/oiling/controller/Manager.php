@@ -53,9 +53,9 @@ class Manager extends BaseController {
 
     public function analysis() {
         $OilAnalysisList = OilAnalysis::getAnalysisList();
-        $OilConfig       = OilConfig::get(1);
+        $OilDetail       = OilDetail::where(['unit' => 'L'])->select();
         $this->assign([
-            'c'       => $OilConfig,
+            'norms'   => $OilDetail,
             'OilList' => $OilAnalysisList,
             'scope'   => $this->userScope,
             'account' => $this->account
@@ -72,15 +72,18 @@ class Manager extends BaseController {
     }
 
     public function equdetail($equ_key_no) {
-        $result    = OilStandard::getEquipmentByKeyNo($equ_key_no);
-        $OilConfig = OilConfig::get(1);
-        $oilNoList = OilDetail::field('oil_no,oil_name,detail')->select();
+        $result      = OilStandard::getEquipmentByKeyNo($equ_key_no);
+        $postpone    = OilConfig::get(1);
+        $oilNoList   = OilDetail::field('oil_no,oil_name,detail')->select();
+        $infoWarning = InfoWarning::where(['equ_key_no' => $equ_key_no])->field('oil_no')->order('del_warning_time desc')->find();
+        $OilDetail   = OilDetail::where(['unit' => 'L', 'oil_no' => $infoWarning->oil_no])->find();
         $this->assign([
             'account'   => $this->account,
             'userId'    => $this->user_id,
             'detail'    => $result,
             'scope'     => $this->userScope,
-            'c'         => $OilConfig,
+            'postpone'  => $postpone->postpone,
+            'norms'     => $OilDetail,
             'oilNoList' => $oilNoList
         ]);
         return $this->fetch();

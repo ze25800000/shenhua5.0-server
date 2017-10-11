@@ -422,7 +422,7 @@
                     isFirstPeriod = $('#RunHuaRadioYes').attr('checked') ? 1 : 0,
                     delWarningTime = $('.oiling-time').val().replace(/^\s+|\s+$/gm, '');
                 var params = {
-                    url: 'oiling/info/lubricate',
+                    url: 'oiling/info/lubricate?XDEBUG_SESSION_START=18185',
                     type: 'post',
                     data: {
                         id: id,

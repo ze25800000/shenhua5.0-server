@@ -55,7 +55,7 @@ class WarningInfo extends BaseController {
             ]);
         }
         $excelHandle       = new ExcelHandle();
-        $posts['how_long'] = $excelHandle->howLong($posts['equ_key_no'], $posts['del_warning_time']);
+        $posts['how_long'] = $excelHandle->howLong($posts);
         $posts['status']   = $excelHandle->getStatus($posts, $posts['how_long']);
         $posts['deadline'] = $excelHandle->getDeadline($posts, $posts['how_long']);
         $InfoWarningItem   = $infoWarningModel
@@ -92,7 +92,7 @@ class WarningInfo extends BaseController {
             ]);
         }
         $excelHandle       = new ExcelHandle();
-        $posts['how_long'] = $excelHandle->howLong($posts['equ_key_no'], $posts['del_warning_time']);
+        $posts['how_long'] = $excelHandle->howLong($posts);
         $posts['status']   = $excelHandle->getStatus($posts, $posts['how_long']);
         $posts['deadline'] = $excelHandle->getDeadline($posts, $posts['how_long']);
         $InfoWarningItem   = $infoWarningModel

@@ -27,10 +27,11 @@ use think\Db;
 use think\Request;
 
 class ExcelHandle {
-    protected $config;
+    protected $postpone;
 
     public function __construct() {
-        $this->config = OilConfig::get(1);
+        $config         = OilConfig::get(1);
+        $this->postpone = $config->postpone;
     }
 
     public function excelToArray() {
@@ -222,11 +223,11 @@ class ExcelHandle {
                 $arr[$k]['Al']            = $v[7];
                 $arr[$k]['Si']            = $v[8];
                 $arr[$k]['Na']            = $v[9];
-                $arr[$k]['pq']            = $v[10];
+                $arr[$k]['PQ']            = $v[10];
                 $arr[$k]['viscosity']     = $v[11];
                 $OilAnalysisValidate->checkExcel($arr[$k], $k);
                 $arr[$k]['oil_no']     = $this->getOilNoFromInfo($arr[$k]['equ_key_no']);
-                $arr[$k]['work_hour']  = $this->howLong($arr[$k]['equ_key_no'], $arr[$k]['sampling_time']);
+                $arr[$k]['work_hour']  = $this->howLong($arr[$k]);
                 $arr[$k]['oil_status'] = implode('<br>', $this->getOilStatus($arr[$k]));
                 $arr[$k]['advise']     = empty($arr[$k]['oil_status']) ? 1 : 0;
                 $item                  = $oilAnalysisModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and sampling_time={$arr[$k]['sampling_time']}")->find();
@@ -290,19 +291,29 @@ class ExcelHandle {
     }
 
     public function getOilStatus($OilAnalysisItem) {
-        $oilStatus = [];
-        if (!empty($OilAnalysisItem['Fe']) && $OilAnalysisItem['Fe'] > $this->config['Fe']) array_push($oilStatus, 'Fe元素超标');
-        if (!empty($OilAnalysisItem['Cu']) && $OilAnalysisItem['Cu'] > $this->config['Cu']) array_push($oilStatus, 'Cu元素超标');
-        if (!empty($OilAnalysisItem['Al']) && $OilAnalysisItem['Al'] > $this->config['Al']) array_push($oilStatus, 'Al元素超标');
-        if (!empty($OilAnalysisItem['Si']) && $OilAnalysisItem['Si'] > $this->config['Si']) array_push($oilStatus, 'Si元素超标');
-        if (!empty($OilAnalysisItem['Na']) && $OilAnalysisItem['Na'] > $this->config['Na']) array_push($oilStatus, 'Na元素超标');
-        if (!empty($OilAnalysisItem['pq']) && $OilAnalysisItem['pq'] > $this->config['pq']) array_push($oilStatus, 'PQ值超标');
-        if (!empty($OilAnalysisItem['viscosity']) && $OilAnalysisItem['viscosity'] < $this->config['viscosity_min']) {
-            array_push($oilStatus, '粘度偏低');
-        } elseif ($OilAnalysisItem['viscosity'] > $this->config['viscosity_max']) {
-            array_push($oilStatus, '粘度偏高');
+        $oilDetail = OilDetail::where(['oil_no' => $OilAnalysisItem['oil_no']])->find();
+        if (!$oilDetail) {
+            throw new DocumentException([
+                'msg' => $OilAnalysisItem['equ_oil_name'] . '该设备没有进行润滑，找不到对应物料编号'
+            ]);
         }
-        return $oilStatus;
+        if ($oilDetail->unit == 'L') {
+            $oilStatus = [];
+            if (!empty($OilAnalysisItem['Fe']) && $OilAnalysisItem['Fe'] > $oilDetail->Fe) array_push($oilStatus, 'Fe元素超标');
+            if (!empty($OilAnalysisItem['Cu']) && $OilAnalysisItem['Cu'] > $oilDetail->Cu) array_push($oilStatus, 'Cu元素超标');
+            if (!empty($OilAnalysisItem['Al']) && $OilAnalysisItem['Al'] > $oilDetail->Al) array_push($oilStatus, 'Al元素超标');
+            if (!empty($OilAnalysisItem['Si']) && $OilAnalysisItem['Si'] > $oilDetail->Si) array_push($oilStatus, 'Si元素超标');
+            if (!empty($OilAnalysisItem['Na']) && $OilAnalysisItem['Na'] > $oilDetail->Na) array_push($oilStatus, 'Na元素超标');
+            if (!empty($OilAnalysisItem['PQ']) && $OilAnalysisItem['PQ'] > $oilDetail->PQ) array_push($oilStatus, 'PQ值超标');
+            if (!empty($OilAnalysisItem['viscosity']) && $OilAnalysisItem['viscosity'] < $oilDetail->viscosity_min) {
+                array_push($oilStatus, '粘度偏低');
+            } elseif ($OilAnalysisItem['viscosity'] > $oilDetail->viscosity_max) {
+                array_push($oilStatus, '粘度偏高');
+            }
+            return $oilStatus;
+        } else {
+            return [];
+        }
     }
 
 
@@ -310,30 +321,32 @@ class ExcelHandle {
      *
      */
     public function howLong($infoWarn) {
-        $OilDetail = OilDetail::field('unit')->where(['oil_no' => $infoWarn['oil_no']])->find();
-        if (!$OilDetail && $infoWarn['warning_type'] == 1) {
+        $OilDetail   = OilDetail::field('unit')->where(['oil_no' => $infoWarn['oil_no']])->find();
+        $infoWarning = InfoWarning::where("equ_key_no={$infoWarn['equ_key_no']}")->order('del_warning_time desc')->limit(1)->find();
+        $warningType = empty($infoWarn['warning_type']) ? $infoWarning->warning_type : $infoWarn['warning_type'];
+        if (!$OilDetail && $warningType == 1) {
             throw new DocumentException([
                 'msg' => '物料编号不存在'
             ]);
         }
         $maxDelTime = InfoWarning::where("equ_key_no={$infoWarn['equ_key_no']} and warning_type=1")->max('del_warning_time');
-        if ($infoWarn['del_warning_time'] > $maxDelTime || empty($maxDelTime)) {
-            $maxDelTime = $infoWarn['del_warning_time'];
+        $time       = empty($infoWarn['del_warning_time']) ? $infoWarn['sampling_time'] : $infoWarn['del_warning_time'];
+        if ($time > $maxDelTime || empty($maxDelTime)) {
+            $maxDelTime = $time;
         }
-        if ($infoWarn['warning_type'] == 1) {
+        if ($warningType == 1) {
             if ($OilDetail->unit == 'L') {
                 $howLong = WorkHour::where("equ_no={$infoWarn['equ_no']} and start_time>={$maxDelTime}")->sum('working_hour');
                 return $howLong ? $howLong : 0;
             } else {
-                $howLong = (time() - $maxDelTime)/60/60;
+                $howLong = (time() - $maxDelTime) / 60 / 60;
                 return $howLong > 0 ? $howLong : 0;
             }
         } else {
-            $infoWarning = InfoWarning::where("equ_key_no={$infoWarn['equ_key_no']}")->order('del_warning_time desc')->limit(1)->find();
             if (!$infoWarning) {
                 return 0;
             }
-            $OilDetail   = OilDetail::field('unit')->where(['oil_no' => $infoWarning->oil_no])->find();
+            $OilDetail = OilDetail::field('unit')->where(['oil_no' => $infoWarning->oil_no])->find();
             if (!$OilDetail) {
                 return 0;
             }
@@ -341,7 +354,7 @@ class ExcelHandle {
                 $howLong = WorkHour::where("equ_no={$infoWarn['equ_no']} and start_time>={$maxDelTime}")->sum('working_hour');
                 return $howLong ? $howLong : 0;
             } else {
-                $howLong = (time() - $maxDelTime)/60/60;
+                $howLong = (time() - $maxDelTime) / 60 / 60;
                 return $howLong > 0 ? $howLong : 0;
             }
         }
@@ -355,7 +368,7 @@ class ExcelHandle {
             //如果消警类型为延期，让保养周期和延期时长相加
             $duration = $infoWarn['warning_type'] ? $oilStandardItem['first_period'] : ($oilStandardItem['first_period'] + $infoWarn['postpone']);
             if ($howLong < $duration) {
-                if (($duration - $howLong) > $this->config['postpone']) {
+                if (($duration - $howLong) > $this->postpone['postpone']) {
                     //正常
                     return 1;
                 } else {
@@ -369,7 +382,7 @@ class ExcelHandle {
         } else {
             $duration = $infoWarn['warning_type'] ? $oilStandardItem['period'] : $oilStandardItem['period'] + $infoWarn['postpone'];
             if ($howLong < $duration) {
-                if (($duration - $howLong) > $this->config['postpone']) {
+                if (($duration - $howLong) > $this->postpone['postpone']) {
                     //正常
                     return 1;
                 } else {
