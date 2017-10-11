@@ -321,8 +321,9 @@ class ExcelHandle {
      *
      */
     public function howLong($infoWarn) {
-        $OilDetail   = OilDetail::field('unit')->where(['oil_no' => $infoWarn['oil_no']])->find();
         $infoWarning = InfoWarning::where("equ_key_no={$infoWarn['equ_key_no']}")->order('del_warning_time desc')->limit(1)->find();
+        $oilNo       = empty($infoWarn['oil_no']) ? $infoWarning->oil_no : $infoWarn['oil_no'];
+        $OilDetail   = OilDetail::field('unit')->where(['oil_no' => $oilNo])->find();
         $warningType = empty($infoWarn['warning_type']) ? $infoWarning->warning_type : $infoWarn['warning_type'];
         if (!$OilDetail && $warningType == 1) {
             throw new DocumentException([

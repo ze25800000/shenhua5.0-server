@@ -76,7 +76,7 @@ class Manager extends BaseController {
         $postpone    = OilConfig::get(1);
         $oilNoList   = OilDetail::field('oil_no,oil_name,detail')->select();
         $infoWarning = InfoWarning::where(['equ_key_no' => $equ_key_no])->field('oil_no')->order('del_warning_time desc')->find();
-        $OilDetail   = OilDetail::where(['unit' => 'L', 'oil_no' => $infoWarning->oil_no])->find();
+        $OilDetail   = OilDetail::where(['oil_no' => $infoWarning->oil_no])->find();
         $this->assign([
             'account'   => $this->account,
             'userId'    => $this->user_id,

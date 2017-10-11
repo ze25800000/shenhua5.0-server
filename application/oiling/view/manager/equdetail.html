@@ -41,7 +41,7 @@
                         </tr>
                         <tr class="rhd_xqb1a">
                             <th>单位：</th>
-                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="unit">*{$detail.unit}</td>
+                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="unit">*{$norms.unit}</td>
                             <th>更换最长周期：</th>
                             <td class="edit-item-standard" data-id="*{$detail.id}" data-key="period">*{$detail.period}</td>
                             <th>首保周期：</th>
@@ -213,7 +213,7 @@
                 </table>
             </div>
         </div>
-        *{if condition="$detail.unit=='L'"}
+        *{if condition="$norms.unit=='L'"}
         <div class="rhd_xqa">
             <h3>
                 <span class="rhd_xqa1">油脂化验指标：</span>
