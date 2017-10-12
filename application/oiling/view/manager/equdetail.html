@@ -339,6 +339,62 @@
 
             </div>
         </div>
+        <div class="rhd_xqa">
+            <h3>
+                <span class="rhd_xqa1">运行时间：</span>
+                *{if condition="$scope>=18"}
+                <span class="rhd_xqa2"><a href="javascript:;"
+                                          id="addWorkHour"
+                                          data-equ_no="*{$detail.equ_no}"
+                                          data-equ_name="*{$detail.equ_name}"
+                >【添加运行时间】</a></span>
+                *{/if}
+            </h3>
+            <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="num">ID</th>
+                        <th class="process">设备名称</th>
+                        <th class="process">运行起始时间</th>
+                        <th class="process">运行时长</th>
+                        *{if condition="$scope>=18"}
+                        <th class="operate">操作</th>
+                        *{/if}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    *{foreach $detail.time_list as $k=>$v}
+                    <tr>
+                        <td class="num">*{$k+1}</td>
+                        <td class="process">*{$v.equ_name}</td>
+                        <td class="process">*{$v.start_time|date="Y年m月d日",###}</td>
+                        <td class="process">*{$v.working_hour}</td>
+                        *{if condition="$scope>=18"}
+                        <td style="width: 30px; text-align: center;" class="operate table-operate del-td" data-id="*{$v.id}" data-type="workhour"></td>
+                        *{/if}
+                    </tr>
+                    *{/foreach}
+                    </tbody>
+                </table>
+            </div>
+            <div class="add-oil-analysis-box workhour">
+                <div class="oil-analysis-window">
+                    <h3>
+                        添加运行时间
+                    </h3>
+                    <div class="content">
+                        <p><span>起始日期：</span><input id="startTime" type="text" value=""></p>
+                        <p><span>运行时长：</span><input id="workingHour" type="text" value="360"></p>
+                    </div>
+                    <div class="box-bottom">
+                        <a href="javascript:;" class="workhour-confirm">确认</a>
+                        <a href="javascript:;" class="workhour-cancel">取消</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
         *{/if}
     </div>
     <div class="tanchuang">
@@ -625,7 +681,7 @@
         $('.confirm-del').click(function (e) {
             e.stopPropagation();
             var params = {
-                url: 'oiling/' + type + '/del/' + id + '?XDEBUG_SESSION_START=11353',
+                url: 'oiling/' + type + '/del/' + id + '?XDEBUG_SESSION_START=12443',
                 type: 'delete',
                 sCallback: function (data) {
                     _this.parent().parent().hide(200).remove();
@@ -708,19 +764,17 @@
         $('#startTime').val(formatDate(new Date(), 'yyyy年MM月dd日'));
         $('.workhour').show(100);
         var equNo = $(this).data('equ_no'),
-            equOilNo = $(this).data('equ_oil_no'),
-            equOilOame = $(this).data('equ_oil_name');
-        $('.workhour-confirm').click(function (e) {
+            equName = $(this).data('equ_name');
+        $('.workhour-confirm').unbind('click').click(function (e) {
             e.stopPropagation();
             var startTime = $('#startTime').val(),
                 workingHour = $('#workingHour').val(),
                 params = {
-                    url: 'oiling/workhour/add',
+                    url: 'oiling/workhour/add?XDEBUG_SESSION_START=18120',
                     type: 'post',
                     data: {
                         equ_no: equNo,
-                        equ_oil_no: equOilNo,
-                        equ_oil_name: equOilOame,
+                        equ_name: equName,
                         start_time: startTime,
                         working_hour: workingHour
                     },

@@ -16,11 +16,11 @@ use app\service\BaseController;
 use app\service\ExcelHandle;
 use app\validate\IDMustBePositiveInt;
 use app\validate\WorkHourValidate;
+use think\Db;
 
 class WorkHour extends BaseController {
     public function deleteWorkHourItemById($id) {
         (new IDMustBePositiveInt())->goCheck();
-        $excelHandle  = new ExcelHandle();
         $workHourItem = \app\model\WorkHour::get($id);
         $result       = $workHourItem->delete();
         if (!$result) {
@@ -28,25 +28,28 @@ class WorkHour extends BaseController {
                 'msg' => '删除运行时间失败'
             ]);
         }
-        $infoWarning = InfoWarning::where('equ_key_no', '=', $workHourItem->equ_key_no)
-            ->order('del_warning_time desc')
-            ->limit(1)
-            ->find();
-        if ($infoWarning) {
-            $howLong               = $excelHandle->howLong($workHourItem->equ_key_no, $infoWarning->del_warning_time);
-            $infoWarning->how_long = $howLong;
-            $infoWarning->status   = $excelHandle->getStatus($infoWarning, $howLong);
-            $infoWarning->deadline = $excelHandle->getDeadline($infoWarning, $howLong);
-            $infoWarning->save();
+        $excelHandle      = new ExcelHandle();
+        $sql              = "SELECT *
+                             FROM info_warning AS i1
+                             WHERE equ_no = 100 AND del_warning_time = (SELECT max(i2.del_warning_time)
+                                     FROM info_warning AS i2
+                                     WHERE i1.equ_key_no = i2.equ_key_no)";
+        $infoWarningList  = Db::query($sql);
+        $infoWarningModel = new InfoWarning();
+        foreach ($infoWarningList as $item) {
+            $howLong = $excelHandle->howLong($item);
+            $infoWarningModel->save([
+                'how_long' => $howLong,
+                'status'   => $excelHandle->getStatus($item, $howLong),
+                'deadline' => $excelHandle->getDeadline($item, $howLong)
+            ], ['id' => $item['id']]);
         }
         return $this->ajaxReturn('删除运行时间成功');
     }
 
     public function addWorkHourItem() {
         (new WorkHourValidate())->goCheck();
-        $excelHandle = new ExcelHandle();
 
-        $_POST['equ_key_no'] = $_POST['equ_no'] . config('salt') . $_POST['equ_oil_no'];
         $_POST['start_time'] = Tools::getTimestamp($_POST['start_time']);
         $workHour            = new \app\model\WorkHour($_POST);
         $result              = $workHour->save();
@@ -55,15 +58,42 @@ class WorkHour extends BaseController {
                 'msg' => '添加运行时间失败'
             ]);
         }
-        $infoWarning           = InfoWarning::where('equ_key_no', '=', $_POST['equ_key_no'])
-            ->order('del_warning_time desc')
-            ->limit(1)
-            ->find();
-        $howLong               = $excelHandle->howLong($_POST['equ_key_no'], $infoWarning->del_warning_time);
-        $infoWarning->how_long = $howLong;
-        $infoWarning->status   = $excelHandle->getStatus($infoWarning, $howLong);
-        $infoWarning->deadline = $excelHandle->getDeadline($infoWarning, $howLong);
-        $infoWarning->save();
+        $excelHandle      = new ExcelHandle();
+        $sql              = "SELECT *
+                             FROM info_warning AS i1
+                             WHERE equ_no = 100 AND del_warning_time = (SELECT max(i2.del_warning_time)
+                                     FROM info_warning AS i2
+                                     WHERE i1.equ_key_no = i2.equ_key_no)";
+        $infoWarningList  = Db::query($sql);
+        $infoWarningModel = new InfoWarning();
+        foreach ($infoWarningList as $item) {
+            $howLong = $excelHandle->howLong($item);
+            $infoWarningModel->save([
+                'how_long' => $howLong,
+                'status'   => $excelHandle->getStatus($item, $howLong),
+                'deadline' => $excelHandle->getDeadline($item, $howLong)
+            ], ['id' => $item['id']]);
+        }
+//        $this->changeInfoWarning();
         return $this->ajaxReturn('添加运行时间成功');
+    }
+
+    private function changeInfoWarning() {
+        $excelHandle      = new ExcelHandle();
+        $sql              = "SELECT *
+                             FROM info_warning AS i1
+                             WHERE equ_no = 100 AND del_warning_time = (SELECT max(i2.del_warning_time)
+                                     FROM info_warning AS i2
+                                     WHERE i1.equ_key_no = i2.equ_key_no)";
+        $infoWarningList  = Db::query($sql);
+        $infoWarningModel = new InfoWarning();
+        foreach ($infoWarningList as $item) {
+            $howLong = $excelHandle->howLong($item);
+            $infoWarningModel->save([
+                'how_long' => $howLong,
+                'status'   => $excelHandle->getStatus($item, $howLong),
+                'deadline' => $excelHandle->getDeadline($item, $howLong)
+            ], ['id' => $item['id']]);
+        }
     }
 }

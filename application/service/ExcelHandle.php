@@ -322,6 +322,9 @@ class ExcelHandle {
      */
     public function howLong($infoWarn) {
         $infoWarning = InfoWarning::where("equ_key_no={$infoWarn['equ_key_no']}")->order('del_warning_time desc')->limit(1)->find();
+        if (empty($infoWarning->oil_no)) {
+            return 0;
+        }
         $oilNo       = empty($infoWarn['oil_no']) ? $infoWarning->oil_no : $infoWarn['oil_no'];
         $OilDetail   = OilDetail::field('unit')->where(['oil_no' => $oilNo])->find();
         $warningType = empty($infoWarn['warning_type']) ? $infoWarning->warning_type : $infoWarn['warning_type'];
@@ -369,7 +372,7 @@ class ExcelHandle {
             //如果消警类型为延期，让保养周期和延期时长相加
             $duration = $infoWarn['warning_type'] ? $oilStandardItem['first_period'] : ($oilStandardItem['first_period'] + $infoWarn['postpone']);
             if ($howLong < $duration) {
-                if (($duration - $howLong) > $this->postpone['postpone']) {
+                if (($duration - $howLong) > $this->postpone) {
                     //正常
                     return 1;
                 } else {
@@ -383,7 +386,7 @@ class ExcelHandle {
         } else {
             $duration = $infoWarn['warning_type'] ? $oilStandardItem['period'] : $oilStandardItem['period'] + $infoWarn['postpone'];
             if ($howLong < $duration) {
-                if (($duration - $howLong) > $this->postpone['postpone']) {
+                if (($duration - $howLong) > $this->postpone) {
                     //正常
                     return 1;
                 } else {
