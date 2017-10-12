@@ -5,6 +5,9 @@
         height: 30px;
         line-height: 30px;
     }
+    th {
+        font-weight: bold;
+    }
 </style>
 <div id="container">
     <div id="hd">
@@ -104,45 +107,38 @@
                                     <table>
                                         <tr>
                                             <th>临近状态时长：</th>
-                                            <td class="edit-item" data-id="1" data-key="postpone">*{$config.postpone}
-                                            </td>
+                                            <td class="edit-item" data-id="1" data-key="postpone">*{$postpone.postpone}</td>
                                         </tr>
+                                    </table>
+                                    <table style="margin-top: 20px">
                                         <tr>
-                                            <th>Fe：</th>
-                                            <td class="edit-item" data-id="1" data-key="Fe">*{$config.Fe}</td>
+                                            <th class="process">物料编号</th>
+                                            <th class="process">物料名称</th>
+                                            <th class="time">物料描述</th>
+                                            <th class="process">Fe</th>
+                                            <th class="process">Cu</th>
+                                            <th class="process">Al</th>
+                                            <th class="process">Si</th>
+                                            <th class="process">Na</th>
+                                            <th class="process">PQ</th>
+                                            <th class="process">粘度最大值</th>
+                                            <th class="process">粘度最小值</th>
                                         </tr>
+                                        *{foreach $oilDetail as $item}
                                         <tr>
-                                            <th>Cu：</th>
-                                            <td class="edit-item" data-id="1" data-key="Cu">*{$config.Cu}</td>
+                                            <td class="process">*{$item.oil_no}</td>
+                                            <td class="process">*{$item.oil_name}</td>
+                                            <td class="time">*{$item.detail}</td>
+                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="Fe">*{$item.Fe}</td>
+                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="Cu">*{$item.Cu}</td>
+                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="Al">*{$item.Al}</td>
+                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="Si">*{$item.Si}</td>
+                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="Na">*{$item.Na}</td>
+                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="PQ">*{$item.PQ}</td>
+                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="viscosity_max">*{$item.viscosity_max}</td>
+                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="viscosity_min">*{$item.viscosity_min}</td>
                                         </tr>
-                                        <tr>
-                                            <th>Al：</th>
-                                            <td class="edit-item" data-id="1" data-key="Al">*{$config.Al}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Si：</th>
-                                            <td class="edit-item" data-id="1" data-key="Si">*{$config.Si}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Na：</th>
-                                            <td class="edit-item" data-id="1" data-key="Na">*{$config.Na}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>PQ：</th>
-                                            <td class="edit-item" data-id="1" data-key="pq">*{$config.pq}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>粘度最小值：</th>
-                                            <td class="edit-item" data-id="1" data-key="viscosity_min">
-                                                *{$config.viscosity_min}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>粘度最大值：</th>
-                                            <td class="edit-item" data-id="1" data-key="viscosity_max">
-                                                *{$config.viscosity_max}
-                                            </td>
-                                        </tr>
+                                        *{/foreach}
                                     </table>
                                 </div>
                             </div>
@@ -244,6 +240,8 @@
 <?php require(APP_PATH.'/oiling/view/user/common/exitDialog.html');?>
 <?php require(APP_PATH.'/oiling/view/user/common/footer.html');?>
 <script>
+    $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
+
     //选项卡
     $('.tab-pane li').click(function (e) {
         $(this).addClass('active').siblings().removeClass('active');
@@ -269,6 +267,26 @@
             if (err.phone) alert(err.phone);
         });
     });
+    $(document).on('dblclick', '.var-edit-item', function (e) {
+        var _this = $(this),
+            oldVal = _this.html(),
+            url = 'oiling/oildetail/edit/';
+        oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
+        var long = oldVal.length?(oldVal.length * 12):'20';
+        if (!/input/.test(oldVal)) {
+            _this.html('<input type="text" value="' + oldVal + '" style="width: 30px;height:16px;outline: none">');
+        }
+        var input = _this.find('input');
+        input.select();
+        window.base.editItemByDblClick(_this, input, oldVal, url, function () {
+//            window.location.reload();
+        }, function (err) {
+            if (err.account) alert(err.account);
+            if (err.name) alert(err.name);
+            if (err.phone) alert(err.phone);
+        });
+    });
+
     $(".title-list ul").on("click", "li", function () {
         var aIndex = $(this).index();
         $(this).addClass("current").siblings().removeClass("current");

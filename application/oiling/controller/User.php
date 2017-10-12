@@ -10,6 +10,7 @@ namespace app\oiling\controller;
 
 
 use app\model\OilConfig;
+use app\model\OilDetail;
 use app\service\BaseController;
 use app\model\User as UserModel;
 
@@ -30,14 +31,16 @@ class User extends BaseController {
     }
 
     public function system() {
-        $config = OilConfig::get(1);
-        $users  = UserModel::order('scope desc')->select();
+        $postpone  = OilConfig::get(1);
+        $OilDetail = OilDetail::where(['unit' => 'L'])->select();
+        $users     = UserModel::order('scope desc')->select();
         $this->assign([
-            'users'    => $users,
-            'config'   => $config,
-            'scope'    => $this->userScope,
-            'account'  => $this->account,
-            'userName' => $this->userName
+            'users'     => $users,
+            'postpone'  => $postpone,
+            'oilDetail' => $OilDetail,
+            'scope'     => $this->userScope,
+            'account'   => $this->account,
+            'userName'  => $this->userName
         ]);
         return $this->fetch();
     }
