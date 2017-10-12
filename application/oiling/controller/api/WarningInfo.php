@@ -92,9 +92,15 @@ class WarningInfo extends BaseController {
             ]);
         }
         $excelHandle       = new ExcelHandle();
-        $posts['how_long'] = $excelHandle->howLong($posts);
-        $posts['status']   = $excelHandle->getStatus($posts, $posts['how_long']);
-        $posts['deadline'] = $excelHandle->getDeadline($posts, $posts['how_long']);
+        $lastLubricate     = $infoWarningModel
+            ->where("equ_key_no={$posts['equ_key_no']}")
+            ->where('warning_type=1')
+            ->order('del_warning_time desc')
+            ->limit(1)
+            ->find();
+        $posts['how_long'] = $lastLubricate->how_long;
+        $posts['status']   = $excelHandle->getStatus($posts, $lastLubricate->how_long);
+        $posts['deadline'] = $excelHandle->getDeadline($posts, $lastLubricate->how_long);
         $InfoWarningItem   = $infoWarningModel
             ->where('equ_key_no', '=', $posts['equ_key_no'])
             ->where('del_warning_time', '=', $posts['del_warning_time'])

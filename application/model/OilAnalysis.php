@@ -101,56 +101,46 @@ class OilAnalysis extends BaseModel {
 
     public static function getElementValues($equKeyNo) {
         $elementList = self::where('equ_key_no', $equKeyNo)
-            ->field('Fe,Cu,Al,Si,Na,pq,viscosity,sampling_time')
+            ->field('Fe,Cu,Al,Si,Na,PQ,viscosity,sampling_time,oil_no')
             ->select();
         $collection  = array_slice(collection($elementList)->toArray(), -12);
-        $config      = OilConfig::get(1);
-        $dates       = Tools::listMoveToArray($collection, 'sampling_time', false);
-        $count       = count($collection);
-        $Fe          = [
-            'normal' => Tools::itemArray($config->Fe, $count),
-            'value'  => Tools::listMoveToArray($collection, 'Fe', false),
-            'date'   => $dates
-        ];
-        $Cu          = [
-            'normal' => Tools::itemArray($config->Cu, $count),
-            'value'  => Tools::listMoveToArray($collection, 'Cu', false),
-            'date'   => $dates,
-        ];
-        $Si          = [
-            'normal' => Tools::itemArray($config->Si, $count),
-            'value'  => Tools::listMoveToArray($collection, 'Si', false),
-            'date'   => $dates,
-        ];
-        $Al          = [
-            'normal' => Tools::itemArray($config->Al, $count),
-            'value'  => Tools::listMoveToArray($collection, 'Al', false),
-            'date'   => $dates,
-        ];
-        $Na          = [
-            'normal' => Tools::itemArray($config->Na, $count),
-            'value'  => Tools::listMoveToArray($collection, 'Na', false),
-            'date'   => $dates,
-        ];
-        $pq          = [
-            'normal' => Tools::itemArray($config->pq, $count),
-            'value'  => Tools::listMoveToArray($collection, 'pq', false),
-            'date'   => $dates,
-        ];
-        $viscosity   = [
-            'normalMax' => Tools::itemArray($config->viscosity_max, $count),
-            'normalMin' => Tools::itemArray($config->viscosity_min, $count),
-            'value'     => Tools::listMoveToArray($collection, 'viscosity', false),
-            'date'      => $dates,
-        ];
         return [
-            'Fe'        => $Fe,
-            'Cu'        => $Cu,
-            'Si'        => $Si,
-            'Al'        => $Al,
-            'Na'        => $Na,
-            'pq'        => $pq,
-            'viscosity' => $viscosity
+            'Fe'        => self::eleDetail($collection, 'Fe'),
+            'Cu'        => self::eleDetail($collection, 'Cu'),
+            'Si'        => self::eleDetail($collection, 'Si'),
+            'Al'        => self::eleDetail($collection, 'Al'),
+            'Na'        => self::eleDetail($collection, 'Na'),
+            'PQ'        => self::eleDetail($collection, 'PQ'),
+            'viscosity' => self::eleDetail($collection, 'viscosity')
         ];
+    }
+
+    public static function eleDetail($OilAnalysisList, $ele) {
+        $dates = Tools::listMoveToArray($OilAnalysisList, 'sampling_time', false);
+        if ($ele != 'viscosity') {
+            $arr = [
+                'normal' => self::config($OilAnalysisList, $ele),
+                'value'  => Tools::listMoveToArray($OilAnalysisList, $ele, false),
+                'date'   => $dates
+            ];
+        } else {
+            $arr = [
+                'normalMax' => self::config($OilAnalysisList, 'viscosity_max'),
+                'normalMin' => self::config($OilAnalysisList, 'viscosity_min'),
+                'value'     => Tools::listMoveToArray($OilAnalysisList, 'viscosity', false),
+                'date'      => $dates,
+            ];
+        }
+        return $arr;
+
+    }
+
+    public static function config($OilAnalysisList, $ele) {
+        $arr = [];
+        foreach ($OilAnalysisList as $item) {
+            $config = OilDetail::where(['unit' => 'L', 'oil_no' => $item['oil_no']])->find();
+            array_push($arr, $config->$ele);
+        }
+        return $arr;
     }
 }

@@ -41,7 +41,7 @@
                         </tr>
                         <tr class="rhd_xqb1a">
                             <th>单位：</th>
-                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="unit">*{$norms.unit}</td>
+                            <td class="" data-id="*{$detail.id}" data-key="unit">*{$detail.oil_no_unit['unit']}</td>
                             <th>更换最长周期：</th>
                             <td class="edit-item-standard" data-id="*{$detail.id}" data-key="period">*{$detail.period}</td>
                             <th>首保周期：</th>
@@ -555,7 +555,7 @@
                 isFirstPeriod = $('#RunHuaRadioYes').attr('checked') ? 1 : 0,
                 delWarningTime = $('.oiling-time').val().replace(/^\s+|\s+$/gm, '');
             var params = {
-                url: 'oiling/info/lubricate',
+                url: 'oiling/info/lubricate?XDEBUG_SESSION_START=18306',
                 type: 'post',
                 data: {
                     id: id,
@@ -600,7 +600,7 @@
                 isFirstPeriod = $('#YanQiRadioYes').attr('checked') ? 1 : 0,
                 postponeReason = $('.postpone-reason').val();
             var params = {
-                url: 'oiling/info/postpone?XDEBUG_SESSION_START=11295',
+                url: 'oiling/info/postpone?XDEBUG_SESSION_START=18306',
                 type: 'post',
                 data: {
                     id: id,
@@ -681,7 +681,7 @@
         $('.confirm-del').click(function (e) {
             e.stopPropagation();
             var params = {
-                url: 'oiling/' + type + '/del/' + id + '?XDEBUG_SESSION_START=12443',
+                url: 'oiling/' + type + '/del/' + id + '?XDEBUG_SESSION_START=18306',
                 type: 'delete',
                 sCallback: function (data) {
                     _this.parent().parent().hide(200).remove();
@@ -704,7 +704,7 @@
             equOilNo = $(this).data('equ_oil_no'),
             equName = $(this).data('equ_name'),
             equOilOame = $(this).data('equ_oil_name');
-        $('.oil-analysis-confirm').click(function (event) {
+        $('.oil-analysis-confirm').unbind('click').click(function (event) {
             event.stopPropagation();
             var samplingTime = $("#samplingTime").val(),
                 Fe = $("#Fe").val(),
@@ -715,7 +715,7 @@
                 PQ = $("#PQ").val(),
                 viscosity = $("#viscosity").val(),
                 params = {
-                    url: 'oiling/analysis/add',
+                    url: 'oiling/analysis/add?XDEBUG_SESSION_START=18306',
                     type: 'post',
                     data: {
                         equ_no: equNo,
@@ -826,8 +826,7 @@
 
                         ]
                     };
-                }
-                if(ele=='viscosity') {
+                } else {
                     var chartData = {
                         labels: eleVal[ele].date,
                         datasets: [

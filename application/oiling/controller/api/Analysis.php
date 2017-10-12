@@ -69,10 +69,10 @@ class Analysis extends BaseController {
         $excelHandle            = new ExcelHandle();
         $_POST['equ_key_no']    = $_POST['equ_no'] . config('salt') . $_POST['equ_oil_no'];
         $_POST['sampling_time'] = Tools::getTimestamp($_POST['sampling_time']);
-        $_POST['work_hour']     = $excelHandle->howLong($_POST['equ_key_no'], $_POST['sampling_time']);
         $_POST['oil_no']        = $excelHandle->getOilNoFromInfo($_POST['equ_key_no']);
         $_POST['oil_status']    = implode('<br>', $excelHandle->getOilStatus($_POST));
         $_POST['advise']        = empty($_POST['oil_status']) ? 1 : 0;
+        $_POST['work_hour']     = $excelHandle->howLong($_POST);
         $OilAnalysis            = new OilAnalysis($_POST);
         $MaxSamplingTime        = $OilAnalysis
             ->where('equ_key_no', '=', $_POST['equ_key_no'])

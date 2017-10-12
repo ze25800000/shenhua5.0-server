@@ -10,6 +10,10 @@ class OilStandard extends BaseModel {
         return $this->hasMany('OilNoList', 'equ_key_no', 'equ_key_no');
     }
 
+    public function oilNoUnit() {
+        return $this->belongsTo('OilDetail', 'oil_no', 'oil_no');
+    }
+
     public function infoWarningDetail() {
         return $this->hasMany('InfoWarning', 'equ_key_no', 'equ_key_no');
     }
@@ -24,6 +28,7 @@ class OilStandard extends BaseModel {
 
     public static function getEquipmentByKeyNo($equ_key_no) {
         return self::with([
+            'oilNoUnit',
             'infoWarningDetail' => function ($query) {
                 $query->with(['user'])
                     ->order('del_warning_time', 'desc')
