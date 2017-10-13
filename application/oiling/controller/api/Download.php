@@ -71,20 +71,34 @@ class Download extends BaseController {
         $afterDate  = date('Y年m月', $after);
         switch (input('get.type')) {
             case 'oil':
-                $fileName    = $beforeDate . '至' . $afterDate . '保养成本统计';
+                $fileName    = $beforeDate . '至' . $afterDate . '保养成本统计结果';
                 $costDetails = OilDetail::getCostList($before, $after);
-                $tatal       = Tools::listMoveToArray($costDetails, 'total');
+                $total       = Tools::listMoveToArray($costDetails, 'total');
                 $cost        = 0;
-                foreach ($tatal as $value) {
+                foreach ($total as $value) {
                     $cost += $value;
                 }
-                $content = [['物料编号', '油品名称', '物料描述', '单位', '单价(元)', '用量', '总计(元)']];
+                $content = [[$fileName, '', '', '', '', '', ''], ['物料编号', '油品名称', '物料描述', '单位', '单价(元)', '用量', '总计(元)']];
                 foreach ($costDetails as $k => $v) {
                     array_push($content, [$v->oil_no, $v->oil_name, $v->detail, $v->unit, $v->price, $v['how_much'], $v['total']]);
                 }
-                array_push($content, ['', '', '', '', '', $beforeDate . '至' . $afterDate . '总计：', $cost]);
+                array_push($content, ['', '', '', '', '', '', $cost]);
                 break;
             case 'equ':
+                $equNo    = input('get.equ_no');
+                $x        = $equNo == 'all' ? '全部设备' : ($equNo . '号设备');
+                $fileName = $beforeDate . '至' . $afterDate . $x . '的保养成本统计结果';
+                $infoWarn = OilDetail::getEquCostList($before, $after, $equNo);
+                $total    = Tools::listMoveToArray($infoWarn, 'total');
+                $cost     = 0;
+                foreach ($total as $value) {
+                    $cost += $value;
+                }
+                $content = [[$fileName, '', '', '', '', '', '', '', '', ''], ['设备编号', '润滑点编号', '润滑点名称', '物料编号', '物料名称', '物料描述', '单位', '单价(元)', '用量', '总计(元)']];
+                foreach ($infoWarn as $k => $v) {
+                    array_push($content, [$v['equ_no'], $v['equ_oil_no'], $v['equ_oil_name'], $v['oil_no'], $v['oil_name'], $v['detail'], $v['unit'], $v['price'], $v['how_much'], $v['total']]);
+                }
+                array_push($content, ['', '', '', '', '', '', '', '', '', $cost]);
                 break;
             default:
                 break;
