@@ -10,8 +10,10 @@ namespace app\oiling\controller\api;
 
 
 use app\lib\exception\DocumentException;
+use app\lib\tools\Tools;
 use app\model\InfoWarning;
 use app\model\OilAnalysis;
+use app\model\OilDetail;
 use app\service\BaseController;
 use app\service\ExcelHandle;
 use app\validate\IDCollection;
@@ -47,13 +49,13 @@ class Download extends BaseController {
                         'work_hour'     => $v['work_hour'] ? $v['work_hour'] : '0',
                         'oil_no'        => $v['oil_no'],
                         'oil_name'      => $v['oil_name'],
-                        'Fe'            => $v['Fe']==0 ? '0.00' : $v['Fe'],
-                        'Cu'            => $v['Cu']==0 ? '0.00' : $v['Cu'],
-                        'Al'            => $v['Al']==0 ? '0.00' : $v['Al'],
-                        'Si'            => $v['Si']==0 ? '0.00' : $v['Si'],
-                        'Na'            => $v['Na']==0 ? '0.00' : $v['Na'],
-                        'pq'            => $v['pq']==0 ? '0.00' : $v['pq'],
-                        'viscosity'     => $v['viscosity']==0 ? '0.00' : $v['viscosity'],
+                        'Fe'            => $v['Fe'] == 0 ? '0.00' : $v['Fe'],
+                        'Cu'            => $v['Cu'] == 0 ? '0.00' : $v['Cu'],
+                        'Al'            => $v['Al'] == 0 ? '0.00' : $v['Al'],
+                        'Si'            => $v['Si'] == 0 ? '0.00' : $v['Si'],
+                        'Na'            => $v['Na'] == 0 ? '0.00' : $v['Na'],
+                        'pq'            => $v['pq'] == 0 ? '0.00' : $v['pq'],
+                        'viscosity'     => $v['viscosity'] == 0 ? '0.00' : $v['viscosity'],
                         'oil_status'    => str_replace('<br>', '，', $v['oil_status']),
                         'advise'        => $v['advise'] ? '正常使用' : '建议更换',
                     ];
@@ -64,60 +66,30 @@ class Download extends BaseController {
         $excelHandle->downloadExcel($tableHeader, $excelTypeCh);
     }
 
-    public function downloadTemplate() {
-        $excelType = input('get.exceltype');
-        switch ($excelType) {
-            case 'workhour':
-                $excelTypeCh = '运行时间';
-                $data        = [
-                    ['设备编号', '润滑点编号', '润滑点(全称)', '运行时长', '起始日期'],
-                    ['100', '1', '一号破碎站板式给料机左侧电动机前端轴承', '360', '2001年3月14日'],
-                    ['100', '2', '一号破碎站板式给料机左侧电动机前端轴承', '360', '2001年3月14日'],
-                    ['100', '3', '一号破碎站板式给料机左侧电动机前端轴承', '360', '2001年3月14日'],
-                ];
+    public function downloadCostListByDate($before, $after) {
+        $beforeDate = date('Y年m月', $before);
+        $afterDate  = date('Y年m月', $after);
+        switch (input('get.type')) {
+            case 'oil':
+                $fileName    = $beforeDate . '至' . $afterDate . '保养成本统计';
+                $costDetails = OilDetail::getCostList($before, $after);
+                $tatal       = Tools::listMoveToArray($costDetails, 'total');
+                $cost        = 0;
+                foreach ($tatal as $value) {
+                    $cost += $value;
+                }
+                $content = [['物料编号', '油品名称', '物料描述', '单位', '单价(元)', '用量', '总计(元)']];
+                foreach ($costDetails as $k => $v) {
+                    array_push($content, [$v->oil_no, $v->oil_name, $v->detail, $v->unit, $v->price, $v['how_much'], $v['total']]);
+                }
+                array_push($content, ['', '', '', '', '', $beforeDate . '至' . $afterDate . '总计：', $cost]);
                 break;
-            case 'warninginfo':
-                $excelTypeCh = '消警记录';
-                $data        = [
-                    ['设备编号', '润滑点编号', '设备名称', '润滑点(全称)', '消警日期', '是否在首保周期(是|否)', '消警类型(润滑|延期)', '延期时长(选填)', '延期原因(选填)', '物料编号(选填)', '用量(选填)'],
-                    ['100', '1', '一号破碎站', '一号破碎站板式给料机左侧电动机前端轴承', '2001年3月14日', '否', '润滑', '', '', '1071231', '100'],
-                    ['100', '2', '一号破碎站', '一号破碎站板式给料机左侧电动机前端轴承', '2001年3月14日', '否', '润滑', '', '', '1071231', '100'],
-                    ['100', '3', '一号破碎站', '一号破碎站板式给料机左侧电动机前端轴承', '2001年3月14日', '是', '延期', '300', '设备维修', '', ''],
-                    ['100', '4', '一号破碎站', '一号破碎站板式给料机左侧电动机前端轴承', '2001年3月14日', '否', '延期', '300', '设备维修', '', ''],
-                ];
-                break;
-            case 'oilstandard':
-                $excelTypeCh = '设备润滑标准';
-                $data        = [
-                    ['设备编号', '润滑点编号', '设备名称', '润滑点(全称)', '物料编号', '用量', '单位', '首保周期', '最长保养周期', '采样间隔'],
-                    ['100', '1', '一号破碎站', '一号破碎站板式给料机左侧电动机前端轴承', '1071231', '100', 'KG', '500', '3500', '500'],
-                    ['100', '2', '一号破碎站', '一号破碎站板式给料机左侧电动机前端轴承', '1071231', '100', 'L', '500', '3500', '500'],
-                    ['100', '3', '一号破碎站', '一号破碎站板式给料机左侧电动机前端轴承', '1071231', '100', 'KG', '500', '3500', '500'],
-                ];
-                break;
-            case 'oilanalysis':
-                $excelTypeCh = '油脂化验指标';
-                $data        = [
-                    ['设备编号', '润滑点编号', '设备名称', '润滑点(全称)', '采样时间', 'Fe', 'Cu', 'Al', 'Si', 'Na', 'PQ', '粘度'],
-                    ['100', '1', '一号破碎站', '一号破碎站板式给料机左侧电动机前端轴承', '2001年3月14日', '12.1', '10.1', '2.54', '2.36', '1.22', '10.2', '15']
-                ];
-                break;
-            case 'oildetail':
-                $excelTypeCh = '润滑保养成本';
-                $data        = [
-                    ['物料编号', '名称', '物料描述', '单位', '单价(元)'],
-                    ['10209358', '抗磨液压油', 'DTE 25;VG46;1×208L\美孚', 'L', '20.56'],
-                    ['10209348', '抗磨液压油', 'DTE 10 超凡 15;VG15;1×208L\美孚', 'L', '20.56']
-                ];
+            case 'equ':
                 break;
             default:
-                throw new DocumentException([
-                    'msg' => '没有找到对应的模板文件类型'
-                ]);
                 break;
         }
         $excelHandle = new ExcelHandle();
-        $excelHandle->downloadExcel($data, $excelTypeCh);
-
+        $excelHandle->downloadExcel($content, $fileName);
     }
 }

@@ -68,11 +68,14 @@ Route::group('oiling/analysis', function () {
 
 //设备成本管理
 Route::group('oiling/oildetail', function () {
+    Route::get('download/:before/:after', 'oiling/api.Download/downloadCostListByDate');
     Route::get('search/:keyword', 'oiling/api.Search/getListByKeyword');
     Route::get('equname/:oil_no', 'oiling/api.OilDetailCost/getEquOilNameByOilNo');
+    Route::get('equcostlist/:before/:after', 'oiling/api.OilDetailCost/getEquCostListByDate');
     Route::get('costlist/:before/:after', 'oiling/api.OilDetailCost/getCostListByDate');
     Route::post('edit/:id', 'oiling/api.OilDetailCost/editOilDetailItemById');
     Route::delete('delete/:id', 'oiling/api.OilDetailCost/deleteOilDetailItemById');
+    Route::get('equ', 'oiling/Manager/oildetailbyequ');
     Route::get('', 'oiling/Manager/oildetail');
 });
 

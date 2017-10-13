@@ -23,6 +23,10 @@ class OilDetailCost extends BaseController {
         return $this->ajaxReturn('success', 0, $temp);
     }
 
+    public function getEquCostListByDate($before, $after) {
+        $temp = OilDetail::getEquCostList($before, $after);
+
+    }
     public function editOilDetailItemById($id) {
         (new IDMustBePositiveInt())->goCheck();
         $model  = OilDetail::get($id);

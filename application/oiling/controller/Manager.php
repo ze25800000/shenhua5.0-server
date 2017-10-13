@@ -85,8 +85,16 @@ class Manager extends BaseController {
             'detail'    => $result,
             'scope'     => $this->userScope,
             'postpone'  => $postpone->postpone,
-            'norms'     => empty($OilDetail)?null:$OilDetail,
+            'norms'     => empty($OilDetail) ? null : $OilDetail,
             'oilNoList' => $oilNoList
+        ]);
+        return $this->fetch();
+    }
+
+    public function oildetailbyequ() {
+        $this->assign([
+            'scope'   => $this->userScope,
+            'account' => $this->account,
         ]);
         return $this->fetch();
     }

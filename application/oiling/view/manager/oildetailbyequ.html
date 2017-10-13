@@ -50,7 +50,7 @@
                 *{if condition="$scope>=18"}
                 <div class="title">
                     <div class="check-content btn-type">
-                        <span class="check-info"><a href="/oiling/oildetail/equ">按设备统计</a></span>
+                        <span class="check-info"><a href="/oiling/oildetail">按物料统计</a></span>
                     </div>
                     <div class="uploader orange oildetail">
                         <form>
@@ -82,6 +82,14 @@
                         <div class="query-btn ue-clear cost-confirm">
                             <a href="javascript:;" class="confirm">查询</a>
                         </div>
+                        <div class="choose-equ">
+                            <select name="" id="">
+                                <option value="">全部设备</option>
+                                <option value="">一号破碎站</option>
+                                <option value="">一号破碎站</option>
+                                <option value="">一号破碎站</option>
+                            </select>
+                        </div>
                         <div class="query-btn ue-clear cost-confirm">
                             <a href="JavaScript:;" class="confirm" id="download">下载</a>
                         </div>
@@ -98,6 +106,9 @@
                             <thead>
                             <tr>
 
+                                <th class="process">设备编号</th>
+                                <th class="process">润滑点编号</th>
+                                <th class="process">润滑点名称</th>
                                 <th class="process">物料编号</th>
                                 <th class="process">油品名称</th>
                                 <th class="node">物料描述</th>
