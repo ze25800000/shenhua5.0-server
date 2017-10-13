@@ -19,19 +19,19 @@
                 <h2 class="sidebar-header"><p>功能导航</p></h2>
                 <ul class="nav">
                     <li class="office">
-                        <div class="nav-header"><a href="standard" class="ue-clear"><span>设备润滑标准</span><i
+                        <div class="nav-header"><a href="/oiling/standard" class="ue-clear"><span>设备润滑标准</span><i
                                 class="icon"></i></a></div>
                     </li>
                     <li class="gongwen">
-                        <div class="nav-header"><a href="info" class="ue-clear"><span>润滑提示与记录</span><i
+                        <div class="nav-header"><a href="/oiling/info" class="ue-clear"><span>润滑提示与记录</span><i
                                 class="icon"></i></a></div>
                     </li>
                     <li class="nav-info">
-                        <div class="nav-header"><a href="analysis" class="ue-clear"><span>油脂化验指标分析</span><i
+                        <div class="nav-header"><a href="/oiling/analysis" class="ue-clear"><span>油脂化验指标分析</span><i
                                 class="icon"></i></a></div>
                     </li>
                     <li class="konwledge current">
-                        <div class="nav-header"><a href="oildetail" class="ue-clear"><span>润滑保养成本管理</span><i
+                        <div class="nav-header"><a href="/oiling/oildetail" class="ue-clear"><span>润滑保养成本管理</span><i
                                 class="icon"></i></a></div>
                     </li>
                 </ul>
@@ -79,16 +79,16 @@
                                 <i class="icon"></i>
                             </div>
                         </div>
+                        <div class="choose-equ">
+                            <select>
+                                <option value="all">全部设备</option>
+                                *{foreach $equs as $v}
+                                <option value="*{$v.equ_no}">*{$v.equ_name}</option>
+                                *{/foreach}
+                            </select>
+                        </div>
                         <div class="query-btn ue-clear cost-confirm">
                             <a href="javascript:;" class="confirm">查询</a>
-                        </div>
-                        <div class="choose-equ">
-                            <select name="" id="">
-                                <option value="">全部设备</option>
-                                <option value="">一号破碎站</option>
-                                <option value="">一号破碎站</option>
-                                <option value="">一号破碎站</option>
-                            </select>
                         </div>
                         <div class="query-btn ue-clear cost-confirm">
                             <a href="JavaScript:;" class="confirm" id="download">下载</a>
@@ -108,15 +108,14 @@
 
                                 <th class="process">设备编号</th>
                                 <th class="process">润滑点编号</th>
-                                <th class="process">润滑点名称</th>
+                                <th class="time">润滑点名称</th>
                                 <th class="process">物料编号</th>
                                 <th class="process">油品名称</th>
-                                <th class="node">物料描述</th>
+                                <th class="time">物料描述</th>
                                 <th class="process">单位</th>
                                 <th class="process">单价(元)</th>
                                 <th class="process">用量</th>
                                 <th class="process">总计(元)</th>
-                                <th class="operate">操作</th>
                             </tr>
                             </thead>
                             <tbody id="costTbody">
@@ -125,26 +124,24 @@
                             <script type="text/html" id="costTemplate">
                                 {{each(i,item) data}}
                                 <tr>
-                                    <td class="process edit-item" data-id="${item.id}" data-key="oil_no">
-                                        ${item.oil_no}
+                                    <td class="process" data-id="${item.id}" data-key="equ_no">
+                                        ${item.equ_no}
                                     </td>
-                                    <td class="process edit-item" data-id="${item.id}" data-key="oil_name">
-                                        ${item.oil_name}
+                                    <td class="process" data-id="${item.id}" data-key="equ_oil_no">
+                                        ${item.equ_oil_no}
                                     </td>
-                                    <td class="node edit-item" data-id="${item.id}" data-key="detail">
-                                        ${item.detail}
+                                    <td class="time" data-id="${item.id}" data-key="equ_oil_name">
+                                        ${item.equ_oil_name}
                                     </td>
-                                    <td class="process edit-item" data-id="${item.id}" data-key="unit">${item.unit}</td>
-                                    <td class="process edit-item" data-id="${item.id}" data-key="price">
-                                        ${item.price}
+                                    <td class="process" data-id="${item.id}" data-key="oil_no">${item.oil_no}</td>
+                                    <td class="process" data-id="${item.id}" data-key="oil_name">${item.oil_name}</td>
+                                    <td class="time" data-id="${item.id}" data-key="detail">${item.detail}</td>
+                                    <td class="process" data-id="${item.id}" data-key="unit">
+                                        ${item.unit}
                                     </td>
-                                    <td class="process ">${item.how_much}</td>
+                                    <td class="process ">${item.price}</td>
+                                    <td class="process total">${item.how_much}</td>
                                     <td class="process total">${item.total}</td>
-                                    <td class="operate table-operate">
-                                        <a class="edit getEquName" data-oil_no="${item.oil_no}"
-                                           href="javascript:;">查看</a>
-                                        <a class="del delOilDetailItem" data-id="${item.id}" href="javascript:;">删除</a>
-                                    </td>
                                 </tr>
                                 {{/each}}
                             </script>
@@ -244,15 +241,16 @@
         });
         var before = (new Date($('#monthly1').val()).getTime()) / 1000;
         var after = (new Date($('#monthly2').val()).getTime()) / 1000;
-        costList(before, after);
+        costList(before, after, 'all');
 
-        function costList(before, after) {
+        function costList(before, after, equNo) {
             if (before >= after) {
                 alert('时间输入有误');
                 return false;
             }
+            var url = '/oiling/oildetail/equcostlist/' + before + '/' + after + '?equ_no=' + equNo;
             var params = {
-                url: '/oiling/oildetail/costlist/' + before + '/' + after,
+                url: url + '&XDEBUG_SESSION_START=16733',
                 sCallback: function (list) {
                     $(document).find('#costTbody').html('');
                     $('#costTemplate').tmpl(list).appendTo('#costTbody');
@@ -277,102 +275,14 @@
         $('.cost-confirm').click(function () {
             var before = (new Date($('#monthly1').val()).getTime()) / 1000;
             var after = (new Date($('#monthly2').val()).getTime()) / 1000;
-            costList(before, after);
-        });
-        //编辑润滑标准条目信息
-        $(document).on('dblclick', '.edit-item', function (e) {
-            var _this = $(this),
-                oldVal = _this.html(),
-                url = '/oiling/oildetail/edit/';
-            oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
-            var long = oldVal.length ? (oldVal.length * 12) : '20';
-            if (!/input/.test(oldVal)) {
-                _this.html('<input type="text" value="' + oldVal + '" style="width: ' + long + 'px">');
-            }
-            var input = _this.find('input');
-            input.select();
-            window.base.editItemByDblClick(_this, input, oldVal, url);
-        });
-        $(document).on('click', '.getEquName', function () {
-            $('#tanBody').html('');
-            var oilNo = $(this).data('oil_no'),
-                params = {
-                    url: 'oiling/oildetail/equname/' + oilNo,
-                    sCallback: function (list) {
-                        $('.tanchuang-equlist').show(100);
-                        $('#tanList').tmpl(list).appendTo('#tanBody');
-                    },
-                    eCallback: function (err) {
-
-                    }
-                };
-            window.base.getData(params);
-
-        });
-        $(document).on('click', '.delOilDetailItem', function () {
-            $('.tanchuang .hintl').show(100);
-            var id = $(this).data('id'),
-                _this = $(this);
-            $('.confirm-del').unbind('click').click(function (e) {
-                $('.tanchuang .hintl').hide(100);
-                e.stopPropagation();
-                var params = {
-                    url: '/oiling/oildetail/delete/' + id,
-                    type: 'delete',
-                    sCallback: function (data) {
-                        _this.parent().parent().hide(200).remove();
-                    }
-                };
-                window.base.getData(params);
-            });
-        });
-        $('.upload').click(function () {
-            var param = $(this).data('param');
-            var params = {
-                url: "/oiling/upload?" + param,
-                data: new FormData($(this).parent()[0]),
-                sCallback: function () {
-                    alert('上传成功');
-                    window.location.reload();
-                },
-                eCallback: function (err) {
-                    if (err.errcode == 2) {
-                        err.msg && alert(err.msg);
-                    }
-                }
-            }
-            window.base.uploadFile(params);
-        });
-        //搜索
-        $(document).on("keyup", '.search-input', function (e) {
-            var val = $(this).val();
-            if (e.keyCode == 8 && !val) {
-                document.getElementById('costTbody').innerHTML = oldHtml;
-                var newHtml = $('#costTbody').html();
-                return false;
-            }
-            var params = {
-                url: 'oiling/oildetail/search/' + val,
-                sCallback: function (list) {
-                    if (newHtml == oldHtml) {
-                        return false;
-                    } else {
-                        if (list.errcode === 0) {
-                            $('#costTbody').html('');
-                            $('#costTemplate').tmpl(list).appendTo('#costTbody');
-                            $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
-                        }
-                    }
-                }
-            };
-            if (val) {
-                window.base.getData(params);
-            }
+            var equNo = $('select').val();
+            costList(before, after, equNo);
         });
         $(document).on('click', '#download', function () {
             var before = (new Date($('#monthly1').val()).getTime()) / 1000;
             var after = (new Date($('#monthly2').val()).getTime()) / 1000;
-            window.location.href = '/oiling/oildetail/download/' + before + '/' + after + '?type=oil';
+            var equNo = $('select').val();
+            window.location.href = '/oiling/oildetail/download/' + before + '/' + after + '?type=equ&equ_no=' + equNo;
         });
     });
 </script>

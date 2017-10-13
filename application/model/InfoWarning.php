@@ -15,6 +15,10 @@ class InfoWarning extends BaseModel {
         return $this->hasOne('user', 'id', 'user_id');
     }
 
+    public function oilDetail() {
+        return $this->belongsTo('OilDetail', 'oil_no', 'oil_no');
+    }
+
     public static function getWarningMessage() {
         $sql    = "SELECT *
                     FROM info_warning AS a

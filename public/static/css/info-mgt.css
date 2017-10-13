@@ -294,9 +294,9 @@ body {
 .choose-equ select {
     border: 1px solid #D3D3D3;
     height: 30px;
-    margin-top: 6px;
-    margin-left: 10px;
-    margin-right: 23px;
+    margin-top: 7px;
+    margin-left: -6px;
+    margin-right: 17px;
     outline: none;
 }
 
