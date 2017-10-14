@@ -327,7 +327,7 @@ class ExcelHandle {
         }
         $oilNo       = empty($infoWarn['oil_no']) ? $infoWarning->oil_no : $infoWarn['oil_no'];
         $OilDetail   = OilDetail::field('unit')->where(['oil_no' => $oilNo])->find();
-        $warningType = (empty($infoWarn['warning_type']) || ($infoWarn['warning_type'] != 0)) ? $infoWarning->warning_type : $infoWarn['warning_type'];
+        $warningType = (empty($infoWarn['warning_type']) && ($infoWarn['warning_type'] != 0)) ? $infoWarning->warning_type : $infoWarn['warning_type'];
         if (!$OilDetail && $warningType == 1) {
             throw new DocumentException([
                 'msg' => '物料编号不存在'

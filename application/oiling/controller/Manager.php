@@ -64,9 +64,11 @@ class Manager extends BaseController {
     }
 
     public function oildetail() {
+        $equs = InfoWarning::field('equ_no,equ_name')->group('equ_no')->select();
         $this->assign([
             'scope'   => $this->userScope,
             'account' => $this->account,
+            'equs'    => $equs
         ]);
         return $this->fetch();
     }

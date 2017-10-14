@@ -68,11 +68,12 @@ class BaseController extends Controller {
         }
     }
 
-    public function ajaxReturn($msg = '', $errcode = 0, $data = []) {
+    public function ajaxReturn($msg = '', $errcode = 0, $data = [], $else = []) {
         $arr = [
             'msg'     => $msg,
             'errcode' => $errcode,
-            'data'    => $data
+            'data'    => $data,
+            'else'    => $else
         ];
         if (empty($data)) {
             unset($arr['data']);

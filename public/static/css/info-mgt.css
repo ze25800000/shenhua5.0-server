@@ -1233,7 +1233,7 @@ button {
 
 .tanchuang-equlist .tan-box {
     width: 400px;
-    max-height: 800px;
+    max-height: 500px;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -1243,6 +1243,11 @@ button {
     padding: 20px 20px 20px 20px;
     border: 3px solid #f06518;
     border-radius: 5px;
+}
+
+.tanchuang-equlist .tan-box .inner-box {
+    overflow-y: auto;
+    max-height: 500px
 }
 
 .tanchuang-equlist .tan-box .hint3 {

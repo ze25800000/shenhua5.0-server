@@ -37,7 +37,7 @@ class Admin extends BaseController {
         } catch (Exception $e) {
             $this->error('执行失败');
         }
-        $this->success('执行成功');
+        $this->success('执行成功','/');
     }
 
     public function deleteRecentUploadData() {

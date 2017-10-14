@@ -43,7 +43,7 @@ class WarningInfo extends BaseController {
     public function lubricate() {
         (new LubricateValidate())->goCheck();
         $posts                     = input('post.');
-        $posts['del_warning_time'] = Tools::getTimestamp($posts['del_warning_time']);
+        $posts['del_warning_time'] = Tools::getTimestamp($posts['del_warning_time'])+86399;
         $posts['equ_key_no']       = $posts['equ_no'] . config('salt') . $posts['equ_oil_no'];
         $infoWarningModel          = new InfoWarning();
         $maxDelTime                = $infoWarningModel

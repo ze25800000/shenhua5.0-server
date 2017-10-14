@@ -18,9 +18,9 @@ class Tools {
     public static function listMoveToArray($arr, $str, $isUnique = true) {
         $result = [];
         foreach ($arr as $k => $v) {
-            if (!empty($v[$str])) {
+
                 array_push($result, $v[$str]);
-            }
+
         }
         if ($isUnique) {
             return array_unique($result);

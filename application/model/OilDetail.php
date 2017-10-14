@@ -9,6 +9,7 @@
 namespace app\model;
 
 
+use app\lib\tools\Tools;
 use think\Db;
 
 class OilDetail extends BaseModel {
@@ -18,21 +19,35 @@ class OilDetail extends BaseModel {
         return $this->hasMany('InfoWarning', 'oil_no', 'oil_no');
     }
 
-    public static function getCostList($before, $after) {
-        $result = self::with(['infowarning'])->select();
-        foreach ($result as $v) {
-            $howMuch = 0;
-            if (!empty($v['infowarning'])) {
-                foreach ($v['infowarning'] as $vv) {
-                    if ($vv['del_warning_time'] >= $before && $vv['del_warning_time'] <= $after) {
-                        $howMuch += $vv['quantity'];
-                    }
-                }
+    public static function getCostList($before, $after, $equNo = 'all') {
+        $equNo     = $equNo == 'all' ? null : " AND equ_no={$equNo}";
+        $sql       = "SELECT
+                      oil_no,
+                      oil_name,
+                      detail,
+                      unit,
+                      price
+                      FROM oil_detail";
+        $oilDetail = Db::query($sql);
+        foreach ($oilDetail as $k => $v) {
+            $sql = "SELECT equ_oil_name,del_warning_time,quantity
+                    FROM info_warning
+                    WHERE del_warning_time BETWEEN $before AND $after AND warning_type = 1 AND oil_no = {$v['oil_no']}" . $equNo . "
+                    ORDER BY equ_no asc,equ_oil_no asc;";
+
+            $infoWarn = Db::query($sql);
+
+            $oilDetail[$k]['how_much'] = 0;
+            $oilDetail[$k]['total']    = 0;
+            $oilDetail[$k]['equs']     = [];
+            foreach ($infoWarn as &$vv) {
+                $oilDetail[$k]['how_much'] += $vv['quantity'];
+                $oilDetail[$k]['total']    = $v['price'] * $oilDetail[$k]['how_much'];
+                array_push($oilDetail[$k]['equs'], $vv);
             }
-            $v['how_much'] = $howMuch;
-            $v['total']    = $howMuch * $v['price'];
         }
-        return $result;
+        return $oilDetail;
+
     }
 
     public static function getEquCostList($before, $after, $equNo) {
@@ -44,7 +59,7 @@ class OilDetail extends BaseModel {
                     oil_no,
                     sum(quantity) AS how_much
                     FROM info_warning
-                    WHERE warning_type = 1 AND del_warning_time BETWEEN $before AND $after" . $equNo . " 
+                    WHERE del_warning_time BETWEEN $before AND $after AND warning_type = 1" . $equNo . " 
                     GROUP BY equ_key_no 
                     ORDER BY equ_no asc,equ_oil_no asc";
         $infoWarns = Db::query($sql);

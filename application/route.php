@@ -70,7 +70,7 @@ Route::group('oiling/analysis', function () {
 Route::group('oiling/oildetail', function () {
     Route::get('download/:before/:after', 'oiling/api.Download/downloadCostListByDate');
     Route::get('search/:keyword', 'oiling/api.Search/getListByKeyword');
-    Route::get('equname/:oil_no', 'oiling/api.OilDetailCost/getEquOilNameByOilNo');
+    Route::get('equname/:oil_no/:before/:after', 'oiling/api.OilDetailCost/getEquOilNameByOilNo');
     Route::get('equcostlist/:before/:after', 'oiling/api.OilDetailCost/getEquCostListByDate');
     Route::get('costlist/:before/:after', 'oiling/api.OilDetailCost/getCostListByDate');
     Route::post('edit/:id', 'oiling/api.OilDetailCost/editOilDetailItemById');

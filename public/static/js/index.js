@@ -57,9 +57,12 @@ $(".btn2").click(function (event) {
 
 $(".hint3").click(function (event) {
     $(this).parent().parent().hide(100);
-    $(".box").hide(100);
+    $('.tanchuang-equlist').hide();
+    $(".box").hide();
 });
-
+$('.tanchuang-equlist').click(function () {
+    $(this).hide(100);
+});
 $(".hintl-in3").click(function (event) {
     $(".hintl").hide(100);
     $(".box").hide(100);
@@ -87,7 +90,9 @@ $(".tab li").click(function () {
     $(".tab li").eq($(this).index()).addClass("activ").siblings().removeClass("activ");
     // $(".tabCon div").hide().eq($(this).index()).show();
 });
-function stops(){
+
+function stops() {
     return false;
 }
-document.oncontextmenu=stops;
+
+document.oncontextmenu = stops;

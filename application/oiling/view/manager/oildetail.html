@@ -79,6 +79,14 @@
                                 <i class="icon"></i>
                             </div>
                         </div>
+                        <div class="choose-equ">
+                            <select>
+                                <option value="all">全部设备</option>
+                                *{foreach $equs as $v}
+                                <option value="*{$v.equ_no}">*{$v.equ_name}</option>
+                                *{/foreach}
+                            </select>
+                        </div>
                         <div class="query-btn ue-clear cost-confirm">
                             <a href="javascript:;" class="confirm">查询</a>
                         </div>
@@ -149,24 +157,26 @@
                 </div>
                 <div class="tanchuang-equlist">
                     <div class="tan-box">
-                        <h2>查看所属设备列表</h2>
-                        <div class="hint3"></div>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>润滑点名称</th>
-                                <th>润滑时间</th>
-                                <th>用量</th>
-                            </tr>
-                            </thead>
-                            <tbody id="tanBody">
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div class="inner-box">
+                            <h2>查看所属设备列表</h2>
+                            <div class="hint3"></div>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>润滑点名称</th>
+                                    <th>润滑时间</th>
+                                    <th>用量</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tanBody">
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <script type="text/html" id="tanList">
@@ -240,20 +250,17 @@
                 alert('时间输入有误');
                 return false;
             }
+            var equNo = $('select').val();
             var params = {
-                url: '/oiling/oildetail/costlist/' + before + '/' + after,
+                url: '/oiling/oildetail/costlist/' + before + '/' + after + '?equ_no=' + equNo+'&XDEBUG_SESSION_START=12350',
                 sCallback: function (list) {
                     $(document).find('#costTbody').html('');
                     $('#costTemplate').tmpl(list).appendTo('#costTbody');
                     $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
                     oldHtml = $(document).find('#costTbody').html();
-                    var totalPrice = 0;
-                    $(document).find('.total').each(function (index, value) {
-                        totalPrice += parseFloat($(value).text());
-                    });
                     var html = "<span class=\"date\">" + $('#monthly1').val() + "至" + $('#monthly2').val() + "</span>\n" +
                         "<span class=\"zongji\">总计：</span>\n" +
-                        "<span class=\"num\">" + totalPrice + "元</span>";
+                        "<span class=\"num\">" + list.else + "元</span>";
                     $('.total-box').html(html);
                 },
                 eCallback: function (err) {
@@ -284,11 +291,15 @@
         });
         $(document).on('click', '.getEquName', function () {
             $('#tanBody').html('');
-            var oilNo = $(this).data('oil_no'),
-                params = {
-                    url: 'oiling/oildetail/equname/' + oilNo,
+            var before = (new Date($('#monthly1').val()).getTime()) / 1000;
+            var after = (new Date($('#monthly2').val()).getTime()) / 1000;
+            var oilNo = $(this).data('oil_no');
+            var equNo = $('select').val();
+            var params = {
+                    url: 'oiling/oildetail/equname/' + oilNo + '/' + before + '/' + after+'?equ_no='+equNo,
                     sCallback: function (list) {
                         $('.tanchuang-equlist').show(100);
+                        $('.tan-box').show(100);
                         $('#tanList').tmpl(list).appendTo('#tanBody');
                     },
                     eCallback: function (err) {
@@ -361,7 +372,8 @@
         $(document).on('click', '#download', function () {
             var before = (new Date($('#monthly1').val()).getTime()) / 1000;
             var after = (new Date($('#monthly2').val()).getTime()) / 1000;
-            window.location.href = '/oiling/oildetail/download/' + before + '/' + after + '?type=oil';
+            var equNo = $('select').val();
+            window.location.href = '/oiling/oildetail/download/' + before + '/' + after + '?type=oil&equ_no='+equNo;
         });
     });
 </script>

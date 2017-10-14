@@ -242,7 +242,6 @@
                         <th class="num">Na</th>
                         <th class="num">PQ</th>
                         <th class="num">粘度</th>
-                        <th class="process">油脂状态</th>
                         *{if condition="$scope>=18"}
                         <th class="operate">操作</th>
                         *{/if}
@@ -269,7 +268,6 @@
                     <td class="num" data-id="*{$v.id}" data-key="viscosity" *{if
                         condition="$v.viscosity<$norms.viscosity_min OR $v.viscosity>$norms.viscosity_max" }
                         style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
-                    <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
                     *{if condition="$scope>=18"}
                     <td class="operate table-operate del-td" data-id="*{$v.id}" data-type="analysis"></td>
                     *{/if}
@@ -681,7 +679,7 @@
         $('.confirm-del').click(function (e) {
             e.stopPropagation();
             var params = {
-                url: 'oiling/' + type + '/del/' + id + '?XDEBUG_SESSION_START=18306',
+                url: 'oiling/' + type + '/del/' + id + '?XDEBUG_SESSION_START=12350',
                 type: 'delete',
                 sCallback: function (data) {
                     _this.parent().parent().hide(200).remove();
@@ -770,7 +768,7 @@
             var startTime = $('#startTime').val(),
                 workingHour = $('#workingHour').val(),
                 params = {
-                    url: 'oiling/workhour/add?XDEBUG_SESSION_START=18120',
+                    url: 'oiling/workhour/add?XDEBUG_SESSION_START=12350',
                     type: 'post',
                     data: {
                         equ_no: equNo,

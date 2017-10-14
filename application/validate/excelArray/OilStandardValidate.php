@@ -17,7 +17,7 @@ class OilStandardValidate extends ExcelArrayValidate {
         'equ_oil_name' => 'chsAlphaNum|require',
 //        'oil_no'       => 'require|integer',
         'quantity'     => 'require|integer',
-        'unit'         => 'require|alpha',
+//        'unit'         => 'require|alpha',
         'first_period' => 'require|integer',
         'period'       => 'require|integer',
         'interval'     => 'require|integer'
