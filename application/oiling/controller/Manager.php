@@ -61,13 +61,20 @@ class Manager extends BaseController {
     }
 
     public function analysis() {
-        $OilAnalysisList = OilAnalysis::getAnalysisList();
+        $equs  = InfoWarning::field('equ_no,equ_name')->group('equ_no')->select();
+        $equNo = input('get.equ_no');
+        if (!$equNo) {
+            $equNo = 'all';
+        }
+        $OilAnalysisList = OilAnalysis::getAnalysisList(false, $equNo);
         $OilDetail       = OilDetail::where(['unit' => 'L'])->select();
         $this->assign([
             'norms'   => $OilDetail,
             'OilList' => $OilAnalysisList,
             'scope'   => $this->userScope,
-            'account' => $this->account
+            'account' => $this->account,
+            'equs'    => $equs,
+            'equNo'   => $equNo
         ]);
         return $this->fetch();
     }

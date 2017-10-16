@@ -20,19 +20,19 @@
                 <h2 class="sidebar-header"><p>功能导航</p></h2>
                 <ul class="nav">
                     <li class="office">
-                        <div class="nav-header"><a href="standard" class="ue-clear"><span>设备润滑标准</span><i
+                        <div class="nav-header"><a href="/oiling/standard" class="ue-clear"><span>设备润滑标准</span><i
                                 class="icon"></i></a></div>
                     </li>
                     <li class="gongwen">
-                        <div class="nav-header"><a href="info" class="ue-clear"><span>润滑提示与记录</span><i
+                        <div class="nav-header"><a href="/oiling/info" class="ue-clear"><span>润滑提示与记录</span><i
                                 class="icon"></i></a></div>
                     </li>
                     <li class="nav-info current">
-                        <div class="nav-header"><a href="analysis" class="ue-clear"><span>油脂化验指标分析</span><i
+                        <div class="nav-header"><a href="/oiling/analysis" class="ue-clear"><span>油脂化验指标分析</span><i
                                 class="icon"></i></a></div>
                     </li>
                     <li class="konwledge">
-                        <div class="nav-header"><a href="oildetail" class="ue-clear"><span>润滑保养成本管理</span><i
+                        <div class="nav-header"><a href="/oiling/oildetail" class="ue-clear"><span>润滑保养成本管理</span><i
                                 class="icon"></i></a></div>
                     </li>
                 </ul>
@@ -70,30 +70,21 @@
                 </div>
                 <div class="query">
                     <div class="query-conditions ue-clear">
-                        <div class="conditions time ue-clear">
-                            <label>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间：</label>
-                            <div class="time-select">
-                                <input id="monthly1" type="text" placeholder="开始时间">
-                                <i class="icon"></i>
-                            </div>
-                            <span class="line">-</span>
-                            <div class="time-select">
-                                <input id="monthly2" type="text"
-                                       placeholder="结束时间">
-                                <i class="icon"></i>
-                            </div>
-                        </div>
-                        <div class="query-btn ue-clear cost-confirm">
-                            <a href="javascript:;" class="confirm info-confirm">查询</a>
-                        </div>
-                        <div class="query-btn ue-clear cost-confirm">
-                            <a href="/oiling/analysis" class="confirm">最近一次</a>
+                        <div class="choose-equ" style="margin-left: 30px;">
+                            <span>选择设备：</span>
+                            <select>
+                                <option value="all">全部设备</option>
+                                *{foreach $equs as $v}
+                                <option value="*{$v.equ_no}" *{if condition="$v.equ_no==$equNo"}selected*{/if}>*{$v.equ_name}</option>
+                                *{/foreach}
+                            </select>
                         </div>
                         <div class="search-box">
                             <span class="search-info">搜索油脂化验指标分析：</span>
                             <input class="search-input" type="text" placeholder="输入润滑点名称的关键字">
                         </div>
                     </div>
+                </div>
                 </div>
                 <div class="table-box">
                     <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
@@ -369,4 +360,8 @@
             window.base.getData(params);
         }
     });
+    $('.choose-equ select').change(function () {
+        var equNo = $(this).val();
+        location.href="/oiling/analysis/?equ_no="+equNo;
+    })
 </script>

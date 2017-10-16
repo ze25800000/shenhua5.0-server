@@ -26,16 +26,19 @@ class OilAnalysis extends BaseModel {
             ->limit(1);
     }
 
-    public static function getAnalysisList($isAdvise = false) {
-        $advise = $isAdvise ? " and advise=0 " : null;
+    public static function getAnalysisList($isAdvise = false, $equNo = 'all') {
+        $equNoSql  = $equNo == 'all' ? null : " and equ_no={$equNo}";
+        $adviseSql = $isAdvise ? " and advise=0 " : null;
+        $adviseASCSql  = $equNo == 'all' ? "advise ASC," : null;
         $sql    = "SELECT *
-                FROM oil_analysis AS a
-                WHERE sampling_time = (SELECT max(a1.sampling_time)
-                                          FROM oil_analysis AS a1
-                                          WHERE a1.equ_key_no = a.equ_key_no
-                )" . $advise . "
-                ORDER BY advise ASC ,equ_no ASC,equ_oil_no ASC; 
-                ";
+                    FROM oil_analysis AS a
+                    WHERE sampling_time = (SELECT max(a1.sampling_time)
+                                           FROM oil_analysis AS a1
+                                           WHERE a1.equ_key_no = a.equ_key_no)
+                          AND equ_key_no = (SELECT s.equ_key_no
+                                            FROM oil_standard AS s
+                                            WHERE s.equ_key_no = a.equ_key_no)"
+            . $equNoSql . $adviseSql .  " ORDER BY ".$adviseASCSql."equ_no ASC,equ_oil_no ASC";
         $result = Db::query($sql);
         if ($isAdvise) {
             foreach ($result as &$v) {
