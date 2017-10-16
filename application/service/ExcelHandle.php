@@ -216,6 +216,7 @@ class ExcelHandle {
                 $arr[$k]['equ_no']        = $v[0];
                 $arr[$k]['equ_oil_no']    = $v[1];
                 $arr[$k]['equ_key_no']    = $v[0] . config('salt') . $v[1];
+                $arr[$k]['equ_name']      = $v[2];
                 $arr[$k]['equ_oil_name']  = $v[3];
                 $arr[$k]['sampling_time'] = $this->getTimestamp($v[4]);
                 $arr[$k]['Fe']            = $v[5];

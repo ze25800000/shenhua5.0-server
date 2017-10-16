@@ -4,6 +4,7 @@ namespace app\oiling\controller\api;
 
 
 use app\lib\tools\Tools;
+use app\model\OilAnalysis;
 use app\model\WorkHour;
 use app\service\ExcelHandle;
 use app\validate\DetailDateValidate;
@@ -43,7 +44,7 @@ class WarningInfo extends BaseController {
     public function lubricate() {
         (new LubricateValidate())->goCheck();
         $posts                     = input('post.');
-        $posts['del_warning_time'] = Tools::getTimestamp($posts['del_warning_time'])+86399;
+        $posts['del_warning_time'] = Tools::getTimestamp($posts['del_warning_time']) + 86399;
         $posts['equ_key_no']       = $posts['equ_no'] . config('salt') . $posts['equ_oil_no'];
         $infoWarningModel          = new InfoWarning();
         $maxDelTime                = $infoWarningModel
@@ -73,6 +74,11 @@ class WarningInfo extends BaseController {
             throw new DocumentException([
                 'msg' => '润滑操作失败'
             ]);
+        }
+        $OilAnalysisItem = OilAnalysis::where(['equ_key_no' => $posts['equ_key_no']])->order('sampling_time desc')->find();
+        if (!empty($OilAnalysisItem)) {
+            $OilAnalysisItem->advise = 1;
+            $OilAnalysisItem->save();
         }
         return $this->ajaxReturn('润滑操作成功');
     }

@@ -15,13 +15,16 @@ use app\service\BaseController;
 class Manager extends BaseController {
     public function warning() {
         $WarningMessage = InfoWarning::getWarningMessage();
+        $OilAnalysis    = OilAnalysis::getAnalysisList(true);
         $count          = count($WarningMessage);
         $this->assign([
-            'userScope'      => $this->userScope,
-            'userName'       => $this->userName,
-            'account'        => $this->account,
-            'warningMessage' => $WarningMessage ? $WarningMessage : 0,
-            'count'          => $count
+            'userScope'       => $this->userScope,
+            'userName'        => $this->userName,
+            'account'         => $this->account,
+            'warningMessage'  => $WarningMessage ? $WarningMessage : 0,
+            'OilAnalysisList' => $OilAnalysis,
+            'AnalysisCount'   => count($OilAnalysis),
+            'StandardCount'   => count($WarningMessage)
         ]);
         return $this->fetch();
     }

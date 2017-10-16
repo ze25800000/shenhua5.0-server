@@ -26,15 +26,22 @@ class OilAnalysis extends BaseModel {
             ->limit(1);
     }
 
-    public static function getAnalysisList() {
+    public static function getAnalysisList($isAdvise = false) {
+        $advise = $isAdvise ? " and advise=0 " : null;
         $sql    = "SELECT *
                 FROM oil_analysis AS a
                 WHERE sampling_time = (SELECT max(a1.sampling_time)
                                           FROM oil_analysis AS a1
                                           WHERE a1.equ_key_no = a.equ_key_no
-                )
-                ORDER BY equ_key_no ASC";
+                )" . $advise . "
+                ORDER BY advise ASC ,equ_no ASC,equ_oil_no ASC; 
+                ";
         $result = Db::query($sql);
+        if ($isAdvise) {
+            foreach ($result as &$v) {
+                $v['oil_status'] = str_replace('<br>', '，', $v['oil_status']);
+            }
+        }
         return $result;
     }
 

@@ -21,7 +21,7 @@
         <div class="shenhua-hover-box">
             <div class="shenhua-title">
                 <img src="__IMG__/jbt-1.png" width="50" height="50">
-                <span>*{if condition="empty($warningMessage)"}无设备报警*{else/}警报：*{$count}个润滑点需要润滑*{/if}</span>
+                <span>*{if condition="empty($warningMessage)"}无设备报警*{else/}警报：*{$StandardCount}个润滑点需要润滑*{/if}</span>
                 *{if condition="!empty($warningMessage)"}
             </div>
             <ul class="shenhua-list">
@@ -39,15 +39,13 @@
         <div class="shenhua-hover-box shenhua-oil-warning">
             <div class="shenhua-title">
                 <img src="__IMG__/jbt-1.png" width="50" height="50">
-                <span>*{if condition="empty($warningMessage)"}无异常化验指标*{else/}警报：*{$count}个润滑点化验指标异常*{/if}</span>
-                *{if condition="!empty($warningMessage)"}
+                <span>*{if condition="empty($OilAnalysisList)"}无异常化验指标*{else/}警报：*{$AnalysisCount}个润滑点化验指标异常*{/if}</span>
+                *{if condition="!empty($OilAnalysisList)"}
             </div>
             <ul class="shenhua-list">
-                *{foreach $warningMessage as $v}
+                *{foreach $OilAnalysisList as $v}
                 <li>
-                    <a href="/oiling/equdetail/*{$v.equ_key_no}" target="_blank" *{if condition="$v.status==3" }
-                       style="color: #ee6b0c;" *{/if}>【*{$v.equ_name}】*{$v.equ_oil_name} 当前状态：*{if
-                    condition="$v.status===2"}临近*{else/}超期*{/if}</a>
+                    <a href="/oiling/equdetail/*{$v.equ_key_no}" target="_blank">【*{$v.equ_name}】*{$v.equ_oil_name} 当前状态：*{$v.oil_status}</a>
 
                 </li>
                 *{/foreach}
