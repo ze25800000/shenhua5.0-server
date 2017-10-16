@@ -1,5 +1,8 @@
 @charset "utf-8";
-.sbrh_nav { width:1080px; height:40px; margin:0 auto; padding:30px 0; 
+.sbrh_nav { width:1080px; height:40px; margin:0 auto; padding:30px 0;
+    position: absolute;
+    bottom: 50px;
+    left: 21%;
 }
 .clear{ clear:both;}
 .sbrh_nav ul li{ display:block; float:left; width:220px; height:50px; line-height:50px; padding:0 0 0 40px;}
@@ -29,3 +32,64 @@ box-shadow: #999 0px 0px 5px;  }
 .sublist li p a{ color:#666}
 .sublist li p a:hover{ color:#F60;}
 .nav .list a span{ display:block; float:left;}
+.shenhua-hover-box {
+    width: 320px;
+    position: relative;
+    font-size: 18px;
+
+}
+
+.shenhua-list-box {
+    max-height: 100px;
+    overflow-y: hidden;
+}
+
+.shenhua-hover-box span {
+    color: #ffffff;
+    vertical-align: top;
+}
+
+.shenhua-title {
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    background-color: #ee6b0c;
+    vertical-align: top;
+}
+
+.shenhua-oil-warning {
+    top: 80px;
+}
+
+.shenhua-hover-box:hover .shenhua-list {
+    display: block;
+}
+
+.shenhua-list {
+    position: absolute;
+    left: 15px;
+    top: 70px;
+    border: 3px solid #ee6b0c;
+    min-width: 98%;
+    display: none;
+    background-color: #ffffff;
+    z-index: 100;
+    padding: 0;
+    max-height: 500px;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+.shenhua-list a {
+    white-space: nowrap;
+}
+
+.shenhua-list li {
+    line-height: 20px;
+    border-bottom: 1px dotted #dfdfdf;
+    margin-left: 10px;
+    padding: 10px;
+}

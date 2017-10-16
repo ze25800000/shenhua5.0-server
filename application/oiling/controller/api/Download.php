@@ -75,7 +75,7 @@ class Download extends BaseController {
                 $x           = $equNo == 'all' ? '全部设备' : ($equNo . '号设备');
                 $fileName    = $beforeDate . '至' . $afterDate . $x . '的保养成本统计';
                 $costDetails = OilDetail::getCostList($before, $after, $equNo);
-                $total       = Tools::listMoveToArray($costDetails, 'total');
+                $total       = Tools::listMoveToArray($costDetails, 'total', false);
                 $cost        = 0;
                 foreach ($total as $value) {
                     $cost += $value;
@@ -91,7 +91,7 @@ class Download extends BaseController {
                 $x        = $equNo == 'all' ? '全部设备' : ($equNo . '号设备');
                 $fileName = $beforeDate . '至' . $afterDate . $x . '的保养成本统计';
                 $infoWarn = OilDetail::getEquCostList($before, $after, $equNo);
-                $total    = Tools::listMoveToArray($infoWarn, 'total');
+                $total    = Tools::listMoveToArray($infoWarn, 'total', false);
                 $cost     = 0;
                 foreach ($total as $value) {
                     $cost += $value;

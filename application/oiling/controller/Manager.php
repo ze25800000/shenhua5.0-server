@@ -37,6 +37,7 @@ class Manager extends BaseController {
     }
 
     public function info() {
+        $equs      = InfoWarning::field('equ_no,equ_name')->group('equ_no')->select();
         $infoList  = InfoWarning::getInfoList();
         $oilNoList = OilDetail::field('oil_no,oil_name,detail')->select();
         $standard  = OilStandard::field('oil_no')->select();
@@ -46,7 +47,8 @@ class Manager extends BaseController {
             'account'       => $this->account,
             'infoList'      => $infoList,
             'oilNoList'     => $oilNoList,
-            'oilNoStandard' => $standard
+            'oilNoStandard' => $standard,
+            'equs'          => $equs
         ]);
         return $this->fetch();
     }

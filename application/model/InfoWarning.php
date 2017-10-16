@@ -29,7 +29,7 @@ class InfoWarning extends BaseModel {
                                             FROM oil_standard AS s
                                             WHERE s.equ_key_no = a.equ_key_no)
                           AND status >= 2
-                    ORDER BY STATUS DESC, equ_key_no ASC;
+                    ORDER BY STATUS DESC, equ_no ASC,equ_oil_no ASC
                   ";
         $result = Db::query($sql);
         return $result;
@@ -44,7 +44,7 @@ class InfoWarning extends BaseModel {
                           AND equ_key_no = (SELECT s.equ_key_no
                                             FROM oil_standard AS s
                                             WHERE s.equ_key_no = a.equ_key_no)
-                    ORDER BY status DESC, equ_key_no ASC;";
+                    ORDER BY status DESC, equ_no ASC,equ_oil_no ASC ;";
         $result = Db::query($sql);
         return $result;
     }

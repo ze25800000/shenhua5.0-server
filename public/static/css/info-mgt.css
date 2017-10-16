@@ -294,12 +294,17 @@ body {
 .choose-equ select {
     border: 1px solid #D3D3D3;
     height: 30px;
+    width: 160px;
+    text-indent: 10px;
+    color: #555;
     margin-top: 7px;
     margin-left: -6px;
     margin-right: 17px;
     outline: none;
 }
-
+.choose-equ select option {
+    color: #555;
+}
 .bottom-bar {
     height: 65px;
 }
