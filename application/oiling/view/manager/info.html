@@ -79,7 +79,7 @@
                             <select>
                                 <option value="all">全部设备</option>
                                 *{foreach $equs as $v}
-                                <option value="*{$v.equ_no}">*{$v.equ_name}</option>
+                                <option value="*{$v.equ_no}" *{if condition="$v.equ_no==$equNo"}selected*{/if}>*{$v.equ_name}</option>
                                 *{/foreach}
                             </select>
                         </div>
@@ -353,7 +353,7 @@
                 }
             });
             var idsStr = ids.join(','),
-                url = 'info/download/' + idsStr + '?exceltype=infowarning';
+                url = '/oiling/info/download/' + idsStr + '?exceltype=infowarning';
             if (ids.length != 0) {
                 window.location.href = url;
             }
@@ -381,7 +381,7 @@
         $('.upload').click(function (e) {
             var exceltype = $('.select-type').val(),
                 params = {
-                    url: 'oiling/upload?' + exceltype+'&XDEBUG_SESSION_START=12443',
+                    url: 'oiling/upload?' + exceltype + '&XDEBUG_SESSION_START=12443',
                     data: new FormData($(this).parent()[0]),
                     sCallback: function (data) {
                         alert('上传成功');
@@ -570,10 +570,14 @@
                     }
                 }
             };
-            if (val&&e.keyCode != 8 ) {
+            if (val && e.keyCode != 8) {
                 window.base.getData(params);
             }
         });
+        $('.choose-equ select').change(function () {
+            var equNo = $(this).val();
+            location.href="/oiling/info/?equ_no="+equNo;
+        })
     });
 </script>
 <script type="text/html">

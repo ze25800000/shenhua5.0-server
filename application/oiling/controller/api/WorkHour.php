@@ -28,7 +28,8 @@ class WorkHour extends BaseController {
                 'msg' => '删除运行时间失败'
             ]);
         }
-        $this->changeInfoWarning($workHourItem->equ_no);
+        $excelTool = new ExcelHandle();
+        $excelTool->changeInfoWarning($workHourItem->equ_no);
         return $this->ajaxReturn('删除运行时间成功');
     }
 
@@ -43,26 +44,9 @@ class WorkHour extends BaseController {
                 'msg' => '添加运行时间失败'
             ]);
         }
-        $equNo            = $_POST['equ_no'];
-        $this->changeInfoWarning($equNo);
+        $equNo     = $_POST['equ_no'];
+        $excelTool = new ExcelHandle();
+        $excelTool->changeInfoWarning($equNo);
         return $this->ajaxReturn('添加运行时间成功');
-    }
-
-    private function changeInfoWarning($equNo) {
-        $excelHandle      = new ExcelHandle();
-        $sql              = "SELECT *
-                             FROM info_warning AS i1
-                             WHERE equ_no = $equNo AND del_warning_time = (SELECT max(i2.del_warning_time)
-                                     FROM info_warning AS i2
-                                     WHERE i1.equ_key_no = i2.equ_key_no)";
-        $infoWarningList  = Db::query($sql);
-        foreach ($infoWarningList as $item) {
-            $howLong = $excelHandle->howLong($item);
-            InfoWarning::where(['id' => $item['id']])->update([
-                'how_long' => $howLong,
-                'status'   => $excelHandle->getStatus($item, $howLong),
-                'deadline' => $excelHandle->getDeadline($item, $howLong)
-            ]);
-        }
     }
 }

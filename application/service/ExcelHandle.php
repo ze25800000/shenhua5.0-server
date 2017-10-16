@@ -10,6 +10,7 @@ namespace app\service;
 
 use app\lib\exception\DocumentException;
 use app\lib\exception\UploadException;
+use app\lib\tools\Tools;
 use app\model\OilConfig;
 use app\model\Equipment;
 use app\model\InfoWarning;
@@ -162,8 +163,13 @@ class ExcelHandle {
                 'msg' => '保存运行时间失败'
             ]);
         }
+        $equNos = Tools::listMoveToArray($arr, 'equ_no', false);
+        foreach ($equNos as $equNo) {
+            $this->changeInfoWarning($equNo);
+        }
         return true;
     }
+
 
     public function infoWarning($excel_array) {
         $equipmentEquNoList  = Equipment::field('equ_no')->select();
@@ -424,5 +430,23 @@ class ExcelHandle {
 
         }
         return $long;
+    }
+
+    public function changeInfoWarning($equNo) {
+        $excelHandle     = new ExcelHandle();
+        $sql             = "SELECT *
+                             FROM info_warning AS i1
+                             WHERE equ_no = $equNo AND del_warning_time = (SELECT max(i2.del_warning_time)
+                                     FROM info_warning AS i2
+                                     WHERE i1.equ_key_no = i2.equ_key_no)";
+        $infoWarningList = Db::query($sql);
+        foreach ($infoWarningList as $item) {
+            $howLong = $excelHandle->howLong($item);
+            InfoWarning::where(['id' => $item['id']])->update([
+                'how_long' => $howLong,
+                'status'   => $excelHandle->getStatus($item, $howLong),
+                'deadline' => $excelHandle->getDeadline($item, $howLong)
+            ]);
+        }
     }
 }

@@ -16,7 +16,6 @@ class Manager extends BaseController {
     public function warning() {
         $WarningMessage = InfoWarning::getWarningMessage();
         $OilAnalysis    = OilAnalysis::getAnalysisList(true);
-        $count          = count($WarningMessage);
         $this->assign([
             'userScope'       => $this->userScope,
             'userName'        => $this->userName,
@@ -40,8 +39,12 @@ class Manager extends BaseController {
     }
 
     public function info() {
-        $equs      = InfoWarning::field('equ_no,equ_name')->group('equ_no')->select();
-        $infoList  = InfoWarning::getInfoList();
+        $equs  = InfoWarning::field('equ_no,equ_name')->group('equ_no')->select();
+        $equNo = input('get.equ_no');
+        if (!$equNo) {
+            $equNo = 'all';
+        }
+        $infoList  = InfoWarning::getInfoList($equNo);
         $oilNoList = OilDetail::field('oil_no,oil_name,detail')->select();
         $standard  = OilStandard::field('oil_no')->select();
         $this->assign([
@@ -51,7 +54,8 @@ class Manager extends BaseController {
             'infoList'      => $infoList,
             'oilNoList'     => $oilNoList,
             'oilNoStandard' => $standard,
-            'equs'          => $equs
+            'equs'          => $equs,
+            'equNo'         => $equNo
         ]);
         return $this->fetch();
     }

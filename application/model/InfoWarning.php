@@ -35,7 +35,8 @@ class InfoWarning extends BaseModel {
         return $result;
     }
 
-    public static function getInfoList() {
+    public static function getInfoList($equNo) {
+        $equNo  = $equNo == 'all' ? null : " AND equ_no={$equNo}";
         $sql    = "SELECT *
                     FROM info_warning AS a
                     WHERE del_warning_time = (SELECT max(a1.del_warning_time)
@@ -43,7 +44,7 @@ class InfoWarning extends BaseModel {
                                               WHERE a1.equ_key_no = a.equ_key_no)
                           AND equ_key_no = (SELECT s.equ_key_no
                                             FROM oil_standard AS s
-                                            WHERE s.equ_key_no = a.equ_key_no)
+                                            WHERE s.equ_key_no = a.equ_key_no)" . $equNo . "
                     ORDER BY status DESC, equ_no ASC,equ_oil_no ASC ;";
         $result = Db::query($sql);
         return $result;
