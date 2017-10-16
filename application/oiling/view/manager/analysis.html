@@ -155,9 +155,11 @@
                             <td class="operate table-operate">
                                 <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
                                 *{if condition="$scope>=18"}
-                                <a href="javascript:;" class="del" data-id="*{$v.id}">删除</a>
+                                <a href="javascript:;" class="del-item del" data-id="*{$v.id}">删除</a>
                                 *{/if}
-                            </td>
+                                *{if condition="$v.advise==0"}
+                                <a data-id="*{$v.id}" href="javascript:;" class="del-warning del"  style="width: 55px;padding-left: 10px;">取消报警</a>
+                                *{/if}</td>
                             </tr>
                             *{/if}
                             *{/foreach}
@@ -217,7 +219,6 @@
         <td class="num">${item.PQ}</td>
         <td class="num">${item.viscosity}</td>
         <td class="process">{{if item.oil_status}}${item.oil_status}{{else}}良好{{/if}}</td>
-        <td class="process">{{if item.advise==1}}正常使用{{else}}建议更换{{/if}}</td>
         <td class="operate table-operate">
             <a href="equdetail/${item.equ_key_no}" class="check" target="_blank">查看</a>
         </td>
@@ -258,16 +259,33 @@
             window.location.href = url;
         }
     });
-    $('.del').click(function () {
+    $('.del-item').click(function () {
         $('.hintl').show(100);
+        $('.hintl2').html('油脂化验指标分析删除窗口');
+        $('.hintl-in2').html('是否删除该油脂化验指标分析？');
         var id = $(this).data('id'),
             _this = $(this);
-        $('.confirm-del').click(function () {
+        $('.confirm-del').unbind('click').click(function () {
             var params = {
                 url: '/oiling/analysis/del/' + id,
                 type: 'delete',
                 sCallback: function () {
                     _this.parent().parent().hide(200).remove();
+                    window.location.reload();
+                }
+            };
+            window.base.getData(params);
+        });
+    });
+    $('.del-warning').click(function () {
+        $('.hintl').show(100);
+        $('.hintl2').html('取消油脂分析报警');
+        $('.hintl-in2').html('是否取消该润滑点的油脂分析报警？');
+        var id = $(this).data('id');
+        $('.confirm-del').unbind('click').click(function () {
+            var params = {
+                url: '/oiling/analysis/delwarn/' + id,
+                sCallback: function () {
                     window.location.reload();
                 }
             };

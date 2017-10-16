@@ -21,6 +21,12 @@ use app\validate\OilAnalysisItemValidate;
 use think\Db;
 
 class Analysis extends BaseController {
+    public function changeAdviseType($id) {
+        $OilAnalysis         = OilAnalysis::get($id);
+        $OilAnalysis->advise = 1;
+        $OilAnalysis->save();
+    }
+
     public function deleteOilAnalysisItemById($id) {
         (new IDMustBePositiveInt())->goCheck();
         $result = OilAnalysis::where('id', '=', $id)->delete();
