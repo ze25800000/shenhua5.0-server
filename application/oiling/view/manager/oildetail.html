@@ -5,7 +5,7 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,&nbsp;<a href="/user/center">*{$account} </a></div>
+                <div class="welcome ue-clear">欢迎您,&nbsp;<a href="/user/center">{$account} </a></div>
             </div>
             <div class="toolbar ue-clear">
                 <a href="/" class="home-btn">首页</a>
@@ -39,15 +39,15 @@
             <div class="content">
                 <div class="title">
                     <h2>润滑保养成本管理</h2>
-                    *{if condition="$scope>=18"}
+                    {if condition="$scope>=18"}
                     <div class="temp-btn-group">
                         下载模板：
                         <a style="width: 160px;" class="excel-temp-btn"
                            href="/template/润滑保养成本.xlsx">润滑保养成本管理excel模板</a>
                     </div>
-                    *{/if}
+                    {/if}
                 </div>
-                *{if condition="$scope>=18"}
+                {if condition="$scope>=18"}
                 <div class="title">
                     <div class="check-content btn-type">
                         <span class="check-info"><a href="/oiling/oildetail/equ">按设备统计</a></span>
@@ -63,7 +63,7 @@
                         </form>
                     </div>
                 </div>
-                *{/if}
+                {/if}
                 <div class="query">
                     <div class="query-conditions ue-clear">
                         <div class="conditions time ue-clear">
@@ -82,9 +82,9 @@
                         <div class="choose-equ">
                             <select>
                                 <option value="all">全部设备</option>
-                                *{foreach $equs as $v}
-                                <option value="*{$v.equ_no}">*{$v.equ_name}</option>
-                                *{/foreach}
+                                {foreach $equs as $v}
+                                <option value="{$v.equ_no}">{$v.equ_name}</option>
+                                {/foreach}
                             </select>
                         </div>
                         <div class="query-btn ue-clear cost-confirm">
@@ -120,6 +120,7 @@
 
                             </tbody>
                             <script type="text/html" id="costTemplate">
+                                {literal}
                                 {{each(i,item) data}}
                                 <tr>
                                     <td class="process edit-item" data-id="${item.id}" data-key="oil_no">
@@ -144,6 +145,8 @@
                                     </td>
                                 </tr>
                                 {{/each}}
+                                {/literal}
+
                             </script>
                         </table>
                     </div>
@@ -180,6 +183,7 @@
                     </div>
                 </div>
                 <script type="text/html" id="tanList">
+                    {literal}
                     {{each(i,item) data}}
                     <tr>
                         <td><a href="/oiling/equdetail/${item.equ_key_no}" target="_blank">${item.equ_oil_name}</a></td>
@@ -187,6 +191,7 @@
                         <td>${item.quantity}</td>
                     </tr>
                     {{/each}}
+                    {/literal}
                 </script>
                 <div class="tanchuang">
                     <div class="hintl">

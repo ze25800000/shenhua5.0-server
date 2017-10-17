@@ -5,7 +5,7 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;*{$account}</a>
+                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;{$account}</a>
                 </div>
             </div>
             <div class="toolbar ue-clear">
@@ -40,13 +40,13 @@
             <div class="content">
                 <div class="title">
                     <h2>油脂化验指标分析</h2>
-                    *{if condition="$scope>=18"}
+                    {if condition="$scope>=18"}
                     <div class="temp-btn-group">
                         下载模板：
                         <a style="width: 160px;" class="excel-temp-btn"
                            href="/template/油脂化验指标.xlsx">油脂化验指标分析excel模板</a>
                     </div>
-                    *{/if}
+                    {/if}
                 </div>
                 <div class="title">
                     <div class="check-content">
@@ -55,7 +55,7 @@
                         <span class="check-info">下载选中的油脂指标分析记录</span>
                         <a href="javascript:;" class="check-download">下载</a>
                     </div>
-                *{if condition="$scope>=18"}
+                    {if condition="$scope>=18"}
                     <div class="uploader orange analysis">
                         <form>
                             <span>批量上传油脂化验指标分析：</span>
@@ -66,7 +66,7 @@
                                    class="button upload" value="上传"/>
                         </form>
                     </div>
-                *{/if}
+                    {/if}
                 </div>
                 <div class="query">
                     <div class="query-conditions ue-clear">
@@ -74,105 +74,111 @@
                             <span>选择设备：</span>
                             <select>
                                 <option value="all">全部设备</option>
-                                *{foreach $equs as $v}
-                                <option value="*{$v.equ_no}" *{if condition="$v.equ_no==$equNo"}selected*{/if}>*{$v.equ_name}</option>
-                                *{/foreach}
+                                {foreach $equs as $v}
+                                <option value="{$v.equ_no}" {if condition="$v.equ_no==$equNo" }selected{
+                                /if}>{$v.equ_name}</option>
+                                {/foreach}
                             </select>
                         </div>
+                        {if condition="$equNo=='all'"}
                         <div class="search-box">
                             <span class="search-info">搜索油脂化验指标分析：</span>
                             <input class="search-input" type="text" placeholder="输入润滑点名称的关键字">
                         </div>
+                        {/if}
                     </div>
                 </div>
-                </div>
-                <div class="table-box">
-                    <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th class="num">
-                                    选择
-                                </th>
-                                <th class="num">设备编号</th>
-                                <th class="num">润滑点编号</th>
-                                <th class="time">润滑点（全称）</th>
-                                <th class="process">采样日期</th>
-                                <th class="num">运行时长</th>
-                                <th class="process">物料编号</th>
-                                <th class="num">Fe</th>
-                                <th class="num">Cu</th>
-                                <th class="num">Al</th>
-                                <th class="num">Si</th>
-                                <th class="num">Na</th>
-                                <th class="num">PQ</th>
-                                <th class="num">粘度</th>
-                                <th class="process">油脂状态</th>
-                                <th class="operate">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody id="analysisBody">
-                            *{foreach $OilList as $v}
-                            *{foreach $norms as $vv}
-                            *{if condition="$v.oil_no==$vv.oil_no" }
-                            <tr *{if condition="$v.advise==0" } style="background-color: #fffdcf" *{/if}>
-                            <td class="num"><input *{if condition="$v.advise==0" }checked*{/if} type="checkbox"
-                                data-id="*{$v.id}">
-                            </td>
-                            <td class="num">*{$v.equ_no}</td>
-                            <td class="num">*{$v.equ_oil_no}</td>
-                            <td class="time edit-item" data-id="*{$v.id}" data-key="equ_oil_name">*{$v.equ_oil_name}
-                            </td>
-                            <td class="process edit-item" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time|date="Y年m月d日",###}
-                            </td>
-                            <td class="num">*{$v.work_hour}</td>
-                            <td class="process">*{$v.oil_no}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$vv.Fe" }
-                                style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$vv.Cu" }
-                                style="color: red;font-weight: 600;" *{/if}>*{$v.Cu}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$vv.Al" }
-                                style="color: red;font-weight: 600;" *{/if}>*{$v.Al}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$vv.Si" }
-                                style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$vv.Na" }
-                                style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="pq" *{if condition="$v.PQ>$vv.PQ" }
-                                style="color: red;font-weight: 600;" *{/if}>*{$v.PQ}</td>
-                            <td class="num edit-item" data-id="*{$v.id}" data-key="viscosity"
-                                *{if condition="$v.viscosity<$vv.viscosity_min OR $v.viscosity>$vv.viscosity_max" }
-                                style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
-                            <td class="process">*{$v.oil_status?$v.oil_status:'良好'}</td>
-                            <td class="operate table-operate">
-                                <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
-                                *{if condition="$scope>=18"}
-                                <a href="javascript:;" class="del-item del" data-id="*{$v.id}">删除</a>
-                                *{/if}
-                                *{if condition="$v.advise==0"}
-                                <a data-id="*{$v.id}" href="javascript:;" class="del-warning del"  style="width: 55px;padding-left: 10px;">取消报警</a>
-                                *{/if}</td>
-                            </tr>
-                            *{/if}
-                            *{/foreach}
-                            *{/foreach}
+            </div>
+            <div class="table-box">
+                <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th class="num">
+                                选择
+                            </th>
+                            <th class="num">设备编号</th>
+                            <th class="num">润滑点编号</th>
+                            <th class="time">润滑点（全称）</th>
+                            <th class="process">采样日期</th>
+                            <th class="num">运行时长</th>
+                            <th class="process">物料编号</th>
+                            <th class="num">Fe</th>
+                            <th class="num">Cu</th>
+                            <th class="num">Al</th>
+                            <th class="num">Si</th>
+                            <th class="num">Na</th>
+                            <th class="num">PQ</th>
+                            <th class="num">粘度</th>
+                            <th class="process">油脂状态</th>
+                            <th class="operate">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="analysisBody">
+                        {foreach $OilList as $v}
+                        {foreach $norms as $vv}
+                        {if condition="$v.oil_no==$vv.oil_no" }
+                        <tr {if condition="$v.advise==0" } style="background-color: #fffdcf" {/if}>
+                        <td class="num"><input {if condition="$v.advise==0" }checked{/if} type="checkbox"
+                            data-id="{$v.id}">
+                        </td>
+                        <td class="num">{$v.equ_no}</td>
+                        <td class="num">{$v.equ_oil_no}</td>
+                        <td class="time edit-item" data-id="{$v.id}" data-key="equ_oil_name">{$v.equ_oil_name}
+                        </td>
+                        <td class="process edit-item" data-id="{$v.id}" data-key="sampling_time">
+                            {$v.sampling_time|date="Y年m月d日",###}
+                        </td>
+                        <td class="num">{$v.work_hour}</td>
+                        <td class="process">{$v.oil_no}</td>
+                        <td class="num edit-item" data-id="{$v.id}" data-key="Fe" {if condition="$v.Fe>$vv.Fe" }
+                            style="color: red;font-weight: 600;" {/if}>{$v.Fe}</td>
+                        <td class="num edit-item" data-id="{$v.id}" data-key="Cu" {if condition="$v.Cu>$vv.Cu" }
+                            style="color: red;font-weight: 600;" {/if}>{$v.Cu}</td>
+                        <td class="num edit-item" data-id="{$v.id}" data-key="Al" {if condition="$v.Al>$vv.Al" }
+                            style="color: red;font-weight: 600;" {/if}>{$v.Al}</td>
+                        <td class="num edit-item" data-id="{$v.id}" data-key="Si" {if condition="$v.Si>$vv.Si" }
+                            style="color: red;font-weight: 600;" {/if}>{$v.Si}</td>
+                        <td class="num edit-item" data-id="{$v.id}" data-key="Na" {if condition="$v.Na>$vv.Na" }
+                            style="color: red;font-weight: 600;" {/if}>{$v.Na}</td>
+                        <td class="num edit-item" data-id="{$v.id}" data-key="pq" {if condition="$v.PQ>$vv.PQ" }
+                            style="color: red;font-weight: 600;" {/if}>{$v.PQ}</td>
+                        <td class="num edit-item" data-id="{$v.id}" data-key="viscosity"
+                            {if condition="$v.viscosity<$vv.viscosity_min OR $v.viscosity>$vv.viscosity_max" }
+                            style="color: red;font-weight: 600;" {/if}>{$v.viscosity}</td>
+                        <td class="process">{$v.oil_status?$v.oil_status:'良好'}</td>
+                        <td class="operate table-operate">
+                            <a href="/oiling/equdetail/{$v.equ_key_no}" class="check" target="_blank">查看</a>
+                            {if condition="$scope>=18"}
+                            <a href="javascript:;" class="del-item del" data-id="{$v.id}">删除</a>
+                            {/if}
+                            {if condition="$v.advise==0"}
+                            <a data-id="{$v.id}" href="javascript:;" class="del-warning del"
+                               style="width: 55px;padding-left: 10px;">取消报警</a>
+                            {/if}
+                        </td>
+                        </tr>
+                        {/if}
+                        {/foreach}
+                        {/foreach}
 
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <div id="ft" class="ue-clear">
-        <div class="ft-left">
-            <span>神华集团</span>
-            <em>设备润滑管理系统</em>
-        </div>
-        <div class="ft-right">
-            <span>非同科技</span>
-            <em>2017</em>
-        </div>
+</div>
+<div id="ft" class="ue-clear">
+    <div class="ft-left">
+        <span>神华集团</span>
+        <em>设备润滑管理系统</em>
     </div>
+    <div class="ft-right">
+        <span>非同科技</span>
+        <em>2017</em>
+    </div>
+</div>
 </div>
 <div class="tanchuang">
     <div class="hintl">
@@ -191,6 +197,7 @@
 <script src="__JS__/data.js"></script>
 <script src="__JS__/jquery.monthpicker.js"></script>
 <script type="text/html" id="analysisTemplate">
+    {literal}
     {{each(i,item) data}}
     <tr>
         <td class="num">
@@ -211,10 +218,12 @@
         <td class="num">${item.viscosity}</td>
         <td class="process">{{if item.oil_status}}${item.oil_status}{{else}}良好{{/if}}</td>
         <td class="operate table-operate">
-            <a href="equdetail/${item.equ_key_no}" class="check" target="_blank">查看</a>
+            <a href="/oiling/equdetail/${item.equ_key_no}" class="check" target="_blank">查看</a>
         </td>
     </tr>
     {{/each}}
+    {/literal}
+
 </script>
 <script>
     $('title').html('油脂化验指标分析');
@@ -223,14 +232,18 @@
     $('.upload').click(function () {
         var param = $(this).data('param'),
             params = {
-                url: 'oiling/upload?' + param+'&XDEBUG_SESSION_START=17102',
+                url: 'oiling/upload?' + param + '&XDEBUG_SESSION_START=17102',
                 data: new FormData($(this).parent()[0]),
                 sCallback: function () {
-                    alert('上传成功');
-                    location.reload();
+                    layer.open({
+                        content: '油脂化验指标上传成功',
+                        yes: function (index, layero) {
+                            location.reload();
+                        }
+                    });
                 },
-                eCallback:function (err) {
-                    if (err.errcode==2) {
+                eCallback: function (err) {
+                    if (err.errcode == 2) {
                         err.msg && alert(err.msg);
                     }
                 }
@@ -289,7 +302,7 @@
             oldVal = _this.html(),
             url = '/oiling/analysis/edititem/';
         oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
-        var long =oldVal.length?(oldVal.length * 12):'20';
+        var long = oldVal.length ? (oldVal.length * 12) : '20';
         if (!/input/.test(oldVal)) {
             _this.html('<input type="text" value="' + oldVal + '" style="width: ' + long + 'px">');
         }
@@ -340,13 +353,13 @@
         var val = $(this).val();
         if (e.keyCode == 8 && !val) {
             document.getElementById('analysisBody').innerHTML = oldHtml;
-            var newHtml=$('#analysisBody').html();
+            var newHtml = $('#analysisBody').html();
             return false;
         }
         var params = {
             url: 'oiling/analysis/search/' + val,
             sCallback: function (list) {
-                if (newHtml==oldHtml) {
+                if (newHtml == oldHtml) {
                     return false;
                 }
                 if (list.errcode === 0) {
@@ -356,12 +369,12 @@
                 }
             }
         };
-        if (val&&e.keyCode != 8) {
+        if (val && e.keyCode != 8) {
             window.base.getData(params);
         }
     });
     $('.choose-equ select').change(function () {
         var equNo = $(this).val();
-        location.href="/oiling/analysis/?equ_no="+equNo;
+        location.href = "/oiling/analysis/?equ_no=" + equNo;
     })
 </script>

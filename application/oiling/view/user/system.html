@@ -16,7 +16,7 @@
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
                 <div class="welcome ue-clear">欢迎您,&nbsp;<a style="color: #fff;"
-                                                           href="/user/center">&nbsp;*{$account}</a></div>
+                                                           href="/user/center">&nbsp;{$account}</a></div>
             </div>
             <div class="toolbar ue-clear">
                 <a href="/" class="home-btn">首页</a>
@@ -72,31 +72,31 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        *{foreach $users as $k=> $user}
+                                        {foreach $users as $k=> $user}
                                         <tr style="border-bottom:1px #ddd solid; ">
-                                            <td class="name" style="width: 10px;text-align: center;">*{$k+1}</td>
-                                            <td class="name">*{$user.account}</td>
-                                            <td class="process">*{$user.name}</td>
-                                            <td class="node">*{$user.phone}</td>
+                                            <td class="name" style="width: 10px;text-align: center;">{$k+1}</td>
+                                            <td class="name">{$user.account}</td>
+                                            <td class="process">{$user.name}</td>
+                                            <td class="node">{$user.phone}</td>
                                             <td class="time">
-                                                *{if condition="$user.scope==36"}
+                                                {if condition="$user.scope==36"}
                                                 超级管理员
-                                                *{else/}
-                                                <select class="scopeModify" data-id="*{$user.id}">
-                                                    <option value="18" *{if condition="$user.scope==18" }selected*{/if}>系统维护员</option>
-                                                    <option value="9" *{if condition="$user.scope==9" }selected*{/if}>普通工作人员</option>
+                                                {else/}
+                                                <select class="scopeModify" data-id="{$user.id}">
+                                                    <option value="18" {if condition="$user.scope==18" }selected{/if}>系统维护员</option>
+                                                    <option value="9" {if condition="$user.scope==9" }selected{/if}>普通工作人员</option>
                                                 </select>
-                                                *{/if}
+                                                {/if}
                                             </td>
 
                                             <td class="operate table-operate">
-                                                *{if condition="$user.scope!=36"}
+                                                {if condition="$user.scope!=36"}
                                                 <a href="javascript:;" class="del del-member"
-                                                   data-id="*{$user.id}">删除</a>
-                                                *{/if}
+                                                   data-id="{$user.id}">删除</a>
+                                                {/if}
                                             </td>
                                         </tr>
-                                        *{/foreach}
+                                        {/foreach}
                                         </tbody>
                                     </table>
                                 </div>
@@ -107,7 +107,7 @@
                                     <table>
                                         <tr>
                                             <th>临近状态时长：</th>
-                                            <td class="edit-item" data-id="1" data-key="postpone">*{$postpone.postpone}</td>
+                                            <td class="edit-item" data-id="1" data-key="postpone">{$postpone.postpone}</td>
                                         </tr>
                                     </table>
                                     <table style="margin-top: 20px">
@@ -124,21 +124,21 @@
                                             <th class="process">粘度最大值</th>
                                             <th class="process">粘度最小值</th>
                                         </tr>
-                                        *{foreach $oilDetail as $item}
+                                        {foreach $oilDetail as $item}
                                         <tr>
-                                            <td class="process">*{$item.oil_no}</td>
-                                            <td class="process">*{$item.oil_name}</td>
-                                            <td class="time">*{$item.detail}</td>
-                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="Fe">*{$item.Fe}</td>
-                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="Cu">*{$item.Cu}</td>
-                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="Al">*{$item.Al}</td>
-                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="Si">*{$item.Si}</td>
-                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="Na">*{$item.Na}</td>
-                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="PQ">*{$item.PQ}</td>
-                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="viscosity_max">*{$item.viscosity_max}</td>
-                                            <td class="process var-edit-item" data-id="*{$item.id}" data-key="viscosity_min">*{$item.viscosity_min}</td>
+                                            <td class="process">{$item.oil_no}</td>
+                                            <td class="process">{$item.oil_name}</td>
+                                            <td class="time">{$item.detail}</td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Fe">{$item.Fe}</td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Cu">{$item.Cu}</td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Al">{$item.Al}</td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Si">{$item.Si}</td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Na">{$item.Na}</td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="PQ">{$item.PQ}</td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="viscosity_max">{$item.viscosity_max}</td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="viscosity_min">{$item.viscosity_min}</td>
                                         </tr>
-                                        *{/foreach}
+                                        {/foreach}
                                     </table>
                                 </div>
                             </div>

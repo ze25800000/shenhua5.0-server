@@ -21,7 +21,7 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您, <a style="color: #fff;" href="/user/center">&nbsp;*{$account}</a>
+                <div class="welcome ue-clear">欢迎您, <a style="color: #fff;" href="/user/center">&nbsp;{$account}</a>
                 </div>
             </div>
             <div class="toolbar ue-clear">
@@ -57,15 +57,15 @@
                 <div class="equ_tab equipment active">
                     <div class="title">
                         <h2>设备润滑标准</h2>
-                        *{if condition="$scope==36"}
+                        {if condition="$scope==36"}
                         <div class="temp-btn-group">
                             下载模板：
                             <a class="excel-temp-btn"
                                href="/template/设备润滑标准.xlsx">设备润滑excel模板</a>
                         </div>
-                        *{/if}
+                        {/if}
                     </div>
-                    *{if condition="$scope==36"}
+                    {if condition="$scope==36"}
                     <div class="title">
                         <div class="uploader orange">
                             <form>
@@ -79,29 +79,29 @@
                             </form>
                         </div>
                     </div>
-                    *{/if}
+                    {/if}
                     <div class="query">
                         <div class="rhbza">
                             <ul id="equipments">
 
-                                *{foreach $list as $v}
-                                <li class="equ-item" data-equ_no="*{$v.equ_no}">
+                                {foreach $list as $v}
+                                <li class="equ-item" data-equ_no="{$v.equ_no}">
                                     <div class="rhbza1">
-                                        <p>编号：*{$v.equ_no}</p>
-                                        <h2>*{$v.equ_name}</h2>
-                                        *{if condition="$scope===36"}
+                                        <p>编号：{$v.equ_no}</p>
+                                        <h2>{$v.equ_name}</h2>
+                                        {if condition="$scope===36"}
                                         <p><a class="equ-del"
-                                              data-id="*{$v.id}"
+                                              data-id="{$v.id}"
                                               href="javascript:;">删除</a>
                                         </p>
-                                        *{/if}
+                                        {/if}
                                     </div>
                                 </li>
-                                *{/foreach}
-                                *{if condition="$scope===36"}
+                                {/foreach}
+                                {if condition="$scope===36"}
                                 <li class="rhbza2"><a class=" add-equ" href="javascript:;"
                                                       style=" font-size:36px">+</a></li>
-                                *{/if}
+                                {/if}
                             </ul>
 
                             <div class="clear"></div>
@@ -114,18 +114,18 @@
                 <script type="text/html" id="equStaListTemp">
                     <div class="title">
                         <h2>设备润滑标准 &gt; ${equ_name}</h2>
-                        <a href="standard" class="more">返回</a>
+                        <a href="standard" class="more" style="font-size: 16px;width: 50px;font-weight: bold;">返回</a>
                     </div>
-                    <div class="query">
-                        <div class="query-conditions ue-clear">
-                            <div style="height: 37px;" class="conditions time ue-clear">
-                            </div>
-                            <div class="search-box">
-                                <span class="search-info">搜索设备润滑标准：</span>
-                                <input class="search-input" type="text" placeholder="输入润滑点名称的关键字">
-                            </div>
-                        </div>
-                    </div>
+                    <!--<div class="query">-->
+                    <!--<div class="query-conditions ue-clear">-->
+                    <!--<div style="height: 37px;" class="conditions time ue-clear">-->
+                    <!--</div>-->
+                    <!--<div class="search-box">-->
+                    <!--<span class="search-info">搜索设备润滑标准：</span>-->
+                    <!--<input class="search-input" type="text" placeholder="输入润滑点名称的关键字">-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
                     <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
                         <div class="table-box">
                             <table>
@@ -142,6 +142,7 @@
                                 </tr>
                                 </thead>
                                 <tbody id="oilStandardTbody">
+                                {literal}
                                 {{each oil_standard_list}}
                                 <tr>
                                     <td class="num">${$value.equ_oil_no}</td>
@@ -165,14 +166,13 @@
                                         ${$value.interval}
                                     </td>
                                     <td class="operate table-operate">
-                                        <a href="equdetail/${$value.equ_key_no}" class="check"
+                                        <a href="/oiling/equdetail/${$value.equ_key_no}" class="check"
                                            target="_blank">查看</a>
-                                        *{if condition="$scope===36"}
                                         <a href="javascript:;" class="del btn2" data-id="${$value.id}">删除</a>
-                                        *{/if}
                                     </td>
                                 </tr>
                                 {{/each}}
+                                {/literal}
                                 </tbody>
                             </table>
 
@@ -306,9 +306,9 @@
                 id: id
             },
             sCallback: function (data) {
-                alert(data.msg)
+                layer.msg(data.msg)
             }
-        }
+        };
         window.base.getData(params);
     });
     //添加新设备
@@ -414,7 +414,7 @@
             },
             eCallback: function (err) {
                 if (err.errcode == 2) {
-                    err.msg && alert(err.msg);
+                    err.msg && layer.msg(err.msg, {icon: 5});
                 }
             }
         };
@@ -446,39 +446,4 @@
             window.base.getData(params);
         }
     });
-</script>
-<script type="text/html" id="standardTemp">
-    {{each data}}
-    <tr>
-        <td class="num">${$value.equ_oil_no}</td>
-        <td class="time edit-item" data-id="${$value.id}" data-key="equ_oil_name">
-            ${$value.equ_oil_name}
-        </td>
-        <td class="process" id="oilNo-${$value.equ_key_no}" data-id="${$value.id}" data-key="oil_no">
-            ${$value.oil_no}
-        </td>
-        <td class="process edit-item" data-id="${$value.id}" data-key="quantity">
-            ${$value.quantity}
-        </td>
-        <td class="process edit-item" data-id="${$value.id}" data-key="unit">
-            ${$value.unit}
-        </td>
-        <td class="process edit-item" data-id="${$value.id}" data-key="period">
-            ${$value.period}
-        </td>
-        <td class="process edit-item" data-id="${$value.id}" data-key="first_period">
-            ${$value.first_period}
-        </td>
-        <td class="process edit-item" data-id="${$value.id}" data-key="interval">
-            ${$value.interval}
-        </td>
-        *{if condition="$scope===36"}
-        <td class="operate table-operate">
-            <a href="equdetail/${$value.equ_key_no}" class="check"
-               target="_blank">查看</a>
-            <a href="javascript:;" class="del btn2" data-id="${$value.id}">删除</a>
-        </td>
-        *{/if}
-    </tr>
-    {{/each}}
 </script>

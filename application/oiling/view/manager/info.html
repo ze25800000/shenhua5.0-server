@@ -5,7 +5,7 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;*{$account}</a>
+                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;{$account}</a>
                 </div>
             </div>
             <div class="toolbar ue-clear">
@@ -40,13 +40,13 @@
             <div class="content">
                 <div class="title">
                     <h2>润滑提示与记录</h2>
-                    *{if condition="$scope>=18"}
+                    {if condition="$scope>=18"}
                     <div class="temp-btn-group">
                         下载模板：
                         <a class="excel-temp-btn" href="/template/运行时间.xlsx">运行时间excel模板</a>
                         <a class="excel-temp-btn" href="/template/消警记录.xlsx">消警记录excel模板</a>
                     </div>
-                    *{/if}
+                    {/if}
                 </div>
                 <div class="title">
                     <div class="check-content">
@@ -55,7 +55,7 @@
                         <span class="check-info">下载选中的润滑提示记录</span>
                         <a href="javascript:;" class="check-download">下载</a>
                     </div>
-                    *{if condition="$scope>=18"}
+                    {if condition="$scope>=18"}
                     <div class="uploader orange info">
                         <form>
                             <span>批量上传运行时间或消警记录：</span>
@@ -70,7 +70,7 @@
                                    class="button upload" value="上传"/>
                         </form>
                     </div>
-                    *{/if}
+                    {/if}
                 </div>
                 <div class="query">
                     <div class="query-conditions ue-clear">
@@ -78,15 +78,17 @@
                             <span>选择设备：</span>
                             <select>
                                 <option value="all">全部设备</option>
-                                *{foreach $equs as $v}
-                                <option value="*{$v.equ_no}" *{if condition="$v.equ_no==$equNo"}selected*{/if}>*{$v.equ_name}</option>
-                                *{/foreach}
+                                {foreach $equs as $v}
+                                <option value="{$v.equ_no}" {if condition="$v.equ_no==$equNo"}selected{/if}>{$v.equ_name}</option>
+                                {/foreach}
                             </select>
                         </div>
+                        {if condition="$equNo=='all'"}
                         <div class="search-box">
                             <span class="search-info">搜索润滑提示与记录：</span>
                             <input class="search-input" type="text" placeholder="输入润滑点名称的关键字">
                         </div>
+                        {/if}
                     </div>
                 </div>
                 <div class="table-box">
@@ -109,57 +111,57 @@
                             </tr>
                             </thead>
                             <tbody id="infoTbody">
-                            *{foreach $infoList as $v}
-                            <tr style="background-color: *{if condition=" $v.status==3"}#ffe0b2*{elseif
+                            {foreach $infoList as $v}
+                            <tr style="background-color: {if condition=" $v.status==3"}#ffe0b2{elseif
                                 condition="$v.status==2"
-                            /}#fffdcf*{/if};">
+                            /}#fffdcf{/if};">
                             <td class="num">
-                                <input type="checkbox" data-id="*{$v.id}" *{if condition="$v.status>=2" }checked*{/if}>
+                                <input type="checkbox" data-id="{$v.id}" {if condition="$v.status>=2" }checked{/if}>
                             </td>
-                            <td class="num">*{$v.equ_no}</td>
-                            <td class="num">*{$v.equ_oil_no}</td>
-                            <td class="time">*{$v.equ_oil_name}</td>
-                            <td class="process">*{$v.del_warning_time|date="Y年m月d日",###}</td>
-                            <td class="process">*{$v.warning_type?'润滑':'延期'}</td>
-                            <td class="process">*{$v.how_long}</td>
-                            <td class="process">*{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
-                            <td class="process">*{$v.postpone}</td>
-                            <td class="process">*{$v.deadline}</td>
-                            <td class="process">*{$v.is_first_period?'是':'否'}</td>
+                            <td class="num">{$v.equ_no}</td>
+                            <td class="num">{$v.equ_oil_no}</td>
+                            <td class="time">{$v.equ_oil_name}</td>
+                            <td class="process">{$v.del_warning_time|date="Y年m月d日",###}</td>
+                            <td class="process">{$v.warning_type?'润滑':'延期'}</td>
+                            <td class="process">{$v.how_long}</td>
+                            <td class="process">{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
+                            <td class="process">{$v.postpone}</td>
+                            <td class="process">{$v.deadline}</td>
+                            <td class="process">{$v.is_first_period?'是':'否'}</td>
                             <td class="operate table-operate">
-                                <a href="equdetail/*{$v.equ_key_no}" class="check" target="_blank">查看</a>
-                                *{if condition="$scope>=18"}
+                                <a href="/oiling/equdetail/{$v.equ_key_no}" class="check" target="_blank">查看</a>
+                                {if condition="$scope>=18"}
                                 <a href="javascript:;"
                                    class="edit runhua"
-                                   data-id="*{$v.id}"
-                                   data-user_id="*{$userId}"
-                                   data-equ_no="*{$v.equ_no}"
-                                   data-equ_oil_no="*{$v.equ_oil_no}"
-                                   data-equ_name="*{$v.equ_name}"
-                                   data-equ_oil_name="*{$v.equ_oil_name}"
-                                   data-del_warning_time="*{$v.del_warning_time|date=" Y年m月d日",###}"
-                                data-equ_key_no="*{$v.equ_key_no}"
+                                   data-id="{$v.id}"
+                                   data-user_id="{$userId}"
+                                   data-equ_no="{$v.equ_no}"
+                                   data-equ_oil_no="{$v.equ_oil_no}"
+                                   data-equ_name="{$v.equ_name}"
+                                   data-equ_oil_name="{$v.equ_oil_name}"
+                                   data-del_warning_time="{$v.del_warning_time|date=" Y年m月d日",###}"
+                                data-equ_key_no="{$v.equ_key_no}"
                                 >润滑</a>
                                 <a href="javascript:;"
                                    class="edit yanqi"
-                                   data-id="*{$v.id}"
-                                   data-user_id="*{$userId}"
-                                   data-equ_no="*{$v.equ_no}"
-                                   data-equ_oil_no="*{$v.equ_oil_no}"
-                                   data-equ_name="*{$v.equ_name}"
-                                   data-equ_oil_name="*{$v.equ_oil_name}"
-                                   data-how_long="*{$v.how_long}"
-                                   data-del_warning_time="*{$v.del_warning_time|date=" Y年m月d日",###}"
-                                data-equ_key_no="*{$v.equ_key_no}"
+                                   data-id="{$v.id}"
+                                   data-user_id="{$userId}"
+                                   data-equ_no="{$v.equ_no}"
+                                   data-equ_oil_no="{$v.equ_oil_no}"
+                                   data-equ_name="{$v.equ_name}"
+                                   data-equ_oil_name="{$v.equ_oil_name}"
+                                   data-how_long="{$v.how_long}"
+                                   data-del_warning_time="{$v.del_warning_time|date=" Y年m月d日",###}"
+                                data-equ_key_no="{$v.equ_key_no}"
                                 >延期</a>
                                 <a href="javascript:;"
                                    class="info-del del"
-                                   data-id="*{$v.id}"
+                                   data-id="{$v.id}"
                                 >删除</a>
-                                *{/if}
+                                {/if}
                             </td>
                             </tr>
-                            *{/foreach}
+                            {/foreach}
                             </tbody>
                         </table>
                     </div>
@@ -186,17 +188,17 @@
                                 <span class="hint-in2a1">物料编号</span>
                                 <span class="hint-in2a2">
                                     <select name="" class="oilNo">
-                                        *{foreach $oilNoList as $v}
+                                        {foreach $oilNoList as $v}
                                          <option
-                                                 value="*{$v.oil_no}"
-                                                 *{foreach $oilNoStandard as $vv}
-                                                 *{if condition="$vv.oil_no==$v.oil_no" }
+                                                 value="{$v.oil_no}"
+                                                 {foreach $oilNoStandard as $vv}
+                                                 {if condition="$vv.oil_no==$v.oil_no" }
                                                  selected
-                                                 *{/if}
-                                                *{/foreach}
-                                        >*{$v.oil_no} | *{$v.oil_name} | *{$v.detail}
+                                                 {/if}
+                                                {/foreach}
+                                        >{$v.oil_no} | {$v.oil_name} | {$v.detail}
                                         </option>
-                                        *{/foreach}
+                                        {/foreach}
                                     </select>
                                 </span>
                             </div>
@@ -315,6 +317,7 @@
 <script src="__JS__/data.js"></script>
 <script src="__JS__/jquery.monthpicker.js"></script>
 <script type="text/html" id="infoListTemplate">
+    {literal}
     {{each(index,item) data}}
     <tr>
         <td class="num">
@@ -331,11 +334,12 @@
         <td class="process">${item.deadline}</td>
         <td class="process">{{if item.is_first_period==1}}是{{else}}否{{/if}}</td>
         <td class="operate table-operate">
-            <a href="equdetail/${item.equ_key_no}" class="check" target="_blank">查看</a>
+            <a href="/oiling/equdetail/${item.equ_key_no}" class="check" target="_blank">查看</a>
         </td>
 
     </tr>
     {{/each}}
+    {/literal}
 </script>
 <script>
     var oldHtml = $('#infoTbody').html();

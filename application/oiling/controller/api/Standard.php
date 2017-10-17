@@ -144,10 +144,9 @@ class Standard extends BaseController {
                 $item = InfoWarning::where('equ_key_no', '=', $equKeyNo)
                     ->where('is_first_period', '=', $isFirstPeriod)
                     ->order('del_warning_time desc')
-                    ->limit(1)
                     ->find();
                 if ($item) {
-                    $item->how_long = $excelHandle->howLong($item->equ_key_no, $item->del_warning_time);
+                    $item->how_long = $excelHandle->howLong($item);
                     $item->status   = $excelHandle->getStatus($item, $item->how_long);
                     $item->deadline = $excelHandle->getDeadline($item, $item->how_long);
                     $item->save();

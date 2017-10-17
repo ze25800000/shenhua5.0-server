@@ -10,7 +10,7 @@
         <div class="top-light"></div>
         <h1 class="logo"></h1>
         <div class="login-info ue-clear">
-            <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;*{$account}</a>
+            <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;{$account}</a>
                 <div class="login-msg ue-clear"><a href="javascript:;" class="msg-txt">消息</a> <a href="javascript:;"
                                                                                                  class="msg-num">10</a>
                 </div>
@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="rhd_xq">
-        <h2>*{$detail.equ_oil_name}</h2>
+        <h2>{$detail.equ_oil_name}</h2>
         <div class="rhd_xqa">
             <h3><span class="rhd_xqa1">设备润滑标准：</span></h3>
             <div class="rhd_xqb">
@@ -29,27 +29,27 @@
                     <table>
                         <tr class="rhd_xqb1a">
                             <th>设备编号：</th>
-                            <td>*{$detail.equ_no}</td>
+                            <td>{$detail.equ_no}</td>
 
                             <th>润滑点编号：</th>
-                            <td>*{$detail.equ_oil_no}</td>
+                            <td>{$detail.equ_oil_no}</td>
 
                             <th>物料编码：</th>
-                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="oil_no">*{$detail.oil_no}</td>
+                            <td class="edit-item-standard" data-id="{$detail.id}" data-key="oil_no">{$detail.oil_no}</td>
                             <th>用量：</th>
-                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="quantity">*{$detail.quantity}</td>
+                            <td class="edit-item-standard" data-id="{$detail.id}" data-key="quantity">{$detail.quantity}</td>
                         </tr>
                         <tr class="rhd_xqb1a">
                             <th>单位：</th>
-                            <td class="" data-id="*{$detail.id}" data-key="unit">*{$detail.oil_no_unit['unit']}</td>
+                            <td class="" data-id="{$detail.id}" data-key="unit">{$detail.oil_no_unit['unit']}</td>
                             <th>更换最长周期：</th>
-                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="period">*{$detail.period}</td>
+                            <td class="edit-item-standard" data-id="{$detail.id}" data-key="period">{$detail.period}</td>
                             <th>首保周期：</th>
-                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="first_period">
-                                *{$detail.first_period}
+                            <td class="edit-item-standard" data-id="{$detail.id}" data-key="first_period">
+                                {$detail.first_period}
                             </td>
                             <th>油脂采样间隔：</th>
-                            <td class="edit-item-standard" data-id="*{$detail.id}" data-key="interval">*{$detail.interval}</td>
+                            <td class="edit-item-standard" data-id="{$detail.id}" data-key="interval">{$detail.interval}</td>
                         </tr>
                     </table>
                 </div>
@@ -61,110 +61,110 @@
         <div class="rhd_xqa">
             <h3>
                 当前状态：
-                *{if condition="$detail.info_warning_detail"}
+                {if condition="$detail.info_warning_detail"}
                 <span
-                    class="*{$detail.info_warning_detail[0]['status']==3?'rhd_xqa_red':($detail.info_warning_detail[0]['status']==2?'rhd_xqa_hs':'')}">*{$detail.info_warning_detail[0]['status']==3?'超期':($detail.info_warning_detail[0]['status']==2?'临近':'正常')}</span>（正常、<span
+                    class="{$detail.info_warning_detail[0]['status']==3?'rhd_xqa_red':($detail.info_warning_detail[0]['status']==2?'rhd_xqa_hs':'')}">{$detail.info_warning_detail[0]['status']==3?'超期':($detail.info_warning_detail[0]['status']==2?'临近':'正常')}</span>（正常、<span
                     class="rhd_xqa_red">超期</span>、<span
                     class="rhd_xqa_hs">临近</span>）
-                *{/if}
+                {/if}
             </h3>
             <div class="rhd_xqb1">
                 <div class="rhd_xqb1">
                     <table class="status">
-                        *{if condition="$detail.info_warning_detail"}
+                        {if condition="$detail.info_warning_detail"}
                         <tr class="rhd_xqb1a">
                             <th>消警日期：</th>
                             <td class="edit-item-info"
-                                data-id="*{$detail.info_warning_detail[0]['id']}"
-                                data-key="del_warning_time">*{$detail.info_warning_detail[0]['del_warning_time']|date="Y年m月d日",###}</td>
+                                data-id="{$detail.info_warning_detail[0]['id']}"
+                                data-key="del_warning_time">{$detail.info_warning_detail[0]['del_warning_time']|date="Y年m月d日",###}</td>
                             <th>消警类型：</th>
-                            <td>*{$detail.info_warning_detail[0]['warning_type']?'润滑':'延期'}</td>
+                            <td>{$detail.info_warning_detail[0]['warning_type']?'润滑':'延期'}</td>
                             <th>运行时长：</th>
-                            <td>*{$detail.info_warning_detail[0]['how_long']}</td>
-                            *{if condition="$detail.info_warning_detail[0]['deadline']>=0"}
+                            <td>{$detail.info_warning_detail[0]['how_long']}</td>
+                            {if condition="$detail.info_warning_detail[0]['deadline']>=0"}
                             <th>剩余时间：</th>
-                            <td>*{$detail.info_warning_detail[0]['deadline']}</td>
-                            *{else/}
+                            <td>{$detail.info_warning_detail[0]['deadline']}</td>
+                            {else/}
                             <th style="color: red">超期时长：</th>
-                            <td style="color: red">*{$detail.info_warning_detail[0]['deadline']<0?(-$detail.info_warning_detail[0]['deadline']):$detail.info_warning_detail[0]['deadline']}</td>
-                            *{/if}
+                            <td style="color: red">{$detail.info_warning_detail[0]['deadline']<0?(-$detail.info_warning_detail[0]['deadline']):$detail.info_warning_detail[0]['deadline']}</td>
+                            {/if}
                         </tr>
-                        *{if condition="$detail.info_warning_detail[0]['warning_type']"}
+                        {if condition="$detail.info_warning_detail[0]['warning_type']"}
                         <tr class="rhd_xqb1a">
                             <th>是否首保：</th>
                             <td class="edit-item-info"
-                                *{if condition="$detail.info_warning_detail[0]['is_first_period']"} style="color: red;"*{/if}
-                                data-id="*{$detail.info_warning_detail[0]['id']}"
+                                {if condition="$detail.info_warning_detail[0]['is_first_period']"} style="color: red;"{/if}
+                                data-id="{$detail.info_warning_detail[0]['id']}"
                                 data-key="is_first_period"
-                            >*{$detail.info_warning_detail[0]['is_first_period']?'是':'否'}</td>
+                            >{$detail.info_warning_detail[0]['is_first_period']?'是':'否'}</td>
                             <th>物料编号：</th>
                             <td  class="edit-item-info"
-                                 data-id="*{$detail.info_warning_detail[0]['id']}"
+                                 data-id="{$detail.info_warning_detail[0]['id']}"
                                  data-key="oil_no"
-                            >*{$detail.info_warning_detail[0]['oil_no']}</td>
+                            >{$detail.info_warning_detail[0]['oil_no']}</td>
                             <th>用量：</th>
                             <td  class="edit-item-info"
-                                 data-id="*{$detail.info_warning_detail[0]['id']}"
+                                 data-id="{$detail.info_warning_detail[0]['id']}"
                                  data-key="quantity"
-                            >*{$detail.info_warning_detail[0]['quantity']}</td>
+                            >{$detail.info_warning_detail[0]['quantity']}</td>
                             <th>操作人员：</th>
-                            <td>*{$detail.info_warning_detail[0]['user']['name']}</td>
+                            <td>{$detail.info_warning_detail[0]['user']['name']}</td>
                         </tr>
-                        *{else/}
+                        {else/}
                         <tr class="rhd_xqb1a">
                             <th>是否首保：</th>
                             <td class="edit-item-info"
-                                data-id="*{$detail.info_warning_detail[0]['id']}"
+                                data-id="{$detail.info_warning_detail[0]['id']}"
                                 data-key="is_first_period"
-                                *{if condition="$detail.info_warning_detail[0]['is_first_period']"} style="color: red;"*{/if}>*{$detail.info_warning_detail[0]['is_first_period']?'是':'否'}</td>
+                                {if condition="$detail.info_warning_detail[0]['is_first_period']"} style="color: red;"{/if}>{$detail.info_warning_detail[0]['is_first_period']?'是':'否'}</td>
                             <th>延期时长：</th>
                             <td class="edit-item-info"
-                                data-id="*{$detail.info_warning_detail[0]['id']}"
+                                data-id="{$detail.info_warning_detail[0]['id']}"
                                 data-key="postpone"
 
-                            >*{$detail.info_warning_detail[0]['postpone']}</td>
+                            >{$detail.info_warning_detail[0]['postpone']}</td>
                             <th>延期原因：</th>
                             <td class="edit-item-info"
-                                data-id="*{$detail.info_warning_detail[0]['id']}"
+                                data-id="{$detail.info_warning_detail[0]['id']}"
                                 data-key="postpone_reason"
 
-                            >*{$detail.info_warning_detail[0]['postpone_reason']}</td>
+                            >{$detail.info_warning_detail[0]['postpone_reason']}</td>
                             <th>操作人员：</th>
-                            <td>*{$detail.info_warning_detail[0]['user']['name']}</td>
+                            <td>{$detail.info_warning_detail[0]['user']['name']}</td>
                         </tr>
-                        *{/if}
-                        *{/if}
+                        {/if}
+                        {/if}
                     </table>
                 </div>
             </div>
-            *{if condition="$scope>=18"}
+            {if condition="$scope>=18"}
             <div class="rhd_xqb2">
                 <span class="rhd_xqb2a">
                     <a href="javascript:;"
                        class="runhua"
-                       data-id="*{$detail.id}"
-                       data-user_id="*{$userId}"
-                       data-equ_no="*{$detail.equ_no}"
-                       data-equ_oil_no="*{$detail.equ_oil_no}"
-                       data-equ_name="*{$detail.equ_name}"
-                       data-equ_oil_name="*{$detail.equ_oil_name}"
-                                data-equ_key_no="*{$detail.equ_key_no}"
+                       data-id="{$detail.id}"
+                       data-user_id="{$userId}"
+                       data-equ_no="{$detail.equ_no}"
+                       data-equ_oil_no="{$detail.equ_oil_no}"
+                       data-equ_name="{$detail.equ_name}"
+                       data-equ_oil_name="{$detail.equ_oil_name}"
+                                data-equ_key_no="{$detail.equ_key_no}"
                                 >润滑</a>
                 </span>
                 <span class="rhd_xqb2a">
                     <a href="javascript:;"
                        class="edit yanqi"
-                       data-id="*{$detail.id}"
-                       data-user_id="*{$userId}"
-                       data-equ_no="*{$detail.equ_no}"
-                       data-equ_oil_no="*{$detail.equ_oil_no}"
-                       data-equ_name="*{$detail.equ_name}"
-                       data-equ_oil_name="*{$detail.equ_oil_name}"
-                                data-equ_key_no="*{$detail.equ_key_no}"
+                       data-id="{$detail.id}"
+                       data-user_id="{$userId}"
+                       data-equ_no="{$detail.equ_no}"
+                       data-equ_oil_no="{$detail.equ_oil_no}"
+                       data-equ_name="{$detail.equ_name}"
+                       data-equ_oil_name="{$detail.equ_oil_name}"
+                                data-equ_key_no="{$detail.equ_key_no}"
                                 >延期</a>
                 </span>
             </div>
-            *{/if}
+            {/if}
             <div class="clear"></div>
         </div>
         <div class="rhd_xqa">
@@ -184,48 +184,48 @@
                         <th class="process">延期原因</th>
                         <th class="process">是否首保</th>
                         <th class="process">操作人员</th>
-                        *{if condition="$scope>=18"}
+                        {if condition="$scope>=18"}
                         <th class="operate">操作</th>
-                        *{/if}
+                        {/if}
                     </tr>
                     </thead>
                     <tbody>
-                    *{foreach $detail.info_warning_detail as $k=>$v}
+                    {foreach $detail.info_warning_detail as $k=>$v}
                     <tr>
-                        <td class="num">*{$k+1}</td>
-                        <td class="name">*{$v.del_warning_time|date="Y年m月d日",###}</td>
-                        <td class="process">*{$v.warning_type?"润滑":"延期"}</td>
-                        <td class="process">*{$v.how_long}</td>
-                        <td class="process">*{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
-                        <td class="process">*{$v.oil_no}</td>
-                        <td class="process">*{$v.quantity}</td>
-                        <td class="process">*{$v.postpone}</td>
-                        <td class="process">*{$v.postpone_reason}</td>
-                        <td class="process">*{$v.is_first_period?'是':'否'}</td>
-                        <td class="process">*{$v.user.name}</td>
-                        *{if condition="$scope>=18"}
-                        <td class="operate table-operate del-td" data-id="*{$v.id}" data-type="info">
+                        <td class="num">{$k+1}</td>
+                        <td class="name">{$v.del_warning_time|date="Y年m月d日",###}</td>
+                        <td class="process">{$v.warning_type?"润滑":"延期"}</td>
+                        <td class="process">{$v.how_long}</td>
+                        <td class="process">{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
+                        <td class="process">{$v.oil_no}</td>
+                        <td class="process">{$v.quantity}</td>
+                        <td class="process">{$v.postpone}</td>
+                        <td class="process">{$v.postpone_reason}</td>
+                        <td class="process">{$v.is_first_period?'是':'否'}</td>
+                        <td class="process">{$v.user.name}</td>
+                        {if condition="$scope>=18"}
+                        <td class="operate table-operate del-td" data-id="{$v.id}" data-type="info">
                         </td>
-                        *{/if}
+                        {/if}
                     </tr>
-                    *{/foreach}
+                    {/foreach}
                     </tbody>
                 </table>
             </div>
         </div>
-        *{if condition="$norms.unit=='L'"}
+        {if condition="$norms.unit=='L'"}
         <div class="rhd_xqa">
             <h3>
                 <span class="rhd_xqa1">油脂化验指标：</span>
-                *{if condition="$scope>=18"}
+                {if condition="$scope>=18"}
                 <span class="rhd_xqa2"><a href="javascript:;"
                                           id="addOilAnalysisItem"
-                                          data-equ_no="*{$detail.equ_no}"
-                                          data-equ_oil_no="*{$detail.equ_oil_no}"
-                                          data-equ_name="*{$detail.equ_name}"
-                                          data-equ_oil_name="*{$detail.equ_oil_name}"
+                                          data-equ_no="{$detail.equ_no}"
+                                          data-equ_oil_no="{$detail.equ_oil_no}"
+                                          data-equ_name="{$detail.equ_name}"
+                                          data-equ_oil_name="{$detail.equ_oil_name}"
                 >【添加油脂化验指标】</a></span>
-                *{/if}
+                {/if}
             </h3>
             <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
                 <table>
@@ -242,37 +242,37 @@
                         <th class="num">Na</th>
                         <th class="num">PQ</th>
                         <th class="num">粘度</th>
-                        *{if condition="$scope>=18"}
+                        {if condition="$scope>=18"}
                         <th class="operate">操作</th>
-                        *{/if}
+                        {/if}
                     </tr>
                     </thead>
                     <tbody id="analysisBody">
-                    *{foreach $detail.oil_analysis_list as $k=>$v}
-                    <td class="num">*{$k+1}</td>
-                    <td class="name" data-id="*{$v.id}" data-key="sampling_time">*{$v.sampling_time}</td>
-                    <td class="process">*{$v.work_hour}</td>
-                    <td class="process">*{$v.oil_no}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Fe" *{if condition="$v.Fe>$norms.Fe" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.Fe}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Cu" *{if condition="$v.Cu>$norms.Cu" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.Cu}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Al" *{if condition="$v.Al>$norms.Al" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.Al}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Si" *{if condition="$v.Si>$norms.Si" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.Si}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="Na" *{if condition="$v.Na>$norms.Na" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.Na}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="PQ" *{if condition="$v.PQ>$norms.PQ" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.PQ}</td>
-                    <td class="num" data-id="*{$v.id}" data-key="viscosity" *{if
+                    {foreach $detail.oil_analysis_list as $k=>$v}
+                    <td class="num">{$k+1}</td>
+                    <td class="name" data-id="{$v.id}" data-key="sampling_time">{$v.sampling_time}</td>
+                    <td class="process">{$v.work_hour}</td>
+                    <td class="process">{$v.oil_no}</td>
+                    <td class="num" data-id="{$v.id}" data-key="Fe" {if condition="$v.Fe>$norms.Fe" }
+                        style="color: red;font-weight: 600;" {/if}>{$v.Fe}</td>
+                    <td class="num" data-id="{$v.id}" data-key="Cu" {if condition="$v.Cu>$norms.Cu" }
+                        style="color: red;font-weight: 600;" {/if}>{$v.Cu}</td>
+                    <td class="num" data-id="{$v.id}" data-key="Al" {if condition="$v.Al>$norms.Al" }
+                        style="color: red;font-weight: 600;" {/if}>{$v.Al}</td>
+                    <td class="num" data-id="{$v.id}" data-key="Si" {if condition="$v.Si>$norms.Si" }
+                        style="color: red;font-weight: 600;" {/if}>{$v.Si}</td>
+                    <td class="num" data-id="{$v.id}" data-key="Na" {if condition="$v.Na>$norms.Na" }
+                        style="color: red;font-weight: 600;" {/if}>{$v.Na}</td>
+                    <td class="num" data-id="{$v.id}" data-key="PQ" {if condition="$v.PQ>$norms.PQ" }
+                        style="color: red;font-weight: 600;" {/if}>{$v.PQ}</td>
+                    <td class="num" data-id="{$v.id}" data-key="viscosity" {if
                         condition="$v.viscosity<$norms.viscosity_min OR $v.viscosity>$norms.viscosity_max" }
-                        style="color: red;font-weight: 600;" *{/if}>*{$v.viscosity}</td>
-                    *{if condition="$scope>=18"}
-                    <td class="operate table-operate del-td" data-id="*{$v.id}" data-type="analysis"></td>
-                    *{/if}
+                        style="color: red;font-weight: 600;" {/if}>{$v.viscosity}</td>
+                    {if condition="$scope>=18"}
+                    <td class="operate table-operate del-td" data-id="{$v.id}" data-type="analysis"></td>
+                    {/if}
                     </tr>
-                    *{/foreach}
+                    {/foreach}
                     </tbody>
                 </table>
                 <div class="add-oil-analysis-box addoilanalysis">
@@ -317,7 +317,7 @@
                 <div class="warpbox">
 
                     <div class="table_card">
-                        <ul class="tab" data-equ_key_no="*{$detail.equ_key_no}">
+                        <ul class="tab" data-equ_key_no="{$detail.equ_key_no}">
                             <li class="activ" data-ele="Fe">Fe</li>
                             <li data-ele="Cu">Cu</li>
                             <li data-ele="Al">Al</li>
@@ -340,13 +340,13 @@
         <div class="rhd_xqa">
             <h3>
                 <span class="rhd_xqa1">运行时间：</span>
-                *{if condition="$scope>=18"}
+                {if condition="$scope>=18"}
                 <span class="rhd_xqa2"><a href="javascript:;"
                                           id="addWorkHour"
-                                          data-equ_no="*{$detail.equ_no}"
-                                          data-equ_name="*{$detail.equ_name}"
+                                          data-equ_no="{$detail.equ_no}"
+                                          data-equ_name="{$detail.equ_name}"
                 >【添加运行时间】</a></span>
-                *{/if}
+                {/if}
             </h3>
             <div class="rhd_xqb" style="overflow: hidden;overflow-y: auto">
                 <table>
@@ -356,23 +356,23 @@
                         <th class="process">设备名称</th>
                         <th class="process">运行起始时间</th>
                         <th class="process">运行时长</th>
-                        *{if condition="$scope>=18"}
+                        {if condition="$scope>=18"}
                         <th class="operate">操作</th>
-                        *{/if}
+                        {/if}
                     </tr>
                     </thead>
                     <tbody>
-                    *{foreach $detail.time_list as $k=>$v}
+                    {foreach $detail.time_list as $k=>$v}
                     <tr>
-                        <td class="num">*{$k+1}</td>
-                        <td class="process">*{$v.equ_name}</td>
-                        <td class="process">*{$v.start_time|date="Y年m月d日",###}</td>
-                        <td class="process">*{$v.working_hour}</td>
-                        *{if condition="$scope>=18"}
-                        <td style="width: 30px; text-align: center;" class="operate table-operate del-td" data-id="*{$v.id}" data-type="workhour"></td>
-                        *{/if}
+                        <td class="num">{$k+1}</td>
+                        <td class="process">{$v.equ_name}</td>
+                        <td class="process">{$v.start_time|date="Y年m月d日",###}</td>
+                        <td class="process">{$v.working_hour}</td>
+                        {if condition="$scope>=18"}
+                        <td style="width: 30px; text-align: center;" class="operate table-operate del-td" data-id="{$v.id}" data-type="workhour"></td>
+                        {/if}
                     </tr>
-                    *{/foreach}
+                    {/foreach}
                     </tbody>
                 </table>
             </div>
@@ -393,7 +393,7 @@
             </div>
 
         </div>
-        *{/if}
+        {/if}
     </div>
     <div class="tanchuang">
         <div class="hint oiling">
@@ -417,15 +417,15 @@
                     <span class="hint-in2a1">物料编号</span>
                     <span class="hint-in2a2">
                                     <select name="" class="oilNo">
-                                        *{foreach $oilNoList as $v}
+                                        {foreach $oilNoList as $v}
                                         <option
-                                                value="*{$v.oil_no}"
-                                                *{if condition="$detail.oil_no==$v.oil_no" }
+                                                value="{$v.oil_no}"
+                                                {if condition="$detail.oil_no==$v.oil_no" }
                                                 selected
-                                                *{/if}
-                                        >*{$v.oil_no} | *{$v.oil_name} | *{$v.detail}
+                                                {/if}
+                                        >{$v.oil_no} | {$v.oil_name} | {$v.detail}
                                         </option>
-                                        *{/foreach}
+                                        {/foreach}
                                     </select>
                                 </span>
                 </div>
@@ -536,7 +536,7 @@
 <script src="__JS__/data.js"></script>
 <script>
     //设置标签
-    $('title').html('*{$detail.equ_oil_name}');
+    $('title').html('{$detail.equ_oil_name}');
     $('.runhua').click(function () {
         $('.tanchuang .oiling').show(100);
         $('.oiling-time').val(formatDate(new Date(), 'yyyy年MM月dd日'));
@@ -627,7 +627,7 @@
             window.base.getData(params);
         });
     });
-    *{if condition="$scope==36"}
+    {if condition="$scope==36"}
     //编辑润滑标准条目信息
     $(document).on('dblclick', '.edit-item-standard', function (e) {
         var _this = $(this),
@@ -646,9 +646,9 @@
             err.msg&&alert(err.msg)
         });
     });
-    *{/if}
+    {/if}
     //编辑消警记录
-    *{if condition="$scope>=18"}
+    {if condition="$scope>=18"}
         $(document).on('dblclick', '.edit-item-info', function (e) {
         var _this = $(this),
             oldVal = _this.html(),
@@ -668,7 +668,7 @@
             }
         });
     });
-    *{/if}
+    {/if}
 //删除
     $('.rhd_xqb table tbody tr:first-child td.operate').html('<a href="javascript:;" class="del">删除</a>');
     $('.del-td').on('click', 'a', function () {

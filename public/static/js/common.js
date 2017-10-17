@@ -9,10 +9,17 @@ window.base = {
             url: that.g_restUrl + params.url,
             type: params.type,
             data: params.data,
+            beforeSend:function(XMLHttpRequest){
+                layer.load(1);
+            },
+            complete:function(XMLHttpRequest,textStatus){
+                layer.closeAll('loading');
+            },
             success: function (data) {
                 params.sCallback && params.sCallback(data);
             },
             error: function (err) {
+                layer.closeAll('loading');
                 params.eCallback && params.eCallback(JSON.parse(err.responseText));
             }
         })
@@ -30,6 +37,7 @@ window.base = {
             cache: false,
             contentType: false,
             processData: false,
+            timeout: 15000,
             success: function (data) {
                 params.sCallback && params.sCallback(data);
             },
@@ -63,10 +71,11 @@ window.base = {
                 type: 'post',
                 data: {[key]: newVal},
                 sCallback: function (data) {
-                    alert(data.msg);
+                    layer.msg(data.msg);
                     sCallback && sCallback(data);
                 },
                 eCallback: function (err) {
+                    layer.msg('修改失败', {icon: 5});
                     _this.html(oldVal);
                     eCallback && eCallback(err);
                 }
