@@ -5,7 +5,7 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;{$account}</a>
+                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center" target="_blank">&nbsp;{$account}</a>
                 </div>
             </div>
             <div class="toolbar ue-clear">
@@ -75,8 +75,7 @@
                             <select>
                                 <option value="all">全部设备</option>
                                 {foreach $equs as $v}
-                                <option value="{$v.equ_no}" {if condition="$v.equ_no==$equNo" }selected{
-                                /if}>{$v.equ_name}</option>
+                                <option value="{$v.equ_no}" {if condition="$v.equ_no==$equNo" }selected{/if}>{$v.equ_name}</option>
                                 {/foreach}
                             </select>
                         </div>
@@ -141,7 +140,7 @@
                             style="color: red;font-weight: 600;" {/if}>{$v.Si}</td>
                         <td class="num edit-item" data-id="{$v.id}" data-key="Na" {if condition="$v.Na>$vv.Na" }
                             style="color: red;font-weight: 600;" {/if}>{$v.Na}</td>
-                        <td class="num edit-item" data-id="{$v.id}" data-key="pq" {if condition="$v.PQ>$vv.PQ" }
+                        <td class="num edit-item" data-id="{$v.id}" data-key="PQ" {if condition="$v.PQ>$vv.PQ" }
                             style="color: red;font-weight: 600;" {/if}>{$v.PQ}</td>
                         <td class="num edit-item" data-id="{$v.id}" data-key="viscosity"
                             {if condition="$v.viscosity<$vv.viscosity_min OR $v.viscosity>$vv.viscosity_max" }
@@ -220,7 +219,7 @@
         <td class="num">${item.viscosity}</td>
         <td class="process">{{if item.oil_status}}${item.oil_status}{{else}}良好{{/if}}</td>
         <td class="operate table-operate">
-            <a href="javascript:;" data-equ_key_no="${$value.equ_key_no}"
+            <a href="javascript:;" data-equ_key_no="${item.equ_key_no}"
                class="check equ_detail"
                target="_blank">查看</a>
         </td>
@@ -235,6 +234,7 @@
         var equKeyNo = $(this).data('equ_key_no');
         layer.open({
             type: 2,
+            title:'润滑点详情',
             area: ['1300px', '100%'],
             content: ['/oiling/equdetail/'+equKeyNo]
         });
@@ -260,7 +260,7 @@
                 },
                 eCallback: function (err) {
                     if (err.errcode == 2) {
-                        err.msg && alert(err.msg);
+                        err.msg && layer.msg(err.msg,{icon:5});
                     }
                 }
             };

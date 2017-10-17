@@ -17,7 +17,7 @@ class SystemVariableValidate extends BaseValidate {
         'Al'            => 'number',
         'Si'            => 'number',
         'Na'            => 'number',
-        'pq'            => 'number',
+        'PQ'            => 'number',
         'viscosity_max' => 'number',
         'viscosity_min' => 'number',
     ];

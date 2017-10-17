@@ -551,11 +551,12 @@
                 },
                 sCallback: function (data) {
                     $('.tanchuang .oiling').hide(100);
+                    layer.msg('润滑成功');
                     window.location.reload();
                 },
                 eCallback: function (err) {
                     if (err.errcode == 1) {
-                        alert(err.msg);
+                        layer.msg(err.msg, {icon: 5});
                     }
                 }
             };
@@ -597,11 +598,12 @@
                 },
                 sCallback: function (data) {
                     $('.tanchuang .postpone').hide(100);
+                    layer.msg('延期成功');
                     window.location.reload();
                 },
                 eCallback: function (err) {
                     if (err.errcode == 1) {
-                        alert(err.msg);
+                        layer.msg(err.msg, {icon: 5});
                     }
                 }
             };

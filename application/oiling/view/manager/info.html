@@ -5,7 +5,7 @@
             <div class="top-light"></div>
             <h1 class="logo"></h1>
             <div class="login-info ue-clear">
-                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;{$account}</a>
+                <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center" target="_blank">&nbsp;{$account}</a>
                 </div>
             </div>
             <div class="toolbar ue-clear">
@@ -113,8 +113,7 @@
                             <tbody id="infoTbody">
                             {foreach $infoList as $v}
                             <tr style="background-color: {if condition=" $v.status==3"}#ffe0b2{elseif
-                                condition="$v.status==2"
-                            /}#fffdcf{/if};">
+                                condition="$v.status==2"/}#fffdcf{/if};">
                             <td class="num">
                                 <input type="checkbox" data-id="{$v.id}" {if condition="$v.status>=2" }checked{/if}>
                             </td>
@@ -336,7 +335,7 @@
         <td class="process">${item.deadline}</td>
         <td class="process">{{if item.is_first_period==1}}是{{else}}否{{/if}}</td>
         <td class="operate table-operate">
-            <a href="javascript:;" data-equ_key_no="${$value.equ_key_no}"
+            <a href="javascript:;" data-equ_key_no="${item.equ_key_no}"
                class="check equ_detail"
                target="_blank">查看</a>
         </td>
@@ -353,6 +352,7 @@
             var equKeyNo = $(this).data('equ_key_no');
             layer.open({
                 type: 2,
+                title:'润滑点详情',
                 area: ['1300px', '100%'],
                 content: ['/oiling/equdetail/'+equKeyNo]
             });
@@ -404,13 +404,17 @@
                     url: 'oiling/upload?' + exceltype + '&XDEBUG_SESSION_START=12443',
                     data: new FormData($(this).parent()[0]),
                     sCallback: function (data) {
-                        alert('上传成功');
-                        window.location.reload();
+                        layer.open({
+                            content: '上传成功',
+                            yes: function(index, layero){
+                                window.location.reload();
+                            }
+                        });
                     },
                     eCallback: function (err) {
                         console.log(err);
                         if (err.errcode == 2) {
-                            err.msg && alert(err.msg);
+                            err.msg && layer.msg(err.msg,{icon:5});
                         }
                     }
                 };

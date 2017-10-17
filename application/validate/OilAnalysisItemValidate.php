@@ -27,7 +27,7 @@ class OilAnalysisItemValidate extends BaseValidate {
         'Al'            => 'Al必须为数字',
         'Si'            => 'Si必须为数字',
         'Na'            => 'Na必须为数字',
-        'PQ'            => 'pq必须为数字',
+        'PQ'            => 'PQ必须为数字',
         'viscosity'     => 'viscosity必须为数字'
     ];
 }

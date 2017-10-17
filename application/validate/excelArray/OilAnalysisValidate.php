@@ -21,7 +21,7 @@ class OilAnalysisValidate extends ExcelArrayValidate {
         'Al'            => 'number',
         'Si'            => 'number',
         'Na'            => 'number',
-        'pq'            => 'number',
+        'PQ'            => 'number',
         'viscosity'     => 'number',
     ];
     protected $message = [
@@ -39,7 +39,7 @@ class OilAnalysisValidate extends ExcelArrayValidate {
         'Al'                       => 'Al元素必须为数字',
         'Si'                       => 'Si元素必须为数字',
         'Na'                       => 'Na元素必须为数字',
-        'pq'                       => 'pq元素必须为数字',
+        'PQ'                       => 'PQ元素必须为数字',
         'viscosity'                => '粘度必须为数字',
     ];
 

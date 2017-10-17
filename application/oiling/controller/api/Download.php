@@ -39,7 +39,7 @@ class Download extends BaseController {
             case 'oilanalysis':
                 $excelTypeCh    = '油脂化验指标分析';
                 $AnalysisResult = OilAnalysis::getOilAnalysisByIds($ids);
-                $tableHeader    = [['设备编号', '润滑点编号', '润滑点名称', '采样日期', '运行时长', '物料编号', '油品名称', 'Fe', 'Cu', 'Al', 'Si', 'Na', 'PQ', '粘度', '油脂状态', '处理意见']];
+                $tableHeader    = [['设备编号', '润滑点编号', '润滑点名称', '采样日期', '运行时长', '物料编号', '物料名称', 'Fe', 'Cu', 'Al', 'Si', 'Na', 'PQ', '粘度', '油脂状态', '处理意见']];
                 foreach ($AnalysisResult as $k => &$v) {
                     $v = [
                         'equ_no'        => $v['equ_no'],
@@ -54,7 +54,7 @@ class Download extends BaseController {
                         'Al'            => $v['Al'] == 0 ? '0.00' : $v['Al'],
                         'Si'            => $v['Si'] == 0 ? '0.00' : $v['Si'],
                         'Na'            => $v['Na'] == 0 ? '0.00' : $v['Na'],
-                        'pq'            => $v['pq'] == 0 ? '0.00' : $v['pq'],
+                        'PQ'            => $v['PQ'] == 0 ? '0.00' : $v['PQ'],
                         'viscosity'     => $v['viscosity'] == 0 ? '0.00' : $v['viscosity'],
                         'oil_status'    => str_replace('<br>', '，', $v['oil_status']),
                         'advise'        => $v['advise'] ? '正常使用' : '建议更换',
@@ -80,7 +80,7 @@ class Download extends BaseController {
                 foreach ($total as $value) {
                     $cost += $value;
                 }
-                $content = [[$fileName, '', '', '', '', '', ''], ['物料编号', '油品名称', '物料描述', '单位', '单价(元)', '用量', '总计(元)']];
+                $content = [[$fileName, '', '', '', '', '', ''], ['物料编号', '物料名称', '物料描述', '单位', '单价(元)', '用量', '总计(元)']];
                 foreach ($costDetails as $k => $v) {
                     array_push($content, [$v['oil_no'], $v['oil_name'], $v['detail'], $v['unit'], $v['price'], $v['how_much'], $v['total']]);
                 }

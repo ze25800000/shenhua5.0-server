@@ -37,7 +37,7 @@ class Admin extends BaseController {
         } catch (Exception $e) {
             $this->error('执行失败');
         }
-        $this->success('执行成功','/');
+        $this->success('执行成功', '/');
     }
 
     public function deleteRecentUploadData() {
@@ -63,10 +63,8 @@ class Admin extends BaseController {
         }
 
         if (!$result) {
-            throw new DocumentException([
-                'msg' => '删除最近一次上传数据失败'
-            ]);
+            $this->error('删除最近一次上传数据失败');
         }
-        return $this->ajaxReturn('删除最近一次上传数据成功');
+        $this->success('删除最近一次上传数据成功', '/');
     }
 }

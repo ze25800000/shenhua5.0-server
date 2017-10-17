@@ -111,6 +111,6 @@ Route::get('download/template', 'oiling/api.Download/downloadTemplate');
 //test
 Route::get('detail/:equ_key_no', 'oiling/manager/detail');
 
-Route::get('delall', 'oiling/api.Admin/delAll');
+Route::get('superadmin/delall', 'oiling/api.Admin/delAll');
 
 

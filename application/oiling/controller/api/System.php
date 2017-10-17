@@ -34,7 +34,7 @@ class System extends BaseController {
             !empty($_POST['Al']) ||
             !empty($_POST['Si']) ||
             !empty($_POST['Na']) ||
-            !empty($_POST['pq']) ||
+            !empty($_POST['PQ']) ||
             !empty($_POST['viscosity_max']) ||
             !empty($_POST['viscosity_min'])
         ) {

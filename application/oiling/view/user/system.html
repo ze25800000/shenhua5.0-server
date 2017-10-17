@@ -5,6 +5,7 @@
         height: 30px;
         line-height: 30px;
     }
+
     th {
         font-weight: bold;
     }
@@ -107,7 +108,8 @@
                                     <table>
                                         <tr>
                                             <th>临近状态时长：</th>
-                                            <td class="edit-item" data-id="1" data-key="postpone">{$postpone.postpone}</td>
+                                            <td class="edit-item" data-id="1" data-key="postpone">{$postpone.postpone}
+                                            </td>
                                         </tr>
                                     </table>
                                     <table style="margin-top: 20px">
@@ -129,14 +131,30 @@
                                             <td class="process">{$item.oil_no}</td>
                                             <td class="process">{$item.oil_name}</td>
                                             <td class="time">{$item.detail}</td>
-                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Fe">{$item.Fe}</td>
-                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Cu">{$item.Cu}</td>
-                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Al">{$item.Al}</td>
-                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Si">{$item.Si}</td>
-                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Na">{$item.Na}</td>
-                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="PQ">{$item.PQ}</td>
-                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="viscosity_max">{$item.viscosity_max}</td>
-                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="viscosity_min">{$item.viscosity_min}</td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Fe">
+                                                {$item.Fe}
+                                            </td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Cu">
+                                                {$item.Cu}
+                                            </td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Al">
+                                                {$item.Al}
+                                            </td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Si">
+                                                {$item.Si}
+                                            </td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="Na">
+                                                {$item.Na}
+                                            </td>
+                                            <td class="process var-edit-item" data-id="{$item.id}" data-key="PQ">
+                                                {$item.PQ}
+                                            </td>
+                                            <td class="process var-edit-item" data-id="{$item.id}"
+                                                data-key="viscosity_max">{$item.viscosity_max}
+                                            </td>
+                                            <td class="process var-edit-item" data-id="{$item.id}"
+                                                data-key="viscosity_min">{$item.viscosity_min}
+                                            </td>
                                         </tr>
                                         {/foreach}
                                     </table>
@@ -253,7 +271,7 @@
             oldVal = _this.html(),
             url = 'user/system/varedit/';
         oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
-        var long = oldVal.length?(oldVal.length * 12):'20';
+        var long = oldVal.length ? (oldVal.length * 12) : '20';
         if (!/input/.test(oldVal)) {
             _this.html('<input type="text" value="' + oldVal + '" style="width: 30px;height:16px;outline: none">');
         }
@@ -262,9 +280,9 @@
         window.base.editItemByDblClick(_this, input, oldVal, url, function () {
 //            window.location.reload();
         }, function (err) {
-            if (err.account) alert(err.account);
-            if (err.name) alert(err.name);
-            if (err.phone) alert(err.phone);
+            if (err.account) layer.msg(err.account);
+            if (err.name) layer.msg(err.name);
+            if (err.phone) layer.msg(err.phone);
         });
     });
     $(document).on('dblclick', '.var-edit-item', function (e) {
@@ -272,7 +290,7 @@
             oldVal = _this.html(),
             url = 'oiling/oildetail/edit/';
         oldVal = oldVal.replace(/(^\s*)|(\s*$)/g, "");
-        var long = oldVal.length?(oldVal.length * 12):'20';
+        var long = oldVal.length ? (oldVal.length * 12) : '20';
         if (!/input/.test(oldVal)) {
             _this.html('<input type="text" value="' + oldVal + '" style="width: 30px;height:16px;outline: none">');
         }
@@ -281,9 +299,9 @@
         window.base.editItemByDblClick(_this, input, oldVal, url, function () {
 //            window.location.reload();
         }, function (err) {
-            if (err.account) alert(err.account);
-            if (err.name) alert(err.name);
-            if (err.phone) alert(err.phone);
+            if (err.account) layer.msg(err.account);
+            if (err.name) layer.msg(err.name);
+            if (err.phone) layer.msg(err.phone);
         });
     });
 
@@ -325,17 +343,17 @@
                     scope: scope
                 },
                 sCallback: function (data) {
-                    alert(data.msg);
+                    layer.msg(data.msg);
                     window.location.reload();
                 },
                 eCallback: function (err) {
                     console.log(err);
                     if (err.errcode == 2) {
-                        err.msg.account && alert(err.msg.account);
-                        err.msg.password && alert(err.msg.password);
-                        err.msg.phone && alert(err.msg.phone);
+                        err.msg.account && layer.msg(err.msg.account, {icon: 5});
+                        err.msg.password && layer.msg(err.msg.password, {icon: 5});
+                        err.msg.phone && layer.msg(err.msg.phone, {icon: 5});
                     } else if (err.errcode == 1) {
-                        alert(err.msg);
+                        layer.msg(err.msg, {icon: 5});
                     }
                 }
             };
@@ -357,11 +375,11 @@
                 url: 'user/system/deluser/' + id,
                 type: 'delete',
                 sCallback: function (data) {
-                    alert(data.msg);
+                    layer.msg(data.msg);
                     window.location.reload();
                 },
                 eCallback: function (err) {
-                    alert(err.msg)
+                    layer.msg(err.msg, {icon: 5})
                 }
             };
             window.base.getData(params);

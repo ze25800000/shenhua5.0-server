@@ -1,3 +1,15 @@
+var timer = null;
+$(document).on('mouseover', '.edit-item', function () {
+    var _this = $(this);
+    timer = setTimeout(function () {
+        layer.tips('双击可修改此内容', _this, {
+            tips: [1, '#829ea8']
+        });
+    }, 600);
+});
+$(document).on('mouseout', '.edit-item', function () {
+    clearTimeout(timer);
+});
 window.base = {
     g_restUrl: 'http://shenhua.cn/',
     getData: function (params) {
@@ -9,10 +21,10 @@ window.base = {
             url: that.g_restUrl + params.url,
             type: params.type,
             data: params.data,
-            beforeSend:function(XMLHttpRequest){
+            beforeSend: function (XMLHttpRequest) {
                 layer.load(1);
             },
-            complete:function(XMLHttpRequest,textStatus){
+            complete: function (XMLHttpRequest, textStatus) {
                 layer.closeAll('loading');
             },
             success: function (data) {
@@ -84,7 +96,7 @@ window.base = {
                 window.base.getData(params);
             }
         }
-    }
+    },
 };
 
 

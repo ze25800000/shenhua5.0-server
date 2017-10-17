@@ -21,8 +21,8 @@ class OilDetailValidate extends ExcelArrayValidate {
     protected $message = [
         'oil_no.require'   => '物料编号不能为空',
         'oil_no.integer'   => '物料编号必须为数字',
-        'oil_name.require' => '油品名称不能为空',
-        'oil_name.chsDash' => '油品名称只能由汉字、字母、数字和下划线_及破折号-组成',
+        'oil_name.require' => '物料名称不能为空',
+        'oil_name.chsDash' => '物料名称只能由汉字、字母、数字和下划线_及破折号-组成',
         'detail'           => '物料描述不能为空',
         'unit.require'     => '单位不能为空',
         'unit.alpha'       => '单位必须使用英文字母',
