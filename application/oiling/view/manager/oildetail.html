@@ -252,7 +252,7 @@
 
         function costList(before, after) {
             if (before >= after) {
-                alert('时间输入有误');
+                layer.msg('时间输入有误', {icon: 5});
                 return false;
             }
             var equNo = $('select').val();
@@ -301,14 +301,14 @@
             var oilNo = $(this).data('oil_no');
             var equNo = $('select').val();
             var params = {
-                    url: 'oiling/oildetail/equname/' + oilNo + '/' + before + '/' + after+'?equ_no='+equNo,
+                    url: 'oiling/oildetail/equname/' + oilNo + '/' + before + '/' + after+'?equ_no='+equNo+'&XDEBUG_SESSION_START=11647',
                     sCallback: function (list) {
                         $('.tanchuang-equlist').show(100);
                         $('.tan-box').show(100);
                         $('#tanList').tmpl(list).appendTo('#tanBody');
                     },
                     eCallback: function (err) {
-
+                        layer.msg('该物料没有被润滑点使用过', {icon: 5});
                     }
                 };
             window.base.getData(params);

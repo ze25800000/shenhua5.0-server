@@ -148,7 +148,9 @@
                             style="color: red;font-weight: 600;" {/if}>{$v.viscosity}</td>
                         <td class="process">{$v.oil_status?$v.oil_status:'良好'}</td>
                         <td class="operate table-operate">
-                            <a href="/oiling/equdetail/{$v.equ_key_no}" class="check" target="_blank">查看</a>
+                            <a href="javascript:;" data-equ_key_no="{$v.equ_key_no}"
+                               class="check equ_detail"
+                               target="_blank">查看</a>
                             {if condition="$scope>=18"}
                             <a href="javascript:;" class="del-item del" data-id="{$v.id}">删除</a>
                             {/if}
@@ -218,7 +220,9 @@
         <td class="num">${item.viscosity}</td>
         <td class="process">{{if item.oil_status}}${item.oil_status}{{else}}良好{{/if}}</td>
         <td class="operate table-operate">
-            <a href="/oiling/equdetail/${item.equ_key_no}" class="check" target="_blank">查看</a>
+            <a href="javascript:;" data-equ_key_no="${$value.equ_key_no}"
+               class="check equ_detail"
+               target="_blank">查看</a>
         </td>
     </tr>
     {{/each}}
@@ -227,6 +231,18 @@
 </script>
 <script>
     $('title').html('油脂化验指标分析');
+    $(document).on('click','.equ_detail',function () {
+        var equKeyNo = $(this).data('equ_key_no');
+        layer.open({
+            type: 2,
+            area: ['1300px', '100%'],
+            content: ['/oiling/equdetail/'+equKeyNo]
+        });
+    });
+    //关闭iframe
+    $(document).on('click', '.layui-layer-close', function () {
+        location.reload();
+    });
     var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
     $('.scroll-box').css('height', scrollHeight);
     $('.upload').click(function () {

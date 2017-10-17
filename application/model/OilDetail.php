@@ -22,6 +22,7 @@ class OilDetail extends BaseModel {
     public static function getCostList($before, $after, $equNo = 'all') {
         $equNo     = $equNo == 'all' ? null : " AND equ_no={$equNo}";
         $sql       = "SELECT
+                      id,
                       oil_no,
                       oil_name,
                       detail,

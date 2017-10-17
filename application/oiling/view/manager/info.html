@@ -129,7 +129,9 @@
                             <td class="process">{$v.deadline}</td>
                             <td class="process">{$v.is_first_period?'是':'否'}</td>
                             <td class="operate table-operate">
-                                <a href="/oiling/equdetail/{$v.equ_key_no}" class="check" target="_blank">查看</a>
+                                <a href="javascript:;" data-equ_key_no="{$v.equ_key_no}"
+                                   class="check equ_detail"
+                                   target="_blank">查看</a>
                                 {if condition="$scope>=18"}
                                 <a href="javascript:;"
                                    class="edit runhua"
@@ -334,7 +336,9 @@
         <td class="process">${item.deadline}</td>
         <td class="process">{{if item.is_first_period==1}}是{{else}}否{{/if}}</td>
         <td class="operate table-operate">
-            <a href="/oiling/equdetail/${item.equ_key_no}" class="check" target="_blank">查看</a>
+            <a href="javascript:;" data-equ_key_no="${$value.equ_key_no}"
+               class="check equ_detail"
+               target="_blank">查看</a>
         </td>
 
     </tr>
@@ -345,6 +349,18 @@
     var oldHtml = $('#infoTbody').html();
     $(function () {
         $('title').html('润滑提示与记录');
+        $(document).on('click','.equ_detail',function () {
+            var equKeyNo = $(this).data('equ_key_no');
+            layer.open({
+                type: 2,
+                area: ['1300px', '100%'],
+                content: ['/oiling/equdetail/'+equKeyNo]
+            });
+        });
+        //关闭iframe
+        $(document).on('click', '.layui-layer-close', function () {
+            location.reload();
+        });
         var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 27;
         $('.scroll-box').css('height', scrollHeight);
 //        $(document).find('tr:odd').css("backgroundColor", "#eff6fa");

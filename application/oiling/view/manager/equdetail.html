@@ -5,21 +5,7 @@
         /*text-align: center;*/
     }
 </style>
-<div id="hd">
-    <div class="hd-wrap ue-clear">
-        <div class="top-light"></div>
-        <h1 class="logo"></h1>
-        <div class="login-info ue-clear">
-            <div class="welcome ue-clear">欢迎您,<a style="color: #fff;" href="/user/center">&nbsp;{$account}</a>
-                <div class="login-msg ue-clear"><a href="javascript:;" class="msg-txt">消息</a> <a href="javascript:;"
-                                                                                                 class="msg-num">10</a>
-                </div>
-            </div>
-            <div class="toolbar ue-clear"><a href="javascript:;" class="home-btn">首页</a> <a href="javascript:;"
-                                                                                            class="quit-btn exit"></a>
-            </div>
-        </div>
-    </div>
+<div id="hd" style="background:none">
     <div class="rhd_xq">
         <h2>{$detail.equ_oil_name}</h2>
         <div class="rhd_xqa">
@@ -524,11 +510,6 @@
             <a class="hintl-in3 confirm-del" href="javascript:;">是</a>
             <a class="hintl-in4" href="javascript:;">否</a>
         </div>
-    </div>
-
-    <div id="ft" class="ue-clear rh_foot">
-        <div class="ft-left"><em>版权所有：赵奇创新工作室</em></div>
-        <div class="ft-right"><em>技术支持：非同科技</em></div>
     </div>
 </div>
 <?php require(APP_PATH.'/oiling/view/manager/common/exitDialog.html');?>

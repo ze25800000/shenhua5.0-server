@@ -58,7 +58,7 @@ class OilDetailCost extends BaseController {
         $equNo = $equNo == 'all' ? null : " AND equ_no={$equNo}";
         $sql   = "SELECT equ_key_no,equ_oil_name,del_warning_time,quantity
                 FROM info_warning
-                WHERE warning_type=1 AND del_warning_time BETWEEN $before AND $after" . $equNo . "
+                WHERE warning_type=1 AND del_warning_time BETWEEN $before AND $after" . $equNo .' AND oil_no='. $oil_no." 
                 ORDER BY equ_no ASC ,equ_oil_no ASC ";
         $list  = Db::query($sql);
 

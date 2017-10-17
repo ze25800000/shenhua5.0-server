@@ -166,7 +166,8 @@
                                         ${$value.interval}
                                     </td>
                                     <td class="operate table-operate">
-                                        <a href="/oiling/equdetail/${$value.equ_key_no}" class="check"
+                                        <a href="javascript:;" data-equ_key_no="${$value.equ_key_no}"
+                                           class="check equ_detail"
                                            target="_blank">查看</a>
                                         <a href="javascript:;" class="del btn2" data-id="${$value.id}">删除</a>
                                     </td>
@@ -234,7 +235,19 @@
 <?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>
 <script>
     $('title').html('设备润滑标准');
-
+    $(document).on('click','.equ_detail',function () {
+        var equKeyNo = $(this).data('equ_key_no');
+        layer.open({
+            type: 2,
+            title:'润滑点详情信息',
+            area: ['1300px', '100%'],
+            content: ['/oiling/equdetail/'+equKeyNo]
+        });
+    });
+    //关闭iframe
+    $(document).on('click', '.layui-layer-close', function () {
+        location.reload();
+    });
     //根据设备编号获取设备润滑标准列表
     var sflag = true;
     $('#equipments').on('click', '.equ-item', function () {
