@@ -373,8 +373,9 @@
             return false;
         }
         var params = {
-            url: 'oiling/analysis/search/' + val,
+            url: 'oiling/analysis/search/' + val+'?XDEBUG_SESSION_START=14691',
             sCallback: function (list) {
+                console.log(list);
                 if (newHtml == oldHtml) {
                     return false;
                 }

@@ -27,10 +27,10 @@ class OilAnalysis extends BaseModel {
     }
 
     public static function getAnalysisList($isAdvise = false, $equNo = 'all') {
-        $equNoSql  = $equNo == 'all' ? null : " and equ_no={$equNo}";
-        $adviseSql = $isAdvise ? " and advise=0 " : null;
-        $adviseASCSql  = $equNo == 'all' ? "advise ASC," : null;
-        $sql    = "SELECT *
+        $equNoSql     = $equNo == 'all' ? null : " and equ_no={$equNo}";
+        $adviseSql    = $isAdvise ? " and advise=0 " : null;
+        $adviseASCSql = $equNo == 'all' ? "advise ASC," : null;
+        $sql          = "SELECT *
                     FROM oil_analysis AS a
                     WHERE sampling_time = (SELECT max(a1.sampling_time)
                                            FROM oil_analysis AS a1
@@ -38,8 +38,8 @@ class OilAnalysis extends BaseModel {
                           AND equ_key_no = (SELECT s.equ_key_no
                                             FROM oil_standard AS s
                                             WHERE s.equ_key_no = a.equ_key_no)"
-            . $equNoSql . $adviseSql .  " ORDER BY ".$adviseASCSql."equ_no ASC,equ_oil_no ASC";
-        $result = Db::query($sql);
+            . $equNoSql . $adviseSql . " ORDER BY " . $adviseASCSql . "equ_no ASC,equ_oil_no ASC";
+        $result       = Db::query($sql);
         if ($isAdvise) {
             foreach ($result as &$v) {
                 $v['oil_status'] = str_replace('<br>', '，', $v['oil_status']);
@@ -76,17 +76,13 @@ class OilAnalysis extends BaseModel {
     }
 
     public static function getOilAnalysisListByKeyword($keyword) {
-        $equKeyNoLists = OilStandard::where('equ_oil_name', 'LIKE', "%$keyword%")
-            ->field('equ_key_no')->select();
-        $equKeyNos     = Tools::listMoveToArray($equKeyNoLists, 'equ_key_no');
-        $result        = [];
-        foreach ($equKeyNos as $equKeyNo) {
-            $item = self::where('equ_key_no', '=', $equKeyNo)
-                ->order('sampling_time desc')
-                ->limit(1)
-                ->find();
-            array_push($result, $item);
-        }
+        $sql    = "SELECT *
+                          FROM oil_analysis AS a
+                          WHERE sampling_time = (SELECT max(a1.sampling_time)
+                                       FROM oil_analysis AS a1
+                                       WHERE a.sampling_time = a1.sampling_time)
+                                AND equ_oil_name LIKE '%$keyword%'";
+        $result = Db::query($sql);
         if (empty($result)) {
             return null;
         }

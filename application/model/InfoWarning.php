@@ -46,7 +46,7 @@ class InfoWarning extends BaseModel {
                           AND equ_key_no = (SELECT s.equ_key_no
                                             FROM oil_standard AS s
                                             WHERE s.equ_key_no = a.equ_key_no)" . $equNoSql . "
-                     ORDER BY ".$isStatus." equ_no ASC,equ_oil_no ASC ;";
+                     ORDER BY " . $isStatus . " equ_no ASC,equ_oil_no ASC ;";
         $result   = Db::query($sql);
         return $result;
     }
@@ -69,17 +69,13 @@ class InfoWarning extends BaseModel {
     }
 
     public static function getInfoWarningListByKeyword($keyword) {
-        $equKeyNoLists = OilStandard::where('equ_oil_name', 'LIKE', "%$keyword%")
-            ->field('equ_key_no')->select();
-        $equKeyNos     = Tools::listMoveToArray($equKeyNoLists, 'equ_key_no');
-        $result        = [];
-        foreach ($equKeyNos as $equKeyNo) {
-            $item = self::where('equ_key_no', '=', $equKeyNo)
-                ->order('del_warning_time desc')
-                ->limit(1)
-                ->find();
-            array_push($result, $item);
-        }
+        $sql    = "SELECT *
+                   FROM info_warning AS a
+                   WHERE del_warning_time = (SELECT max(a1.del_warning_time)
+                               FROM info_warning AS a1
+                               WHERE a.del_warning_time = a1.del_warning_time)
+                        AND equ_oil_name LIKE '%$keyword%'";
+        $result = Db::query($sql);
         if (empty($result)) {
             return null;
         }
