@@ -96,11 +96,11 @@ class Download extends BaseController {
                 foreach ($total as $value) {
                     $cost += $value;
                 }
-                $content = [[$fileName, '', '', '', '', '', '', '', '', ''], ['设备编号', '润滑点编号', '润滑点名称', '物料编号', '物料名称', '物料描述', '单位', '单价(元)', '用量', '总计(元)']];
+                $content = [[$fileName, '', '', '', '', '', '', '', '', ''], ['设备编号', '润滑点编号', '润滑点名称', '物料编号', '物料名称', '物料描述', '单位', '单价(元)', '润滑日期', '用量', '总计(元)']];
                 foreach ($infoWarn as $k => $v) {
-                    array_push($content, [$v['equ_no'], $v['equ_oil_no'], $v['equ_oil_name'], $v['oil_no'], $v['oil_name'], $v['detail'], $v['unit'], $v['price'], $v['how_much'], $v['total']]);
+                    array_push($content, [$v['equ_no'], $v['equ_oil_no'], $v['equ_oil_name'], $v['oil_no'], $v['oil_name'], $v['detail'], $v['unit'], $v['price'], $v['date'], $v['quantity'], $v['total']]);
                 }
-                array_push($content, ['', '', '', '', '', '', '', '', '', $cost]);
+                array_push($content, ['', '', '', '', '', '', '','', '', '', $cost]);
                 break;
             default:
                 break;
