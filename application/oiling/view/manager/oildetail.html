@@ -270,7 +270,7 @@
             }
             var equNo = $('select').val();
             var params = {
-                url: '/oiling/oildetail/costlist/' + before + '/' + after + '?equ_no=' + equNo + '&XDEBUG_SESSION_START=12350',
+                url: '/oiling/oildetail/costlist/' + before + '/' + after + '?equ_no=' + equNo + '&XDEBUG_SESSION_START=11261',
                 sCallback: function (list) {
                     $(document).find('#costTbody').html('');
                     $('#costTemplate').tmpl(list).appendTo('#costTbody');

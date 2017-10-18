@@ -5,6 +5,7 @@ namespace app\oiling\controller\api;
 
 use app\lib\tools\Tools;
 use app\model\OilAnalysis;
+use app\model\OilUsed;
 use app\model\WorkHour;
 use app\service\ExcelHandle;
 use app\validate\DetailDateValidate;
@@ -75,6 +76,7 @@ class WarningInfo extends BaseController {
                 'msg' => '润滑操作失败'
             ]);
         }
+        $excelHandle->saveToOilUsed($posts);
         $OilAnalysisItem = OilAnalysis::where(['equ_key_no' => $posts['equ_key_no']])->order('sampling_time desc')->find();
         if (!empty($OilAnalysisItem)) {
             $OilAnalysisItem->advise = 1;
@@ -188,13 +190,17 @@ class WarningInfo extends BaseController {
 
     public function deleteInfoItemById($id) {
         (new IDMustBePositiveInt())->goCheck();
-        $result = InfoWarning::where('id', '=', $id)
-            ->delete();
+        $InfoWarning = InfoWarning::get($id);
+        $result      = $InfoWarning->delete();
         if (!$result) {
             throw new DocumentException([
                 'msg' => '删除消警记录失败'
             ]);
         }
+        $res = OilUsed::where([
+            'equ_key_no'       => $InfoWarning->equ_key_no,
+            'del_warning_time' => $InfoWarning->del_warning_time,
+        ])->delete();
         return $this->ajaxReturn('删除消警记录成功');
     }
 

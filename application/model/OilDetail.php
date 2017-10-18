@@ -20,8 +20,8 @@ class OilDetail extends BaseModel {
     }
 
     public static function getCostList($before, $after, $equNo = 'all') {
-        $equNo     = $equNo == 'all' ? null : " AND equ_no={$equNo}";
-        $sql       = "SELECT
+        $equNo      = $equNo == 'all' ? null : " AND equ_no={$equNo}";
+        $sql        = "SELECT
                       id,
                       oil_no,
                       oil_name,
@@ -29,7 +29,8 @@ class OilDetail extends BaseModel {
                       unit,
                       price
                       FROM oil_detail";
-        $oilDetail = Db::query($sql);
+        $oilDetail  = Db::query($sql);
+        $totalPrice = 0;
         foreach ($oilDetail as $k => $v) {
             $sql = "SELECT equ_oil_name,del_warning_time,quantity
                     FROM info_warning
@@ -46,26 +47,28 @@ class OilDetail extends BaseModel {
                 $oilDetail[$k]['total']    = $v['price'] * $oilDetail[$k]['how_much'];
                 array_push($oilDetail[$k]['equs'], $vv);
             }
+            $totalPrice += $oilDetail[$k]['total'];
         }
+        $x = $totalPrice;
         return $oilDetail;
 
     }
 
     public static function getEquCostList($before, $after, $equNo) {
-        $equNo     = $equNo == 'all' ? null : " AND equ_no={$equNo}";
-        $sql       = "SELECT
+        $equNo      = $equNo == 'all' ? null : " AND equ_no={$equNo}";
+        $sql        = "SELECT
                     id,
                     equ_no,
                     equ_key_no,
                     equ_oil_no,
                     equ_oil_name,
-                    oil_no,
-                    sum(quantity) AS how_much
+                    oil_no
                     FROM info_warning
                     WHERE del_warning_time BETWEEN $before AND $after AND warning_type = 1" . $equNo . " 
                     GROUP BY equ_key_no 
                     ORDER BY equ_no asc,equ_oil_no asc";
-        $infoWarns = Db::query($sql);
+        $infoWarns  = Db::query($sql);
+        $totalPrice = 0;
         foreach ($infoWarns as &$infoWarn) {
             $OilUsed  = OilUsed::where(['equ_key_no' => $infoWarn['equ_key_no'],])
                 ->where("del_warning_time between $before and $after")
@@ -96,8 +99,9 @@ class OilDetail extends BaseModel {
             $infoWarn['date']     = implode('<br>', $date);
             $infoWarn['quantity'] = implode('<br>', $quantity);
             $infoWarn['total']    = $total;
-
+            $totalPrice           += $infoWarn['total'];
         }
+        $x = $totalPrice;
         return $infoWarns;
     }
 

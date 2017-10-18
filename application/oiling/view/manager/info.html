@@ -436,7 +436,7 @@
                     isFirstPeriod = $('#RunHuaRadioYes').attr('checked') ? 1 : 0,
                     delWarningTime = $('.oiling-time').val().replace(/^\s+|\s+$/gm, '');
                 var params = {
-                    url: 'oiling/info/lubricate?XDEBUG_SESSION_START=18185',
+                    url: 'oiling/info/lubricate?XDEBUG_SESSION_START=11261',
                     type: 'post',
                     data: {
                         id: id,
@@ -557,7 +557,7 @@
             $('.confirm-del').click(function (e) {
                 e.stopPropagation();
                 var params = {
-                    url: 'oiling/info/del/' + id + '?XDEBUG_SESSION_START=11353',
+                    url: 'oiling/info/del/' + id + '?XDEBUG_SESSION_START=11261',
                     type: 'delete',
                     sCallback: function (data) {
                         window.location.reload();
