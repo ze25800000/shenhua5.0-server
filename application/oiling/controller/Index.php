@@ -5,12 +5,38 @@ namespace app\oiling\controller;
 
 use app\lib\exception\SuccessMessage;
 use app\lib\exception\UserException;
+use app\model\InfoWarning;
 use app\service\BaseController;
 use app\model\User;
+use app\service\ExcelHandle;
+use think\Db;
 use think\Request;
 
 class Index extends BaseController {
-
+    public function _initialize() {
+        $howLong    = cache('howLong');
+        $excelTools = new ExcelHandle();
+        if (!$howLong) {
+            $sql          = "SELECT *
+                             FROM info_warning AS a
+                             WHERE del_warning_time = (SELECT max(a1.del_warning_time)
+                                                       FROM info_warning AS a1
+                                                       WHERE a.del_warning_time = a1.del_warning_time)
+                                  AND oil_no = (SELECT d.oil_no
+                                                FROM oil_detail AS d
+                                                WHERE a.oil_no = d.oil_no AND d.unit = 'KG')";
+            $infoWarnings = Db::query($sql);
+            foreach ($infoWarnings as &$infoWarning) {
+                $howLong = $excelTools->howLong($infoWarning);
+                InfoWarning::where(['id' => $infoWarning['id']])->update([
+                    'how_long' => $howLong,
+                    'status'   => $excelTools->getStatus($infoWarning, $howLong),
+                    'deadline' => $excelTools->getDeadline($infoWarning, $howLong)
+                ]);
+            }
+            $resCache = cache('howLong', '每隔6小时更新数据库', 21600);
+        }
+    }
 
     public function login() {
         $request = Request::instance();

@@ -2,10 +2,10 @@ var timer = null;
 $(document).on('mouseover', '.edit-item', function () {
     var _this = $(this);
     timer = setTimeout(function () {
-        layer.tips('双击可修改此内容', _this, {
+        layer.tips('双击修改此内容，按回车确认修改', _this, {
             tips: [1, '#829ea8']
         });
-    }, 600);
+    }, 800);
 });
 $(document).on('mouseout', '.edit-item', function () {
     clearTimeout(timer);
