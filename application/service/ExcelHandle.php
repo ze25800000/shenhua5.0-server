@@ -17,6 +17,7 @@ use app\model\InfoWarning;
 use app\model\OilAnalysis;
 use app\model\OilDetail;
 use app\model\OilStandard;
+use app\model\OilUsed;
 use app\model\WorkHour;
 use app\validate\excelArray\ExcelArrayValidate;
 use app\validate\excelArray\InfoWarningValidate;
@@ -196,7 +197,10 @@ class ExcelHandle {
                 $arr[$k]['status']   = $this->getStatus($arr[$k], $arr[$k]['how_long']);
                 $arr[$k]['deadline'] = $this->getDeadline($arr[$k], $arr[$k]['how_long']);
                 $arr[$k]['user_id']  = session('user_id');
-                $item                = $infoWarningModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and del_warning_time={$arr[$k]['del_warning_time']}")->find();
+                if (!empty($arr[$k]['oil_no'])) {
+                    $this->saveToOilUsed($arr[$k]);
+                }
+                $item = $infoWarningModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and del_warning_time={$arr[$k]['del_warning_time']}")->find();
                 if ($item) {
                     $arr[$k]['id'] = $item->id;
                 }
@@ -209,6 +213,23 @@ class ExcelHandle {
             ]);
         }
         return true;
+    }
+
+    public function saveToOilUsed($infoWarning) {
+        $OilDetail = OilDetail::where(['oil_no' => $infoWarning['oil_no']])->find();
+        $arr       = [
+            'equ_key_no'       => $infoWarning['equ_key_no'],
+            'del_warning_time' => $infoWarning['del_warning_time'],
+            'oil_no'           => $infoWarning['oil_no'],
+            'oil_name'         => $OilDetail->oil_name,
+            'detail'           => $OilDetail->detail,
+            'unit'             => $OilDetail->unit,
+            'quantity'         => $infoWarning['quantity'],
+            'price'            => $OilDetail->price,
+            'cost'             => $OilDetail->price * $infoWarning['quantity'],
+        ];
+        $OilUsed   = new OilUsed();
+        $OilUsed->save($arr);
     }
 
     public function oilAnalysis($excel_array) {

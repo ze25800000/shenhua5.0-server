@@ -89,6 +89,15 @@ class Manager extends BaseController {
         return $this->fetch();
     }
 
+    public function equoildetailtable($before, $after) {
+        $equNo       = input('get.equ_no');
+        $infoWarning = OilDetail::getEquCostList($before, $after, $equNo);
+        $this->assign([
+            'list' => $infoWarning
+        ]);
+        return $this->fetch();
+    }
+
     public function equdetail($equ_key_no) {
         $result      = OilStandard::getEquipmentByKeyNo($equ_key_no);
         $postpone    = OilConfig::get(1);

@@ -1,0 +1,19 @@
+<?php require(APP_PATH.'/oiling/view/manager/common/header.html');?>
+<table>
+    {foreach $list as $k=> $v}
+    <tr>
+        <td class="process">{$v.equ_no}</td>
+        <td class="process">{$v.equ_oil_no}</td>
+        <td class="time">{$v.equ_oil_name}</td>
+        <td class="process">{$v.oil_no}</td>
+        <td class="process">{$v.oil_name}</td>
+        <td class="time">{$v.detail}</td>
+        <td class="process">{$v.unit}</td>
+        <td class="process">{$v.price}</td>
+        <td class="process">{$v.date}</td>
+        <td class="process">{$v.quantity}</td>
+        <td class="process">{$v.total}</td>
+    </tr>
+    {/foreach}
+</table>
+<?php require(APP_PATH.'/oiling/view/manager/common/footer.html');?>

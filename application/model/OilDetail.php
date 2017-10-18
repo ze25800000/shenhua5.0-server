@@ -54,7 +54,9 @@ class OilDetail extends BaseModel {
     public static function getEquCostList($before, $after, $equNo) {
         $equNo     = $equNo == 'all' ? null : " AND equ_no={$equNo}";
         $sql       = "SELECT
+                    id,
                     equ_no,
+                    equ_key_no,
                     equ_oil_no,
                     equ_oil_name,
                     oil_no,
@@ -65,12 +67,36 @@ class OilDetail extends BaseModel {
                     ORDER BY equ_no asc,equ_oil_no asc";
         $infoWarns = Db::query($sql);
         foreach ($infoWarns as &$infoWarn) {
-            $oilDetail            = OilDetail::where(['oil_no' => $infoWarn['oil_no']])->find();
-            $infoWarn['oil_name'] = $oilDetail->oil_name;
-            $infoWarn['detail']   = $oilDetail->detail;
-            $infoWarn['unit']     = $oilDetail->unit;
-            $infoWarn['price']    = $oilDetail->price;
-            $infoWarn['total']    = $infoWarn['how_much'] * $infoWarn['price'];
+            $OilUsed  = OilUsed::where(['equ_key_no' => $infoWarn['equ_key_no'],])
+                ->where("del_warning_time between $before and $after")
+                ->select();
+            $oil_no   = [];
+            $oil_name = [];
+            $detail   = [];
+            $unit     = [];
+            $price    = [];
+            $quantity = [];
+            $date     = [];
+            $total    = 0;
+            foreach ($OilUsed as $k => $item) {
+                array_push($oil_no, $item->oil_no);
+                array_push($oil_name, $item->oil_name);
+                array_push($detail, $item->detail);
+                array_push($unit, $item->unit);
+                array_push($price, $item->price);
+                array_push($quantity, $item->quantity);
+                array_push($date, date('Y年m月d日', $item->del_warning_time));
+                $total += $item->cost;
+            }
+            $infoWarn['oil_no']   = implode('<br>', $oil_no);
+            $infoWarn['oil_name'] = implode('<br>', $oil_name);
+            $infoWarn['detail']   = implode('<br>', $detail);
+            $infoWarn['unit']     = implode('<br>', $unit);
+            $infoWarn['price']    = implode('<br>', $price);
+            $infoWarn['date']     = implode('<br>', $date);
+            $infoWarn['quantity'] = implode('<br>', $quantity);
+            $infoWarn['total']    = $total;
+
         }
         return $infoWarns;
     }

@@ -21,24 +21,24 @@ use think\Db;
 class OilDetailCost extends BaseController {
     public function getCostListByDate($before, $after) {
         (new DetailDateValidate())->goCheck();
-        $temp = OilDetail::getCostList($before, $after, input('get.equ_no'));
+        $temp       = OilDetail::getCostList($before, $after, input('get.equ_no'));
         $totalPrice = 0;
-        $totals     = Tools::listMoveToArray($temp, 'total',false);
+        $totals     = Tools::listMoveToArray($temp, 'total', false);
         foreach ($totals as $total) {
             $totalPrice += $total;
         }
         return $this->ajaxReturn('success', 0, $temp, $totalPrice);
     }
 
-    public function getEquCostListByDate($before, $after) {
+    public function getEquTotalPriceByDate($before, $after) {
         $equNo      = input('get.equ_no');
         $temp       = OilDetail::getEquCostList($before, $after, $equNo);
         $totalPrice = 0;
-        $totals     = Tools::listMoveToArray($temp, 'total',false);
+        $totals     = Tools::listMoveToArray($temp, 'total', false);
         foreach ($totals as $total) {
             $totalPrice += $total;
         }
-        return $this->ajaxReturn('success', 0, $temp, $totalPrice);
+        $this->result($totalPrice);
     }
 
     public function editOilDetailItemById($id) {
@@ -58,7 +58,7 @@ class OilDetailCost extends BaseController {
         $equNo = $equNo == 'all' ? null : " AND equ_no={$equNo}";
         $sql   = "SELECT equ_key_no,equ_oil_name,del_warning_time,quantity
                 FROM info_warning
-                WHERE warning_type=1 AND del_warning_time BETWEEN $before AND $after" . $equNo .' AND oil_no='. $oil_no." 
+                WHERE warning_type=1 AND del_warning_time BETWEEN $before AND $after" . $equNo . ' AND oil_no=' . $oil_no . " 
                 ORDER BY equ_no ASC ,equ_oil_no ASC ";
         $list  = Db::query($sql);
 

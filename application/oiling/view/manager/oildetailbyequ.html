@@ -1,4 +1,10 @@
 <?php require(APP_PATH.'/oiling/view/manager/common/header.html');?>
+<style>
+    iframe {
+        width: 100%;
+        height: 93%;
+    }
+</style>
 <div id="container">
     <div id="hd">
         <div class="hd-wrap ue-clear">
@@ -83,7 +89,6 @@
                         <table>
                             <thead>
                             <tr>
-
                                 <th class="process">设备编号</th>
                                 <th class="process">润滑点编号</th>
                                 <th class="time">润滑点名称</th>
@@ -92,38 +97,13 @@
                                 <th class="time">物料描述</th>
                                 <th class="process">单位</th>
                                 <th class="process">单价(元)</th>
+                                <th class="process">润滑日期</th>
                                 <th class="process">用量</th>
                                 <th class="process">总计(元)</th>
                             </tr>
                             </thead>
-                            <tbody id="costTbody">
-
-                            </tbody>
-                            <script type="text/html" id="costTemplate">
-                                {{each(i,item) data}}
-                                <tr>
-                                    <td class="process" data-id="${item.id}" data-key="equ_no">
-                                        ${item.equ_no}
-                                    </td>
-                                    <td class="process" data-id="${item.id}" data-key="equ_oil_no">
-                                        ${item.equ_oil_no}
-                                    </td>
-                                    <td class="time" data-id="${item.id}" data-key="equ_oil_name">
-                                        ${item.equ_oil_name}
-                                    </td>
-                                    <td class="process" data-id="${item.id}" data-key="oil_no">${item.oil_no}</td>
-                                    <td class="process" data-id="${item.id}" data-key="oil_name">${item.oil_name}</td>
-                                    <td class="time" data-id="${item.id}" data-key="detail">${item.detail}</td>
-                                    <td class="process" data-id="${item.id}" data-key="unit">
-                                        ${item.unit}
-                                    </td>
-                                    <td class="process ">${item.price}</td>
-                                    <td class="process total">${item.how_much}</td>
-                                    <td class="process total">${item.total}</td>
-                                </tr>
-                                {{/each}}
-                            </script>
                         </table>
+                        <iframe src="/oiling/oildetail/equoildetailtable" frameborder="0"></iframe>
                     </div>
                 </div>
                 <div class="bottom-bar">
@@ -133,50 +113,6 @@
                         <span class="num">21701元</span>
                     </div>
                 </div>
-                <div class="tanchuang-equlist">
-                    <div class="tan-box">
-                        <h2>查看所属设备列表</h2>
-                        <div class="hint3"></div>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>润滑点名称</th>
-                                <th>润滑时间</th>
-                                <th>用量</th>
-                            </tr>
-                            </thead>
-                            <tbody id="tanBody">
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <script type="text/html" id="tanList">
-                    {{each(i,item) data}}
-                    <tr>
-                        <td><a href="/oiling/equdetail/${item.equ_key_no}" target="_blank">${item.equ_oil_name}</a></td>
-                        <td>${item.del_warning_time}</td>
-                        <td>${item.quantity}</td>
-                    </tr>
-                    {{/each}}
-                </script>
-                <div class="tanchuang">
-                    <div class="hintl">
-                        <div class="hintl-in1">
-                            <div class="hintl1"></div>
-                            <div class="hintl2">设备保养成本管理</div>
-                            <div class="hint3"></div>
-                        </div>
-                        <div class="hintl-in2">是否删除该条油品信息？</div>
-                        <a class="hintl-in3 confirm-del" href="javascript:;">是</a>
-                        <a class="hintl-in4" href="javascript:;">否</a>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
@@ -197,12 +133,9 @@
 <script src="__JS__/jquery.monthpicker.js"></script>
 <script>
     $(function () {
-        var oldHtml = '';
         $('title').html('润滑保养成本管理');
         var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 92;
         $('.scroll-box').css('height', scrollHeight);
-
-
         var date = new Date(),
             year = date.getFullYear(),
             mouth = (2 + date.getMonth()).toString().length == 1 ? ('0' + (2 + date.getMonth())) : (2 + date.getMonth());
@@ -217,40 +150,31 @@
         $('#monthly2').monthpicker({
             topOffset: 1
         });
-        var before = (new Date($('#monthly1').val()).getTime()) / 1000;
-        var after = (new Date($('#monthly2').val()).getTime()) / 1000;
-        costList(before, after, 'all');
 
-        function costList(before, after, equNo) {
+        costList('all');
+
+        function costList(equNo) {
+            var before = (new Date($('#monthly1').val()).getTime()) / 1000;
+            var after = (new Date($('#monthly2').val()).getTime()) / 1000;
             if (before >= after) {
-                alert('时间输入有误');
+                layer.msg('时间输入有误', {icon: 5});
                 return false;
             }
-            var url = '/oiling/oildetail/equcostlist/' + before + '/' + after + '?equ_no=' + equNo;
-            var params = {
-                url: url + '&XDEBUG_SESSION_START=16733',
-                sCallback: function (list) {
-                    $(document).find('#costTbody').html('');
-                    $('#costTemplate').tmpl(list).appendTo('#costTbody');
-                    $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
-                    oldHtml = $(document).find('#costTbody').html();
-                    var html = "<span class=\"date\">" + $('#monthly1').val() + "至" + $('#monthly2').val() + "</span>\n" +
-                        "<span class=\"zongji\">总计：</span>\n" +
-                        "<span class=\"num\">" + list.else + "元</span>";
-                    $('.total-box').html(html);
-                },
-                eCallback: function (err) {
-                    alert()
-                }
-            };
-            window.base.getData(params);
+            var url = '/oiling/oildetail/equoildetailtable/' + before + '/' + after + '?equ_no=' + equNo;
+            $('iframe').attr('src', url);
+            var getCostUrl = '/oiling/oildetail/totalprice/' + before + '/' + after + '?equ_no=' + equNo + '&XDEBUG_SESSION_START=11261'
+            $.get(getCostUrl, function (data) {
+                var totalPrice = data.data;
+                var html = "<span class=\"date\">" + $('#monthly1').val() + "至" + $('#monthly2').val() + "</span>\n" +
+                    "<span class=\"zongji\">总计：</span>\n" +
+                    "<span class=\"num\">" + totalPrice + "元</span>";
+                $('.total-box').html(html);
+            });
         }
 
         $('.cost-confirm').click(function () {
-            var before = (new Date($('#monthly1').val()).getTime()) / 1000;
-            var after = (new Date($('#monthly2').val()).getTime()) / 1000;
             var equNo = $('select').val();
-            costList(before, after, equNo);
+            costList(equNo);
         });
         $(document).on('click', '#download', function () {
             var before = (new Date($('#monthly1').val()).getTime()) / 1000;
