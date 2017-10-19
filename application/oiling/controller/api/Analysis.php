@@ -21,6 +21,10 @@ use app\validate\OilAnalysisItemValidate;
 use think\Db;
 
 class Analysis extends BaseController {
+    protected $beforeActionList = [
+        'checkStaffScope' => ['only'=>'changeAdviseType,deleteOilAnalysisItemById,editOilAnalysisItemById,addOilAnalysisItem']
+    ];
+
     public function changeAdviseType($id) {
         $OilAnalysis         = OilAnalysis::get($id);
         $OilAnalysis->advise = 1;

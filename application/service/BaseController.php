@@ -4,6 +4,7 @@ namespace app\service;
 
 
 use app\lib\enum\ScopeEnum;
+use app\lib\exception\DocumentException;
 use app\lib\exception\ForbiddenException;
 use think\Controller;
 use think\Request;
@@ -46,7 +47,13 @@ class BaseController extends Controller {
 
     protected function checkAdminScope() {
         if ($this->scope() < ScopeEnum::ADMIN) {
-            $this->error('权限不够');
+            if (Request::instance()->isAjax()) {
+                throw new DocumentException([
+                    'msg' => '权限不够'
+                ]);
+            } else {
+                $this->error('权限不够');
+            }
         } else {
             return true;
         }
@@ -54,7 +61,13 @@ class BaseController extends Controller {
 
     protected function checkStaffScope() {
         if ($this->scope() < ScopeEnum::STAFF) {
-            $this->error('权限不够');
+            if (Request::instance()->isAjax()) {
+                throw new DocumentException([
+                    'msg' => '权限不够'
+                ]);
+            } else {
+                $this->error('权限不够');
+            }
         } else {
             return true;
         }
@@ -62,7 +75,13 @@ class BaseController extends Controller {
 
     protected function checkCommonScope() {
         if ($this->scope() < ScopeEnum::COMMON) {
-            $this->error('权限不够');
+            if (Request::instance()->isAjax()) {
+                throw new DocumentException([
+                    'msg' => '权限不够'
+                ]);
+            } else {
+                $this->error('权限不够');
+            }
         } else {
             return true;
         }

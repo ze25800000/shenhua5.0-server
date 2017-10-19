@@ -87,7 +87,6 @@ window.base = {
                     sCallback && sCallback(data);
                 },
                 eCallback: function (err) {
-                    layer.msg('修改失败', {icon: 5});
                     _this.html(oldVal);
                     eCallback && eCallback(err);
                 }

@@ -22,6 +22,9 @@ use app\validate\IDMustBePositiveInt;
 use think\Validate;
 
 class Standard extends BaseController {
+    protected $beforeActionList = [
+        'checkAdminScope'=>['only'=>'editOilStandardDetailById,deleteOilStandardItemById,addEquipment,delEquipmentById,delEquipmentById']
+    ];
     /** 获取设备润滑标准列表
      * @param $equ_no
      * @return \think\response\Json

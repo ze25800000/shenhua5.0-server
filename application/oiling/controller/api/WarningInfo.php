@@ -21,6 +21,11 @@ use think\Db;
 use think\Validate;
 
 class WarningInfo extends BaseController {
+    protected $beforeActionList = [
+        'checkStaffScope' => ['only' => 'lubricate,postpone,editInfoWarningDetailById,deleteInfoItemById'],
+        'checkAdminScope' => ['only' => 'deleteRecentUploadData']
+    ];
+
     public function getWarningMessage() {
         $info = InfoWarning::getWarningMessage();
         if (!$info) {
@@ -180,7 +185,7 @@ class WarningInfo extends BaseController {
             $param['deadline'] = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
             $result            = $InfoWarningItem->save($param);
         }
-        if (!$result) {
+        if (empty($result)) {
             throw new DocumentException([
                 'msg' => '修改消警记录失败'
             ]);

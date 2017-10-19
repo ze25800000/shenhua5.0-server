@@ -13,6 +13,7 @@ class OilAnalysisValidate extends ExcelArrayValidate {
     protected $rule = [
         'equ_no'        => 'integer|require',
         'equ_oil_no'    => 'integer|require',
+        'equ_key_no'    => 'isInOilStandardList',
         'equ_name'      => 'chsAlphaNum',
         'equ_oil_name'  => 'chsAlphaNum|require',
         'sampling_time' => 'integer|require',
@@ -27,6 +28,7 @@ class OilAnalysisValidate extends ExcelArrayValidate {
     protected $message = [
         'equ_no.require'           => '设备编号不能为空',
         'equ_no.integer'           => '设备编号必须为数字',
+        'equ_key_no'               => '设备润滑标准中没有找到该设备',
         'equ_oil_no.require'       => '润滑点编号必须为数字',
         'equ_oil_no.integer'       => '润滑点编号必须为数字',
         'equ_name.chsAlphaNum'     => '设备名称只能由汉字、字母和数字组成',

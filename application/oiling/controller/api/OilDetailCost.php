@@ -13,12 +13,17 @@ use app\lib\exception\DocumentException;
 use app\lib\tools\Tools;
 use app\model\InfoWarning;
 use app\model\OilDetail;
+use app\model\OilUsed;
 use app\service\BaseController;
 use app\validate\DetailDateValidate;
 use app\validate\IDMustBePositiveInt;
 use think\Db;
 
 class OilDetailCost extends BaseController {
+    protected $beforeActionList = [
+        'checkAdminScope' => ['only' => 'editOilDetailItemById,deleteOilDetailItemById']
+    ];
+
     public function getCostListByDate($before, $after) {
         (new DetailDateValidate())->goCheck();
         $temp       = OilDetail::getCostList($before, $after, input('get.equ_no'));
@@ -75,12 +80,19 @@ class OilDetailCost extends BaseController {
 
     public function deleteOilDetailItemById($id) {
         (new IDMustBePositiveInt())->goCheck();
-        $result = OilDetail::get($id)->delete();
+        $OilDetail = OilDetail::get($id);
+        $result    = $OilDetail->delete();
         if (!$result) {
             throw new DocumentException([
                 'msg' => '删除失败'
             ]);
         }
+        OilUsed::where([
+            'oil_no' => $OilDetail->oil_no
+        ])->delete();
+        InfoWarning::where([
+            'oil_no' => $OilDetail->oil_no
+        ])->delete();
         return $this->ajaxReturn('删除成功');
     }
 }

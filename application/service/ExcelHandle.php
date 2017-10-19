@@ -214,12 +214,13 @@ class ExcelHandle {
                 $arr[$k]['status']   = $this->getStatus($arr[$k], $arr[$k]['how_long']);
                 $arr[$k]['deadline'] = $this->getDeadline($arr[$k], $arr[$k]['how_long']);
                 $arr[$k]['user_id']  = session('user_id');
-                if (!empty($arr[$k]['oil_no'])) {
-                    $this->saveToOilUsed($arr[$k]);
-                }
-                $item = $infoWarningModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and del_warning_time={$arr[$k]['del_warning_time']}")->find();
+                $item                = $infoWarningModel->field('id')->where("equ_key_no={$arr[$k]['equ_key_no']} and del_warning_time={$arr[$k]['del_warning_time']}")->find();
                 if ($item) {
                     $arr[$k]['id'] = $item->id;
+                } else {
+                    if (!empty($arr[$k]['oil_no'])) {
+                        $this->saveToOilUsed($arr[$k]);
+                    }
                 }
             }
         }
@@ -375,7 +376,7 @@ class ExcelHandle {
         $warningType = isset($infoWarn['warning_type']) ? $infoWarn['warning_type'] : $infoWarning->warning_type;
         if (!$OilDetail && $warningType == 1) {
             throw new DocumentException([
-                'msg' => '物料编号不存在'
+                'msg' => '润滑保养成本里没有物料编号：' . $infoWarn['oil_no']
             ]);
         }
         $maxDelTime = InfoWarning::where("equ_key_no={$infoWarn['equ_key_no']} and warning_type=1")->max('del_warning_time');

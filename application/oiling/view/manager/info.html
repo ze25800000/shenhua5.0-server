@@ -402,7 +402,7 @@
         $('.upload').click(function (e) {
             var exceltype = $('.select-type').val(),
                 params = {
-                    url: 'oiling/upload?' + exceltype + '&XDEBUG_SESSION_START=11261',
+                    url: 'oiling/upload?' + exceltype + '&XDEBUG_SESSION_START=10393',
                     data: new FormData($(this).parent()[0]),
                     sCallback: function (data) {
                         layer.open({
@@ -414,8 +414,11 @@
                     },
                     eCallback: function (err) {
                         console.log(err);
+                        if (err.errcode==1) {
+                            layer.msg(err.msg,{icon:5});
+                        }
                         if (err.errcode == 2) {
-                            err.msg && layer.msg(err.msg,{icon:5});
+                            layer.msg(err.msg,{icon:5});
                         }
                     }
                 };

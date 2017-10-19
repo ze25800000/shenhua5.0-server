@@ -75,7 +75,8 @@
                             <select>
                                 <option value="all">全部设备</option>
                                 {foreach $equs as $v}
-                                <option value="{$v.equ_no}" {if condition="$v.equ_no==$equNo" }selected{/if}>{$v.equ_name}</option>
+                                <option value="{$v.equ_no}" {if condition="$v.equ_no==$equNo" }selected{
+                                /if}>{$v.equ_name}</option>
                                 {/foreach}
                             </select>
                         </div>
@@ -227,13 +228,13 @@
 </script>
 <script>
     $('title').html('油脂化验指标分析');
-    $(document).on('click','.equ_detail',function () {
+    $(document).on('click', '.equ_detail', function () {
         var equKeyNo = $(this).data('equ_key_no');
         layer.open({
             type: 2,
-            title:'润滑点详情',
+            title: '润滑点详情',
             area: ['1300px', '100%'],
-            content: ['/oiling/equdetail/'+equKeyNo]
+            content: ['/oiling/equdetail/' + equKeyNo]
         });
     });
     //关闭iframe
@@ -245,7 +246,7 @@
     $('.upload').click(function () {
         var param = $(this).data('param'),
             params = {
-                url: 'oiling/upload?' + param + '&XDEBUG_SESSION_START=17102',
+                url: 'oiling/upload?' + param + '&XDEBUG_SESSION_START=17512',
                 data: new FormData($(this).parent()[0]),
                 sCallback: function () {
                     layer.open({
@@ -256,8 +257,11 @@
                     });
                 },
                 eCallback: function (err) {
+                    if (err.errcode == 1) {
+                        layer.msg(err.msg, {icon: 5});
+                    }
                     if (err.errcode == 2) {
-                        err.msg && layer.msg(err.msg,{icon:5});
+                        layer.msg(err.msg, {icon: 5});
                     }
                 }
             };
@@ -297,9 +301,14 @@
             var params = {
                 url: '/oiling/analysis/del/' + id,
                 type: 'delete',
-                sCallback: function () {
-                    _this.parent().parent().hide(200).remove();
+                sCallback: function (data) {
                     window.location.reload();
+                },
+                eCallback:function (err) {
+                    if (data.code == 0) {
+                        $('.hintl').hide(100);
+                        layer.msg(data.msg, {icon: 5});
+                    }
                 }
             };
             window.base.getData(params);
@@ -313,8 +322,14 @@
         $('.confirm-del').unbind('click').click(function () {
             var params = {
                 url: '/oiling/analysis/delwarn/' + id,
-                sCallback: function () {
+                sCallback: function (data) {
                     window.location.reload();
+                },
+                eCallback:function (err) {
+                    if (err.errcode == 1) {
+                        layer.msg(err.msg,{icon:5});
+                        $('.hintl').hide(100);
+                    }
                 }
             };
             window.base.getData(params);
@@ -332,8 +347,12 @@
         }
         var input = _this.find('input');
         input.select();
-        window.base.editItemByDblClick(_this, input, oldVal, url, function () {
+        window.base.editItemByDblClick(_this, input, oldVal, url, function (data) {
             window.location.reload();
+        },function (err) {
+            if(err.errcode==1) {
+                layer.msg(err.msg, {icon: 5});
+            }
         });
     });
     //日期
@@ -381,7 +400,7 @@
             return false;
         }
         var params = {
-            url: 'oiling/analysis/search/' + val+'?XDEBUG_SESSION_START=14691',
+            url: 'oiling/analysis/search/' + val + '?XDEBUG_SESSION_START=14691',
             sCallback: function (list) {
                 console.log(list);
                 if (newHtml == oldHtml) {

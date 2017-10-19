@@ -117,16 +117,7 @@
                         <h2>设备润滑标准 &gt; ${equ_name}</h2>
                         <a href="standard" class="more" style="font-size: 16px;width: 50px;font-weight: bold;">返回</a>
                     </div>
-                    <!--<div class="query">-->
-                    <!--<div class="query-conditions ue-clear">-->
-                    <!--<div style="height: 37px;" class="conditions time ue-clear">-->
-                    <!--</div>-->
-                    <!--<div class="search-box">-->
-                    <!--<span class="search-info">搜索设备润滑标准：</span>-->
-                    <!--<input class="search-input" type="text" placeholder="输入润滑点名称的关键字">-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!--</div>-->
+
                     <div class="scroll-box" style="overflow: hidden;overflow-y: auto">
                         <div class="table-box">
                             <table>
@@ -249,10 +240,6 @@
             content: ['/oiling/equdetail/' + equKeyNo]
         });
     });
-    //    //关闭iframe
-    //    $(document).on('click', '.layui-layer-close', function () {
-    //        location.reload();
-    //    });
     //根据设备编号获取设备润滑标准列表
     var sflag = true;
     $('#equipments').on('click', '.equ-item', function () {
@@ -316,6 +303,7 @@
     $(document).on('change', 'select', function () {
         var oilNo = $(this).val();
         var id = $(this).parent().data('id');
+        var _this = $(this);
         var params = {
             url: 'oiling/standard/oilno',
             type: 'post',
@@ -324,7 +312,14 @@
                 id: id
             },
             sCallback: function (data) {
-                layer.msg(data.msg)
+                layer.msg(data.msg);
+            },
+            eCallback: function (err) {
+                if (err.errcode == 1) {
+                    layer.msg(err.msg, {icon: 5},function () {
+                        location.reload();
+                    });
+                }
             }
         };
         window.base.getData(params);
@@ -349,7 +344,7 @@
                     },
                     eCallback: function (err) {
                         if (err.errcode == 1) {
-                            alert(err.msg);
+                            layer.msg(err.msg, {icon: 5});
                         }
                     }
                 };
@@ -374,7 +369,7 @@
                     location.reload()
                 },
                 eCallback: function (err) {
-                    alert('删除失败')
+                    layer.msg('删除失败', {icon: 5})
                 }
             };
             window.base.getData(params);
@@ -395,12 +390,11 @@
                 url: 'oiling/standard/del/' + id,
                 type: 'delete',
                 sCallback: function (data) {
-                    if (!data.errcode) {
-                        _this.parent().parent().remove();
-                    }
+                    _this.parent().parent().remove();
+
                 },
-                eCallback: function (err) {
-                    console.log(err);
+                eCallback: function (data) {
+                    layer.msg(data.msg, {icon: 5});
                 }
             };
             window.base.getData(params);
@@ -441,31 +435,5 @@
             }
         };
         window.base.uploadFile(params);
-    });
-    //搜索
-    $(document).on("keyup", '.search-input', function (e) {
-        var val = $(this).val();
-        if (!val && e.keyCode == 8) {
-            document.getElementById('oilStandardTbody').innerHTML = oldHtml;
-            var newHtml = $('#oilStandardTbody').html();
-            return false;
-        }
-        var _this = $(this),
-            params = {
-                url: 'oiling/standard/search/' + val,
-                sCallback: function (list) {
-                    if (newHtml == oldHtml) {
-                        return false;
-                    }
-                    if (list.errcode === 0) {
-                        $('#oilStandardTbody').html('');
-                        $('#standardTemp').tmpl(list).appendTo('#oilStandardTbody');
-                        $(document).find('tr:odd').css("backgroundColor", "#eff6fa");
-                    }
-                }
-            };
-        if (val) {
-            window.base.getData(params);
-        }
     });
 </script>
