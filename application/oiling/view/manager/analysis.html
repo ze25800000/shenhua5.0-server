@@ -109,7 +109,6 @@
                             <th class="num">Na</th>
                             <th class="num">PQ</th>
                             <th class="num">粘度</th>
-                            <th class="process">油脂状态</th>
                             <th class="operate">操作</th>
                         </tr>
                         </thead>
@@ -145,7 +144,6 @@
                         <td class="num edit-item" data-id="{$v.id}" data-key="viscosity"
                             {if condition="$v.viscosity<$vv.viscosity_min OR $v.viscosity>$vv.viscosity_max" }
                             style="color: red;font-weight: 600;" {/if}>{$v.viscosity}</td>
-                        <td class="process">{$v.oil_status?$v.oil_status:'良好'}</td>
                         <td class="operate table-operate">
                             <a href="javascript:;" data-equ_key_no="{$v.equ_key_no}"
                                class="check equ_detail"
@@ -217,7 +215,6 @@
         <td class="num">${item.Na}</td>
         <td class="num">${item.PQ}</td>
         <td class="num">${item.viscosity}</td>
-        <td class="process">{{if item.oil_status}}${item.oil_status}{{else}}良好{{/if}}</td>
         <td class="operate table-operate">
             <a href="javascript:;" data-equ_key_no="${item.equ_key_no}"
                class="check equ_detail"
