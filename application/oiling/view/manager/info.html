@@ -379,6 +379,7 @@
             }
         });
         $('.check-all').click(function () {
+            alert();
             if ($(this).attr('checked')) {
                 $('#infoTbody input').each(function (index, value) {
                     $(value).attr('checked', true);

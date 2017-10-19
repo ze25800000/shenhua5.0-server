@@ -279,6 +279,17 @@
             window.location.href = url;
         }
     });
+    $('.check-all').click(function () {
+        if ($(this).attr('checked')) {
+            $('#analysisBody input').each(function (index, value) {
+                $(value).attr('checked', true);
+            });
+        } else {
+            $('#analysisBody input').each(function (index, value) {
+                $(value).attr('checked', false);
+            });
+        }
+    });
     $('.del-item').click(function () {
         $('.hintl').show(100);
         $('.hintl2').html('油脂化验指标分析删除窗口');

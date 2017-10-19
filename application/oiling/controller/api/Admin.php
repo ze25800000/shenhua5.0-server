@@ -15,6 +15,7 @@ use app\model\InfoWarning;
 use app\model\OilAnalysis;
 use app\model\OilDetail;
 use app\model\OilStandard;
+use app\model\OilUsed;
 use app\service\BaseController;
 use app\model\WorkHour;
 use think\Db;
@@ -34,6 +35,7 @@ class Admin extends BaseController {
             OilDetail::query('TRUNCATE oil_detail');
             OilStandard::query('TRUNCATE oil_standard');
             WorkHour::query('TRUNCATE work_hour');
+            OilUsed::query('TRUNCATE oil_used');
         } catch (Exception $e) {
             $this->error('执行失败');
         }
@@ -46,7 +48,9 @@ class Admin extends BaseController {
         $type = $matches[1];
         switch ($type) {
             case 'info':
-                $ids    = InfoWarning::getRecentInfoWarningIds();
+                $ids        = InfoWarning::getRecentInfoWarningIds();
+                $oilUsedIds = OilUsed::getRecentOilUsedIds();
+                Db::table('oil_used')->delete($oilUsedIds);
                 $result = Db::table('info_warning')->delete($ids);
                 break;
             case 'workhour':

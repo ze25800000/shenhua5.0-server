@@ -9,6 +9,7 @@
 namespace app\service;
 
 use app\lib\exception\DocumentException;
+use app\lib\exception\ParameterException;
 use app\lib\exception\UploadException;
 use app\lib\tools\Tools;
 use app\model\OilConfig;
@@ -188,10 +189,26 @@ class ExcelHandle {
                 $arr[$k]['del_warning_time'] = $this->getTimestamp($v[4]);
                 $arr[$k]['is_first_period']  = preg_match('/^是$/', $v[5]) ? 1 : (preg_match('/^否$/', $v[5]) ? 0 : null);
                 $arr[$k]['warning_type']     = preg_match('/^润滑$/', $v[6]) ? 1 : (preg_match('/^延期$/', $v[6]) ? 0 : null);
-                $arr[$k]['oil_no']           = empty($v[7]) ? null : $v[7];
-                $arr[$k]['quantity']         = empty($v[8]) ? null : $v[8];
-                $arr[$k]['postpone']         = empty($v[9]) ? null : $v[9];
-                $arr[$k]['postpone_reason']  = empty($v[10]) ? null : $v[10];
+                if ($arr[$k]['warning_type'] == 1) {
+                    if (empty($v[7]) || empty($v[8])) {
+                        $msg = 'excel第' . ($k + 2) . '行没有填写物料编号或用量';
+                        throw new ParameterException([
+                            'msg' => $msg
+                        ]);
+                    }
+                    $arr[$k]['oil_no']   = $v[7];
+                    $arr[$k]['quantity'] = $v[8];
+                }
+                if ($arr[$k]['warning_type'] == 0) {
+                    if (empty($v[9])) {
+                        $msg = 'excel第' . ($k + 2) . '行没有填写延期时长';
+                        throw new ParameterException([
+                            'msg' => $msg
+                        ]);
+                    }
+                    $arr[$k]['postpone']        = $v[9];
+                    $arr[$k]['postpone_reason'] = empty($v[10]) ? null : $v[10];
+                }
                 $InfoWarningValidate->checkExcel($arr[$k], $k);
                 $arr[$k]['how_long'] = $this->howLong($arr[$k]);
                 $arr[$k]['status']   = $this->getStatus($arr[$k], $arr[$k]['how_long']);
