@@ -15,7 +15,7 @@ class OilStandardValidate extends ExcelArrayValidate {
         'equ_oil_no'   => 'integer|require',
         'equ_name'     => 'chsAlphaNum|require',
         'equ_oil_name' => 'chsAlphaNum|require',
-//        'oil_no'       => 'require|integer',
+        'oil_no'       => 'isInOilDetailList',
         'quantity'     => 'require|integer',
 //        'unit'         => 'require|alpha',
         'first_period' => 'require|integer',
@@ -31,8 +31,7 @@ class OilStandardValidate extends ExcelArrayValidate {
         'equ_name.require'         => '设备名称不能为空',
         'equ_oil_name.chsAlphaNum' => '润滑点名称只能由汉字、字母和数字组成',
         'equ_oil_name.require'     => '润滑点名称不能为空',
-        'oil_no.require'           => '物料编号不能为空',
-        'oil_no.integer'           => '物料编号必须为数字',
+        'oil_no'                   => '物料编号不存在',
         'quantity.require'         => '用量不能为空',
         'quantity.integer'         => '用量必须为数字',
         'unit.require'             => '单位不能为空',
@@ -43,5 +42,8 @@ class OilStandardValidate extends ExcelArrayValidate {
         'period.integer'           => '最长保养周期必须为数字',
         'interval.require'         => '采样间隔不能为空',
         'interval.integer'         => '采样间隔必须为数字'
+    ];
+    protected $scene = [
+        'oil_no' => ['oil_no']
     ];
 }

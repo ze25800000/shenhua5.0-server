@@ -109,7 +109,7 @@ class ExcelHandle {
                 $arr[$k]['equ_key_no']   = $v[0] . config('salt') . $v[1];
                 $arr[$k]['equ_name']     = $v[2];
                 $arr[$k]['equ_oil_name'] = $v[3];
-                $arr[$k]['oil_no']       = $this->saveOilNo($arr[$k]['equ_no'], $arr[$k]['equ_key_no'], $v[4]);
+                $arr[$k]['oil_no']       = $this->saveOilNo($arr[$k]['equ_no'], $arr[$k]['equ_key_no'], $v[4], $OilStandardValidate);
                 $arr[$k]['quantity']     = $v[5];
                 $arr[$k]['first_period'] = $v[6];
                 $arr[$k]['period']       = $v[7];
@@ -131,10 +131,11 @@ class ExcelHandle {
         return true;
     }
 
-    private function saveOilNo($equNo, $equKeyNo, $oilNoStr) {
+    private function saveOilNo($equNo, $equKeyNo, $oilNoStr, $validate) {
         db('oil_no_list')->where(['equ_key_no' => $equKeyNo])->delete();
         $oilNos = preg_split('/\\n/', $oilNoStr);
         foreach ($oilNos as $oilNo) {
+            $validateResult = $validate->scene('oil_no')->check($oilNo);
             db('oil_no_list')->insert(['equ_no' => $equNo, 'equ_key_no' => $equKeyNo, 'oil_no' => $oilNo]);
         }
         return $oilNos[0];

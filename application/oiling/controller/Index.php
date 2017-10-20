@@ -14,9 +14,9 @@ use think\Request;
 
 class Index extends BaseController {
     public function _initialize() {
-        $howLong    = cache('howLong');
+        $timeFlag    = cache('timeFlag');
         $excelTools = new ExcelHandle();
-        if (!$howLong) {
+        if (!$timeFlag) {
             $sql          = "SELECT *
                              FROM info_warning AS a
                              WHERE del_warning_time = (SELECT max(a1.del_warning_time)
@@ -34,7 +34,7 @@ class Index extends BaseController {
                     'deadline' => $excelTools->getDeadline($infoWarning, $howLong)
                 ]);
             }
-            $resCache = cache('howLong', '每隔6小时更新数据库', 21600);
+            $resCache = cache('timeFlag', '每隔6小时更新数据库', 21600);
         }
     }
 

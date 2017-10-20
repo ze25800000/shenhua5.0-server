@@ -11,6 +11,7 @@ namespace app\validate\excelArray;
 
 use app\lib\exception\ParameterException;
 use app\lib\tools\Tools;
+use app\model\Equipment;
 use app\model\OilDetail;
 use app\model\OilStandard;
 use app\validate\BaseValidate;
@@ -18,13 +19,28 @@ use app\validate\BaseValidate;
 class ExcelArrayValidate extends BaseValidate {
     protected $equKeyNos;
     protected $oilNos;
+    protected $equs;
 
     public function __construct(array $rules = [], array $message = [], array $field = []) {
         parent::__construct($rules, $message, $field);
-        $OilDetail       = OilDetail::field('oil_no')->group('oil_no')->select();
-        $OilStandard     = OilStandard::field('equ_key_no')->group('equ_key_no')->select();
-        $this->equKeyNos = Tools::listMoveToArray($OilStandard, 'equ_key_no');
-        $this->oilNos    = Tools::listMoveToArray($OilDetail, 'oil_no');
+        $equipment   = Equipment::field('equ_no')->group('equ_no')->select();
+        $OilDetail   = OilDetail::field('oil_no')->group('oil_no')->select();
+        $OilStandard = OilStandard::field('equ_key_no')->group('equ_key_no')->select();
+        if ($equipment) {
+            $this->equs = Tools::listMoveToArray($equipment, 'equ_no');
+        } else {
+            $this->equs = [];
+        }
+        if ($OilDetail) {
+            $this->oilNos = Tools::listMoveToArray($OilDetail, 'oil_no');
+        } else {
+            $this->oilNos = [];
+        }
+        if ($OilStandard) {
+            $this->equKeyNos = Tools::listMoveToArray($OilStandard, 'equ_key_no');
+        } else {
+            $this->equKeyNos = [];
+        }
     }
 
     public function checkExcel($value, $line) {
@@ -41,6 +57,14 @@ class ExcelArrayValidate extends BaseValidate {
     protected function isDataExceedNow($value) {
         $result = time() - $value;
         if ($result > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected function isInEquipment($value) {
+        if (in_array($value, $this->equs)) {
             return true;
         } else {
             return false;

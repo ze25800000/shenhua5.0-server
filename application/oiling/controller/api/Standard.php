@@ -13,7 +13,10 @@ use app\lib\exception\DocumentException;
 use app\lib\tools\Tools;
 use app\model\Equipment;
 use app\model\InfoWarning;
+use app\model\OilAnalysis;
+use app\model\OilNoList;
 use app\model\OilStandard;
+use app\model\OilUsed;
 use app\service\BaseController;
 use app\service\ExcelHandle;
 use app\validate\EquipmentNoValidate;
@@ -23,8 +26,9 @@ use think\Validate;
 
 class Standard extends BaseController {
     protected $beforeActionList = [
-        'checkAdminScope'=>['only'=>'editOilStandardDetailById,deleteOilStandardItemById,addEquipment,delEquipmentById,delEquipmentById']
+        'checkAdminScope' => ['only' => 'editOilStandardDetailById,deleteOilStandardItemById,addEquipment,delEquipmentById,delEquipmentById']
     ];
+
     /** 获取设备润滑标准列表
      * @param $equ_no
      * @return \think\response\Json
@@ -65,7 +69,8 @@ class Standard extends BaseController {
      */
     public function deleteOilStandardItemById($id) {
         (new IDMustBePositiveInt())->goCheck();
-        $result = OilStandard::where('id', '=', $id)->delete();
+        $OilStandard = OilStandard::get($id);
+        $result      = $OilStandard->delete();
         if (!$result) {
             throw new DocumentException([
                 'msg' => '删除失败'
