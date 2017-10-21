@@ -70,9 +70,11 @@ class OilDetail extends BaseModel {
         $infoWarns  = Db::query($sql);
         $totalPrice = 0;
         foreach ($infoWarns as &$infoWarn) {
-            $OilUsed  = OilUsed::where(['equ_key_no' => $infoWarn['equ_key_no'],])
-                ->where("del_warning_time between $before and $after")
-                ->select();
+//            $OilUsed  = OilUsed::where(['equ_key_no' => $infoWarn['equ_key_no'],])
+//                ->where("del_warning_time between $before and $after")
+//                ->select();
+            $sql      = "select * from oil_used where equ_key_no={$infoWarn['equ_key_no']} AND del_warning_time between $before and $after";
+            $OilUsed  = Db::query($sql);
             $oil_no   = [];
             $oil_name = [];
             $detail   = [];
@@ -82,14 +84,14 @@ class OilDetail extends BaseModel {
             $date     = [];
             $total    = 0;
             foreach ($OilUsed as $k => $item) {
-                array_push($oil_no, $item->oil_no);
-                array_push($oil_name, $item->oil_name);
-                array_push($detail, $item->detail);
-                array_push($unit, $item->unit);
-                array_push($price, $item->price);
-                array_push($quantity, $item->quantity);
-                array_push($date, date('Y年m月d日', $item->del_warning_time));
-                $total += $item->cost;
+                array_push($oil_no, $item['oil_no']);
+                array_push($oil_name, $item['oil_name']);
+                array_push($detail, $item['detail']);
+                array_push($unit, $item['unit']);
+                array_push($price, $item['price']);
+                array_push($quantity, $item['quantity']);
+                array_push($date, date('Y年m月d日', $item['del_warning_time']));
+                $total += $item['cost'];
             }
             $infoWarn['oil_no']   = implode('<hr>', $oil_no);
             $infoWarn['oil_name'] = implode('<hr>', $oil_name);
