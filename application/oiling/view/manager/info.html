@@ -121,7 +121,7 @@
                             <td class="num">{$v.equ_oil_no}</td>
                             <td class="time">{$v.equ_oil_name}</td>
                             <td class="process">{$v.del_warning_time|date="Y年m月d日",###}</td>
-                            <td class="process">{$v.warning_type?'润滑':'延期'}</td>
+                            <td class="process" {if condition="$v.warning_type==0"}style="color: red;"{/if}>{$v.warning_type?'润滑':'延期'}</td>
                             <td class="process">{$v.how_long}</td>
                             <td class="process">{$v.status==3?'超期':($v.status==2?'临近':'正常')}</td>
                             <td class="process">{$v.postpone}</td>

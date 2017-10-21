@@ -11,7 +11,7 @@ $(document).on('mouseout', '.edit-item', function () {
     clearTimeout(timer);
 });
 window.base = {
-    g_restUrl: 'http://demo2.feitongkeji.com/',
+    g_restUrl: 'http://shenhua.cn/',
     getData: function (params) {
         if (!params.type) {
             params.type = 'GET';

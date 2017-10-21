@@ -1,4 +1,17 @@
 <?php require(APP_PATH.'/oiling/view/manager/common/header.html');?>
+<style>
+    hr {
+        border: 1px dotted #ececec;
+    }
+
+    table tr td.process, table tr td.time {
+        border-left: 1px dotted #c7c7c7;
+        padding-left: 0;
+    }
+    table tr td.time {
+        text-align: center;
+    }
+</style>
 <table>
     {foreach $list as $k=> $v}
     <tr>

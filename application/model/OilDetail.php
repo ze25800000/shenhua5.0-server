@@ -91,13 +91,13 @@ class OilDetail extends BaseModel {
                 array_push($date, date('Y年m月d日', $item->del_warning_time));
                 $total += $item->cost;
             }
-            $infoWarn['oil_no']   = implode('<br>', $oil_no);
-            $infoWarn['oil_name'] = implode('<br>', $oil_name);
-            $infoWarn['detail']   = implode('<br>', $detail);
-            $infoWarn['unit']     = implode('<br>', $unit);
-            $infoWarn['price']    = implode('<br>', $price);
-            $infoWarn['date']     = implode('<br>', $date);
-            $infoWarn['quantity'] = implode('<br>', $quantity);
+            $infoWarn['oil_no']   = implode('<hr>', $oil_no);
+            $infoWarn['oil_name'] = implode('<hr>', $oil_name);
+            $infoWarn['detail']   = implode('<hr>', $detail);
+            $infoWarn['unit']     = implode('<hr>', $unit);
+            $infoWarn['price']    = implode('<hr>', $price);
+            $infoWarn['date']     = implode('<hr>', $date);
+            $infoWarn['quantity'] = implode('<hr>', $quantity);
             $infoWarn['total']    = $total;
             $totalPrice           += $infoWarn['total'];
         }
