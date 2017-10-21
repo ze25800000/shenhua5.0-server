@@ -11,7 +11,7 @@ $(document).on('mouseout', '.edit-item', function () {
     clearTimeout(timer);
 });
 window.base = {
-    g_restUrl: '/',
+    g_restUrl: 'http://demo2.feitongkeji.com/',
     getData: function (params) {
         if (!params.type) {
             params.type = 'GET';

@@ -321,7 +321,7 @@
         var id = $(this).data('id');
         $('.confirm-del').unbind('click').click(function () {
             var params = {
-                url: '/oiling/analysis/delwarn/' + id,
+                url: '/oiling/analysis/delwarn/' + id+'?XDEBUG_SESSION_START=11852',
                 sCallback: function (data) {
                     window.location.reload();
                 },
