@@ -44,7 +44,7 @@ class OilDetail extends BaseModel {
             $oilDetail[$k]['equs']     = [];
             foreach ($infoWarn as &$vv) {
                 $oilDetail[$k]['how_much'] += $vv['quantity'];
-                $oilDetail[$k]['total']    = $v['price'] * $oilDetail[$k]['how_much'];
+                $oilDetail[$k]['total']    = round($v['price'] * $oilDetail[$k]['how_much'], 2);
                 array_push($oilDetail[$k]['equs'], $vv);
             }
             $totalPrice += $oilDetail[$k]['total'];
@@ -91,7 +91,7 @@ class OilDetail extends BaseModel {
                 array_push($price, $item['price']);
                 array_push($quantity, $item['quantity']);
                 array_push($date, date('Y年m月d日', $item['del_warning_time']));
-                $total += $item['cost'];
+                $total += round($item['cost'], 2);
             }
             $infoWarn['oil_no']   = implode('<hr>', $oil_no);
             $infoWarn['oil_name'] = implode('<hr>', $oil_name);

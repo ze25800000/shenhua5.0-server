@@ -43,7 +43,7 @@ class OilDetailCost extends BaseController {
         foreach ($totals as $total) {
             $totalPrice += $total;
         }
-        $this->result($totalPrice);
+        $this->result(round($totalPrice, 2));
     }
 
     public function editOilDetailItemById($id) {

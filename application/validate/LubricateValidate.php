@@ -11,7 +11,7 @@ namespace app\validate;
 
 class LubricateValidate extends BaseValidate {
     protected $rule = [
-        'quantity'         => 'require|isPositiveInt',
+        'quantity'         => 'require|number',
         'oil_no'           => 'require|isPositiveInt',
         'del_warning_time' => 'require|FDate',
     ];
