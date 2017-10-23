@@ -10,7 +10,6 @@ namespace app\oiling\controller\api;
 
 
 use app\lib\exception\DocumentException;
-use app\lib\tools\Tools;
 use app\model\InfoWarning;
 use app\model\OilDetail;
 use app\model\OilUsed;
@@ -28,7 +27,7 @@ class OilDetailCost extends BaseController {
         (new DetailDateValidate())->goCheck();
         $temp       = OilDetail::getCostList($before, $after, input('get.equ_no'));
         $totalPrice = 0;
-        $totals     = Tools::listMoveToArray($temp, 'total', false);
+        $totals     = listMoveToArray($temp, 'total', false);
         foreach ($totals as $total) {
             $totalPrice += $total;
         }
@@ -39,7 +38,7 @@ class OilDetailCost extends BaseController {
         $equNo      = input('get.equ_no');
         $temp       = OilDetail::getEquCostList($before, $after, $equNo);
         $totalPrice = 0;
-        $totals     = Tools::listMoveToArray($temp, 'total', false);
+        $totals     = listMoveToArray($temp, 'total', false);
         foreach ($totals as $total) {
             $totalPrice += $total;
         }

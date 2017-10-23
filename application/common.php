@@ -1,12 +1,19 @@
 <?php
-// +----------------------------------------------------------------------
-// | ThinkPHP [ WE CAN DO IT JUST THINK ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2006-2016 http://thinkphp.cn All rights reserved.
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author: 流年 <liu21st@gmail.com>
-// +----------------------------------------------------------------------
+function listMoveToArray($arr, $str, $isUnique = true) {
+    $result = [];
+    foreach ($arr as $k => $v) {
 
-// 应用公共文件
+        array_push($result, $v[$str]);
+
+    }
+    if ($isUnique) {
+        return array_unique($result);
+    } else {
+        return $result;
+    }
+}
+
+function getTimestamp($time) {
+    return strtotime(rtrim(preg_replace('/[\"]?年[\"]?|[\"]?月[\"]?|[\"]?日[\"]?/', '/', $time), '/'));
+
+}

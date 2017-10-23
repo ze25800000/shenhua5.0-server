@@ -10,7 +10,6 @@ namespace app\oiling\controller\api;
 
 
 use app\lib\exception\DocumentException;
-use app\lib\tools\Tools;
 use app\model\OilAnalysis;
 use app\service\BaseController;
 use app\service\ExcelHandle;
@@ -55,7 +54,7 @@ class Analysis extends BaseController {
         $post        = input('post.');
         $keys        = array_keys($post);
         if ($keys[0] == 'sampling_time') {
-            $timestamp          = Tools::getTimestamp($post[$keys[0]]);
+            $timestamp          = getTimestamp($post[$keys[0]]);
             $analysis->$keys[0] = $timestamp;
         } else {
             $analysis->$keys[0] = $post[$keys[0]];
@@ -84,7 +83,7 @@ class Analysis extends BaseController {
         (new OilAnalysisItemValidate())->goCheck();
         $excelHandle            = new ExcelHandle();
         $_POST['equ_key_no']    = $_POST['equ_no'] . config('salt') . $_POST['equ_oil_no'];
-        $_POST['sampling_time'] = Tools::getTimestamp($_POST['sampling_time']);
+        $_POST['sampling_time'] = getTimestamp($_POST['sampling_time']);
         $_POST['oil_no']        = $excelHandle->getOilNoFromInfo($_POST['equ_key_no']);
         $_POST['oil_status']    = implode('<br>', $excelHandle->getOilStatus($_POST));
         $_POST['advise']        = empty($_POST['oil_status']) ? 1 : 0;

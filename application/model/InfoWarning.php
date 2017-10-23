@@ -3,7 +3,6 @@
 namespace app\model;
 
 
-use app\lib\tools\Tools;
 use think\Db;
 use think\Request;
 
@@ -84,7 +83,7 @@ class InfoWarning extends BaseModel {
 
     public static function getRecentInfoWarningIds() {
         $equKeyNoList = self::field('equ_key_no')->select();
-        $equKeyNos    = Tools::listMoveToArray($equKeyNoList, 'equ_key_no');
+        $equKeyNos    = listMoveToArray($equKeyNoList, 'equ_key_no');
         $arr          = [];
         foreach ($equKeyNos as $equKeyNo) {
             $item = self::where('equ_key_no', $equKeyNo)
@@ -95,6 +94,6 @@ class InfoWarning extends BaseModel {
                 array_push($arr, $item);
             }
         }
-        return Tools::listMoveToArray($arr, 'id');
+        return listMoveToArray($arr, 'id');
     }
 }

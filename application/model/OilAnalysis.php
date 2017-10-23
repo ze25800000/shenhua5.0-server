@@ -9,7 +9,6 @@
 namespace app\model;
 
 
-use app\lib\tools\Tools;
 use think\Db;
 
 class OilAnalysis extends BaseModel {
@@ -91,7 +90,7 @@ class OilAnalysis extends BaseModel {
 
     public static function getRecentOilAnalysisIds() {
         $equKeyNoList = self::field('equ_key_no')->select();
-        $equKeyNos    = Tools::listMoveToArray($equKeyNoList, 'equ_key_no');
+        $equKeyNos    = listMoveToArray($equKeyNoList, 'equ_key_no');
         $arr          = [];
         foreach ($equKeyNos as $equKeyNo) {
             $item = self::where('equ_key_no', $equKeyNo)
@@ -102,7 +101,7 @@ class OilAnalysis extends BaseModel {
                 array_push($arr, $item);
             }
         }
-        return Tools::listMoveToArray($arr, 'id');
+        return listMoveToArray($arr, 'id');
     }
 
     public static function getElementValues($equKeyNo) {
@@ -122,18 +121,18 @@ class OilAnalysis extends BaseModel {
     }
 
     public static function eleDetail($OilAnalysisList, $ele) {
-        $dates = Tools::listMoveToArray($OilAnalysisList, 'sampling_time', false);
+        $dates = listMoveToArray($OilAnalysisList, 'sampling_time', false);
         if ($ele != 'viscosity') {
             $arr = [
                 'normal' => self::config($OilAnalysisList, $ele),
-                'value'  => Tools::listMoveToArray($OilAnalysisList, $ele, false),
+                'value'  => listMoveToArray($OilAnalysisList, $ele, false),
                 'date'   => $dates
             ];
         } else {
             $arr = [
                 'normalMax' => self::config($OilAnalysisList, 'viscosity_max'),
                 'normalMin' => self::config($OilAnalysisList, 'viscosity_min'),
-                'value'     => Tools::listMoveToArray($OilAnalysisList, 'viscosity', false),
+                'value'     => listMoveToArray($OilAnalysisList, 'viscosity', false),
                 'date'      => $dates,
             ];
         }

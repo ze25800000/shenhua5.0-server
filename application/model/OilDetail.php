@@ -9,7 +9,6 @@
 namespace app\model;
 
 
-use app\lib\tools\Tools;
 use think\Db;
 
 class OilDetail extends BaseModel {

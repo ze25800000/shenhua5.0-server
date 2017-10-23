@@ -10,7 +10,6 @@ namespace app\oiling\controller\api;
 
 
 use app\lib\exception\DocumentException;
-use app\lib\tools\Tools;
 use app\model\InfoWarning;
 use app\model\OilAnalysis;
 use app\model\OilDetail;
@@ -75,7 +74,7 @@ class Download extends BaseController {
                 $x           = $equNo == 'all' ? '全部设备' : ($equNo . '号设备');
                 $fileName    = $beforeDate . '至' . $afterDate . $x . '的保养成本统计';
                 $costDetails = OilDetail::getCostList($before, $after, $equNo);
-                $total       = Tools::listMoveToArray($costDetails, 'total', false);
+                $total       = listMoveToArray($costDetails, 'total', false);
                 $cost        = 0;
                 foreach ($total as $value) {
                     $cost += $value;
@@ -91,7 +90,7 @@ class Download extends BaseController {
                 $x        = $equNo == 'all' ? '全部设备' : ($equNo . '号设备');
                 $fileName = $beforeDate . '至' . $afterDate . $x . '的保养成本统计';
                 $infoWarn = OilDetail::getEquCostList($before, $after, $equNo);
-                $total    = Tools::listMoveToArray($infoWarn, 'total', false);
+                $total    = listMoveToArray($infoWarn, 'total', false);
                 $cost     = 0;
                 foreach ($total as $value) {
                     $cost += $value;
@@ -100,7 +99,7 @@ class Download extends BaseController {
                 foreach ($infoWarn as $k => $v) {
                     array_push($content, [$v['equ_no'], $v['equ_oil_no'], $v['equ_oil_name'], $v['oil_no'], $v['oil_name'], $v['detail'], $v['unit'], $v['price'], $v['date'], $v['quantity'], $v['total']]);
                 }
-                array_push($content, ['', '', '', '', '', '', '','', '', '', $cost]);
+                array_push($content, ['', '', '', '', '', '', '', '', '', '', $cost]);
                 break;
             default:
                 break;

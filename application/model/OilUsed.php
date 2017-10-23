@@ -9,12 +9,10 @@
 namespace app\model;
 
 
-use app\lib\tools\Tools;
-
 class OilUsed extends BaseModel {
     public static function getRecentOilUsedIds() {
         $equKeyNoList = self::field('equ_key_no')->select();
-        $equKeyNos    = Tools::listMoveToArray($equKeyNoList, 'equ_key_no');
+        $equKeyNos    = listMoveToArray($equKeyNoList, 'equ_key_no');
         $arr          = [];
         foreach ($equKeyNos as $equKeyNo) {
             $item = self::where('equ_key_no', $equKeyNo)
@@ -25,6 +23,6 @@ class OilUsed extends BaseModel {
                 array_push($arr, $item);
             }
         }
-        return Tools::listMoveToArray($arr, 'id');
+        return listMoveToArray($arr, 'id');
     }
 }

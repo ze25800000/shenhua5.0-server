@@ -10,7 +10,6 @@ namespace app\validate\excelArray;
 
 
 use app\lib\exception\ParameterException;
-use app\lib\tools\Tools;
 use app\model\Equipment;
 use app\model\OilDetail;
 use app\model\OilStandard;
@@ -27,17 +26,17 @@ class ExcelArrayValidate extends BaseValidate {
         $OilDetail   = OilDetail::field('oil_no')->group('oil_no')->select();
         $OilStandard = OilStandard::field('equ_key_no')->group('equ_key_no')->select();
         if ($equipment) {
-            $this->equs = Tools::listMoveToArray($equipment, 'equ_no');
+            $this->equs = listMoveToArray($equipment, 'equ_no');
         } else {
             $this->equs = [];
         }
         if ($OilDetail) {
-            $this->oilNos = Tools::listMoveToArray($OilDetail, 'oil_no');
+            $this->oilNos = listMoveToArray($OilDetail, 'oil_no');
         } else {
             $this->oilNos = [];
         }
         if ($OilStandard) {
-            $this->equKeyNos = Tools::listMoveToArray($OilStandard, 'equ_key_no');
+            $this->equKeyNos = listMoveToArray($OilStandard, 'equ_key_no');
         } else {
             $this->equKeyNos = [];
         }

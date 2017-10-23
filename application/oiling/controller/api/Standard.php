@@ -10,7 +10,6 @@ namespace app\oiling\controller\api;
 
 
 use app\lib\exception\DocumentException;
-use app\lib\tools\Tools;
 use app\model\Equipment;
 use app\model\InfoWarning;
 use app\model\OilAnalysis;
@@ -147,7 +146,7 @@ class Standard extends BaseController {
             }
             $OilStandard->save($param);
             $equKeyNoList = OilStandard::field('equ_key_no')->select();
-            $equKeyNos    = Tools::listMoveToArray($equKeyNoList, 'equ_key_no');
+            $equKeyNos    = listMoveToArray($equKeyNoList, 'equ_key_no');
             foreach ($equKeyNos as $equKeyNo) {
                 $item = InfoWarning::where('equ_key_no', '=', $equKeyNo)
                     ->where('is_first_period', '=', $isFirstPeriod)

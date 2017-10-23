@@ -10,7 +10,6 @@ namespace app\oiling\controller\api;
 
 
 use app\lib\exception\DocumentException;
-use app\lib\tools\Tools;
 use app\model\InfoWarning;
 use app\service\BaseController;
 use app\service\ExcelHandle;
@@ -36,7 +35,7 @@ class WorkHour extends BaseController {
     public function addWorkHourItem() {
         (new WorkHourValidate())->goCheck();
 
-        $_POST['start_time'] = Tools::getTimestamp($_POST['start_time']);
+        $_POST['start_time'] = getTimestamp($_POST['start_time']);
         $workHour            = new \app\model\WorkHour($_POST);
         $result              = $workHour->save();
         if (!$result) {

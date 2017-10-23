@@ -3,7 +3,6 @@
 namespace app\oiling\controller\api;
 
 
-use app\lib\tools\Tools;
 use app\model\OilAnalysis;
 use app\model\OilUsed;
 use app\model\WorkHour;
@@ -50,7 +49,7 @@ class WarningInfo extends BaseController {
     public function lubricate() {
         (new LubricateValidate())->goCheck();
         $posts                     = input('post.');
-        $posts['del_warning_time'] = Tools::getTimestamp($posts['del_warning_time']) + 86399;
+        $posts['del_warning_time'] = getTimestamp($posts['del_warning_time']) + 86399;
         $posts['equ_key_no']       = $posts['equ_no'] . config('salt') . $posts['equ_oil_no'];
         $infoWarningModel          = new InfoWarning();
         $maxDelTime                = $infoWarningModel
@@ -93,7 +92,7 @@ class WarningInfo extends BaseController {
     public function postpone() {
         (new PostponeValidate())->goCheck();
         $posts                     = input('post.');
-        $posts['del_warning_time'] = Tools::getTimestamp($posts['del_warning_time']);
+        $posts['del_warning_time'] = getTimestamp($posts['del_warning_time']);
         $posts['equ_key_no']       = $posts['equ_no'] . config('salt') . $posts['equ_oil_no'];
         $infoWarningModel          = new InfoWarning();
         $maxDelTime                = $infoWarningModel
@@ -148,7 +147,7 @@ class WarningInfo extends BaseController {
                     'msg' => '日期格式有误，请输入xxxx年xx月xx日格式的时间'
                 ]);
             }
-            $param['del_warning_time'] = Tools::getTimestamp($param['del_warning_time']);
+            $param['del_warning_time'] = getTimestamp($param['del_warning_time']);
             $InfoWarningItem->how_long = $excelHandle->howLong($InfoWarningItem->equ_key_no, $param['del_warning_time']);
             $InfoWarningItem->status   = $excelHandle->getStatus($InfoWarningItem, $InfoWarningItem->how_long);
             $InfoWarningItem->deadline = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
