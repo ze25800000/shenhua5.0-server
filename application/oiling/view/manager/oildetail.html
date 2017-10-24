@@ -243,8 +243,6 @@
         $('title').html('润滑保养成本管理');
         var scrollHeight = $(document).height() - $('.scroll-box').offset().top - 92;
         $('.scroll-box').css('height', scrollHeight);
-
-
         var date = new Date(),
             year = date.getFullYear(),
             mouth = (2 + date.getMonth()).toString().length == 1 ? ('0' + (2 + date.getMonth())) : (2 + date.getMonth());
@@ -305,7 +303,13 @@
             }
             var input = _this.find('input');
             input.select();
-            window.base.editItemByDblClick(_this, input, oldVal, url);
+            window.base.editItemByDblClick(_this, input, oldVal, url, function () {
+
+            }, function (err) {
+                if (err.errcode === 1) {
+                    layer.msg(err.msg, {icon: 5});
+                }
+            });
         });
         $(document).on('click', '.getEquName', function () {
             $('#tanBody').html('');
@@ -335,13 +339,13 @@
                 $('.tanchuang .hintl').hide(100);
                 e.stopPropagation();
                 var params = {
-                    url: '/oiling/oildetail/delete/' + id+'?XDEBUG_SESSION_START=17512',
+                    url: '/oiling/oildetail/delete/' + id + '?XDEBUG_SESSION_START=17512',
                     type: 'delete',
                     sCallback: function (data) {
                         _this.parent().parent().hide(200).remove();
                     },
-                    eCallback:function (err) {
-                        if (err.errcode==1) {
+                    eCallback: function (err) {
+                        if (err.errcode == 1) {
                             layer.msg(err.msg, {icon: 5});
                         }
                     }

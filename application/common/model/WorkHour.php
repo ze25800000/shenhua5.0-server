@@ -7,11 +7,11 @@ class WorkHour extends BaseModel {
     protected $visible = ['start_time', 'working_hour'];
 
     public static function getRecentWorkHourIds() {
-        $equKeyNoList = self::field('equ_key_no')->select();
-        $equKeyNos    = listMoveToArray($equKeyNoList, 'equ_key_no');
+        $equNoList = self::field('equ_no')->select();
+        $equNos    = listMoveToArray($equNoList, 'equ_no');
         $arr          = [];
-        foreach ($equKeyNos as $equKeyNo) {
-            $item = self::where('equ_key_no', $equKeyNo)
+        foreach ($equNos as $equNo) {
+            $item = self::where('equ_key_no', $equNo)
                 ->order('start_time desc')
                 ->limit(1)
                 ->find();
