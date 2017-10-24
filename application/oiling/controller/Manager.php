@@ -3,14 +3,13 @@
 namespace app\oiling\controller;
 
 
-use app\lib\exception\DocumentException;
-use app\model\Equipment;
-use app\model\InfoWarning;
-use app\model\OilAnalysis;
-use app\model\OilConfig;
-use app\model\OilDetail;
-use app\model\OilStandard;
-use app\service\BaseController;
+use app\common\controller\BaseController;
+use app\common\model\InfoWarning;
+use app\common\model\Equipment;
+use app\common\model\OilAnalysis;
+use app\common\model\OilConfig;
+use app\common\model\OilDetail;
+use app\common\model\OilStandard;
 
 class Manager extends BaseController {
     public function warning() {

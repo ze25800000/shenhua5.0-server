@@ -9,11 +9,11 @@
 namespace app\oiling\controller\api;
 
 
-use app\lib\exception\DocumentException;
-use app\model\User;
-use app\service\BaseController;
-use app\validate\PwdModifyValidate;
-use app\validate\UserModifyValidate;
+use app\common\exception\DocumentException;
+use app\common\model\User;
+use app\common\controller\BaseController;
+use app\common\validate\PwdModifyValidate;
+use app\common\validate\UserModifyValidate;
 
 class Center extends BaseController {
     public function editUserDetailById($id) {

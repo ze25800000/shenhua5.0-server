@@ -3,18 +3,18 @@
 namespace app\oiling\controller\api;
 
 
-use app\model\OilAnalysis;
-use app\model\OilUsed;
-use app\model\WorkHour;
-use app\service\ExcelHandle;
-use app\validate\DetailDateValidate;
-use app\validate\IDCollection;
-use app\lib\exception\DocumentException;
-use app\model\InfoWarning;
-use app\service\BaseController;
-use app\validate\IDMustBePositiveInt;
-use app\validate\LubricateValidate;
-use app\validate\PostponeValidate;
+use app\common\model\OilAnalysis;
+use app\common\model\OilUsed;
+use app\common\model\WorkHour;
+use app\common\validate\DetailDateValidate;
+use app\common\validate\IDCollection;
+use app\common\exception\DocumentException;
+use app\common\model\InfoWarning;
+use app\common\controller\BaseController;
+use app\common\validate\IDMustBePositiveInt;
+use app\common\validate\LubricateValidate;
+use app\common\validate\PostponeValidate;
+use app\oiling\service\DataHandle;
 use think\Config;
 use think\Db;
 use think\Validate;
@@ -60,10 +60,9 @@ class WarningInfo extends BaseController {
                 'msg' => "最近一次消警日期为：" . date('Y年m月d日', $maxDelTime) . "，请输入大于该时间的消警日期"
             ]);
         }
-        $excelHandle       = new ExcelHandle();
-        $posts['how_long'] = $excelHandle->howLong($posts);
-        $posts['status']   = $excelHandle->getStatus($posts, $posts['how_long']);
-        $posts['deadline'] = $excelHandle->getDeadline($posts, $posts['how_long']);
+        $posts['how_long'] = DataHandle::howLong($posts);
+        $posts['status']   = DataHandle::getStatus($posts, $posts['how_long']);
+        $posts['deadline'] = DataHandle::getDeadline($posts, $posts['how_long']);
         $InfoWarningItem   = $infoWarningModel
             ->where('equ_key_no', '=', $posts['equ_key_no'])
             ->where('del_warning_time', '=', $posts['del_warning_time'])
@@ -80,7 +79,7 @@ class WarningInfo extends BaseController {
                 'msg' => '润滑操作失败'
             ]);
         }
-        $excelHandle->saveToOilUsed($posts);
+        DataHandle::saveToOilUsed($posts);
         $OilAnalysisItem = OilAnalysis::where(['equ_key_no' => $posts['equ_key_no']])->order('sampling_time desc')->find();
         if (!empty($OilAnalysisItem)) {
             $OilAnalysisItem->advise = 1;
@@ -103,7 +102,6 @@ class WarningInfo extends BaseController {
                 'msg' => "最近一次消警日期为：" . date('Y年m月d日', $maxDelTime) . "，请输入大于该时间的消警日期"
             ]);
         }
-        $excelHandle       = new ExcelHandle();
         $lastLubricate     = $infoWarningModel
             ->where("equ_key_no={$posts['equ_key_no']}")
             ->where('warning_type=1')
@@ -111,8 +109,8 @@ class WarningInfo extends BaseController {
             ->limit(1)
             ->find();
         $posts['how_long'] = $lastLubricate->how_long;
-        $posts['status']   = $excelHandle->getStatus($posts, $lastLubricate->how_long);
-        $posts['deadline'] = $excelHandle->getDeadline($posts, $lastLubricate->how_long);
+        $posts['status']   = DataHandle::getStatus($posts, $lastLubricate->how_long);
+        $posts['deadline'] = DataHandle::getDeadline($posts, $lastLubricate->how_long);
         $InfoWarningItem   = $infoWarningModel
             ->where('equ_key_no', '=', $posts['equ_key_no'])
             ->where('del_warning_time', '=', $posts['del_warning_time'])
@@ -135,7 +133,6 @@ class WarningInfo extends BaseController {
     public function editInfoWarningDetailById($id) {
         (new IDMustBePositiveInt())->goCheck();
         $InfoWarningItem = InfoWarning::get($id);
-        $excelHandle     = new ExcelHandle();
         $param           = input('post.');
         if (!empty($param['del_warning_time'])) {
             $validate = new Validate([
@@ -148,9 +145,9 @@ class WarningInfo extends BaseController {
                 ]);
             }
             $param['del_warning_time'] = getTimestamp($param['del_warning_time']);
-            $InfoWarningItem->how_long = $excelHandle->howLong($InfoWarningItem->equ_key_no, $param['del_warning_time']);
-            $InfoWarningItem->status   = $excelHandle->getStatus($InfoWarningItem, $InfoWarningItem->how_long);
-            $InfoWarningItem->deadline = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
+            $InfoWarningItem->how_long = DataHandle::howLong($InfoWarningItem);
+            $InfoWarningItem->status   = DataHandle::getStatus($InfoWarningItem, $InfoWarningItem->how_long);
+            $InfoWarningItem->deadline = DataHandle::getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
             $result                    = $InfoWarningItem->save($param);
         }
         if (!empty($param['is_first_period'])) {
@@ -165,8 +162,8 @@ class WarningInfo extends BaseController {
             }
             $param['is_first_period'] = preg_match('/^是$/', $param['is_first_period']) ? 1 : (preg_match('/^否$/', $param['is_first_period']) ? 0 : null);
             $InfoWarningItem->save($param);
-            $InfoWarningItem->status   = $excelHandle->getStatus($InfoWarningItem, $InfoWarningItem->how_long);
-            $InfoWarningItem->deadline = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
+            $InfoWarningItem->status   = DataHandle::getStatus($InfoWarningItem, $InfoWarningItem->how_long);
+            $InfoWarningItem->deadline = DataHandle::getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
             $result                    = $InfoWarningItem->save($param);
         }
         if (!empty($param['postpone'])) {
@@ -180,8 +177,8 @@ class WarningInfo extends BaseController {
                 ]);
             }
             $InfoWarningItem->save($param);
-            $param['status']   = $excelHandle->getStatus($InfoWarningItem, $InfoWarningItem->how_long);
-            $param['deadline'] = $excelHandle->getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
+            $param['status']   = DataHandle::getStatus($InfoWarningItem, $InfoWarningItem->how_long);
+            $param['deadline'] = DataHandle::getDeadline($InfoWarningItem, $InfoWarningItem->how_long);
             $result            = $InfoWarningItem->save($param);
         }
         if (empty($result)) {

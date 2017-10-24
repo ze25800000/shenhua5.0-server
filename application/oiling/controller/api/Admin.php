@@ -9,15 +9,14 @@
 namespace app\oiling\controller\api;
 
 
-use app\lib\exception\DocumentException;
-use app\model\Equipment;
-use app\model\InfoWarning;
-use app\model\OilAnalysis;
-use app\model\OilDetail;
-use app\model\OilStandard;
-use app\model\OilUsed;
-use app\service\BaseController;
-use app\model\WorkHour;
+use app\common\model\Equipment;
+use app\common\model\InfoWarning;
+use app\common\model\OilAnalysis;
+use app\common\model\OilDetail;
+use app\common\model\OilStandard;
+use app\common\model\OilUsed;
+use app\common\model\WorkHour;
+use app\common\controller\BaseController;
 use think\Db;
 use think\Exception;
 use think\Request;

@@ -9,13 +9,12 @@
 namespace app\oiling\controller\api;
 
 
-use app\lib\exception\DocumentException;
-use app\model\InfoWarning;
-use app\model\OilAnalysis;
-use app\model\OilDetail;
-use app\service\BaseController;
-use app\service\ExcelHandle;
-use app\validate\IDCollection;
+use app\common\exception\DocumentException;
+use app\common\model\InfoWarning;
+use app\common\model\OilAnalysis;
+use app\common\model\OilDetail;
+use app\common\controller\BaseController;
+use app\common\validate\IDCollection;
 
 class Download extends BaseController {
     public function downLoadExcelByIds($ids) {
@@ -61,8 +60,7 @@ class Download extends BaseController {
                     array_push($tableHeader, $v);
                 }
         }
-        $excelHandle = new ExcelHandle();
-        $excelHandle->downloadExcel($tableHeader, $excelTypeCh);
+        \Excel::downloadExcel($tableHeader, $excelTypeCh);
     }
 
     public function downloadCostListByDate($before, $after) {
@@ -104,7 +102,6 @@ class Download extends BaseController {
             default:
                 break;
         }
-        $excelHandle = new ExcelHandle();
-        $excelHandle->downloadExcel($content, $fileName);
+        \Excel::downloadExcel($content, $fileName);
     }
 }

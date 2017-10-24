@@ -3,19 +3,18 @@
 namespace app\oiling\controller;
 
 
-use app\lib\exception\SuccessMessage;
-use app\lib\exception\UserException;
-use app\model\InfoWarning;
-use app\service\BaseController;
-use app\model\User;
-use app\service\ExcelHandle;
+use app\common\exception\SuccessMessage;
+use app\common\exception\UserException;
+use app\common\model\InfoWarning;
+use app\common\controller\BaseController;
+use app\common\model\User;
+use app\oiling\service\DataHandle;
 use think\Db;
 use think\Request;
 
 class Index extends BaseController {
     public function _initialize() {
-        $timeFlag    = cache('timeFlag');
-        $excelTools = new ExcelHandle();
+        $timeFlag = cache('timeFlag');
         if (!$timeFlag) {
             $sql          = "SELECT *
                              FROM info_warning AS a
@@ -27,11 +26,11 @@ class Index extends BaseController {
                                                 WHERE a.oil_no = d.oil_no AND d.unit = 'KG')";
             $infoWarnings = Db::query($sql);
             foreach ($infoWarnings as &$infoWarning) {
-                $howLong = $excelTools->howLong($infoWarning);
+                $howLong = DataHandle::howLong($infoWarning);
                 InfoWarning::where(['id' => $infoWarning['id']])->update([
                     'how_long' => $howLong,
-                    'status'   => $excelTools->getStatus($infoWarning, $howLong),
-                    'deadline' => $excelTools->getDeadline($infoWarning, $howLong)
+                    'status'   => DataHandle::getStatus($infoWarning, $howLong),
+                    'deadline' => DataHandle::getDeadline($infoWarning, $howLong)
                 ]);
             }
             $resCache = cache('timeFlag', '每隔6小时更新数据库', 21600);

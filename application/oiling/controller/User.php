@@ -9,10 +9,10 @@
 namespace app\oiling\controller;
 
 
-use app\model\OilConfig;
-use app\model\OilDetail;
-use app\service\BaseController;
-use app\model\User as UserModel;
+use app\common\model\OilConfig;
+use app\common\model\OilDetail;
+use app\common\controller\BaseController;
+use app\common\model\User as UserModel;
 
 class User extends BaseController {
     protected $beforeActionList = [

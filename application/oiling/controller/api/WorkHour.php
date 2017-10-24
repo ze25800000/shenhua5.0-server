@@ -9,26 +9,25 @@
 namespace app\oiling\controller\api;
 
 
-use app\lib\exception\DocumentException;
-use app\model\InfoWarning;
-use app\service\BaseController;
-use app\service\ExcelHandle;
-use app\validate\IDMustBePositiveInt;
-use app\validate\WorkHourValidate;
+use app\common\exception\DocumentException;
+use app\common\model\InfoWarning;
+use app\common\controller\BaseController;
+use app\common\validate\IDMustBePositiveInt;
+use app\common\validate\WorkHourValidate;
+use app\oiling\service\DataHandle;
 use think\Db;
 
 class WorkHour extends BaseController {
     public function deleteWorkHourItemById($id) {
         (new IDMustBePositiveInt())->goCheck();
-        $workHourItem = \app\model\WorkHour::get($id);
+        $workHourItem = \app\common\model\WorkHour::get($id);
         $result       = $workHourItem->delete();
         if (!$result) {
             throw new DocumentException([
                 'msg' => '删除运行时间失败'
             ]);
         }
-        $excelTool = new ExcelHandle();
-        $excelTool->changeInfoWarning($workHourItem->equ_no);
+        DataHandle::changeInfoWarning($workHourItem->equ_no);
         return $this->ajaxReturn('删除运行时间成功');
     }
 
@@ -36,16 +35,15 @@ class WorkHour extends BaseController {
         (new WorkHourValidate())->goCheck();
 
         $_POST['start_time'] = getTimestamp($_POST['start_time']);
-        $workHour            = new \app\model\WorkHour($_POST);
+        $workHour            = new \app\common\model\WorkHour($_POST);
         $result              = $workHour->save();
         if (!$result) {
             throw new DocumentException([
                 'msg' => '添加运行时间失败'
             ]);
         }
-        $equNo     = $_POST['equ_no'];
-        $excelTool = new ExcelHandle();
-        $excelTool->changeInfoWarning($equNo);
+        $equNo = $_POST['equ_no'];
+        DataHandle::changeInfoWarning($equNo);
         return $this->ajaxReturn('添加运行时间成功');
     }
 }

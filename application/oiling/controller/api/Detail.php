@@ -9,10 +9,10 @@
 namespace app\oiling\controller\api;
 
 
-use app\lib\exception\DocumentException;
-use app\model\OilStandard;
-use app\service\BaseController;
-use app\validate\EquipmentKeyNoValidate;
+use app\common\exception\DocumentException;
+use app\common\model\OilStandard;
+use app\common\controller\BaseController;
+use app\common\validate\EquipmentKeyNoValidate;
 
 class Detail extends BaseController {
     public function getEquipmentDetailByNo($equ_key_no) {

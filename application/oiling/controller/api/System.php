@@ -3,28 +3,28 @@
 namespace app\oiling\controller\api;
 
 
-use app\lib\exception\DocumentException;
-use app\model\InfoWarning;
-use app\model\OilAnalysis;
-use app\model\OilConfig;
-use app\model\User;
-use app\service\BaseController;
-use app\service\ExcelHandle;
-use app\validate\IDMustBePositiveInt;
-use app\validate\ScopeValidate;
-use app\validate\SystemVariableValidate;
-use app\validate\UserValidate;
+use app\common\exception\DocumentException;
+use app\common\model\InfoWarning;
+use app\common\model\OilAnalysis;
+use app\common\model\OilConfig;
+use app\common\model\User;
+use app\common\controller\BaseController;
+use app\common\validate\IDMustBePositiveInt;
+use app\common\validate\ScopeValidate;
+use app\common\validate\SystemVariableValidate;
+use app\common\validate\UserValidate;
+use app\oiling\service\DataHandle;
+use app\oiling\service\ExcelHandle;
 
 class System extends BaseController {
     public function editSystemDetail() {
         (new SystemVariableValidate())->goCheck();
-        $config      = OilConfig::get(1);
-        $re          = $config->save($_POST);
-        $excelHandle = new ExcelHandle();
+        $config = OilConfig::get(1);
+        $re     = $config->save($_POST);
         if ($re && !empty($_POST['postpone'])) {
             $infoList = InfoWarning::getInfoList();
             foreach ($infoList as $infoItem) {
-                $infoItem->status = $excelHandle->getStatus($infoItem, $infoItem->how_long);
+                $infoItem->status = DataHandle::getStatus($infoItem, $infoItem->how_long);
                 $infoItem->save();
             }
         }
@@ -42,12 +42,11 @@ class System extends BaseController {
             foreach ($oilAnalysisList as $oilAnalysisItem) {
                 unset($oilAnalysisItem['oil_no']);
                 unset($oilAnalysisItem['oil_name']);
-                $oilAnalysisItem->oil_status = implode('<br>', $excelHandle->getOilStatus($oilAnalysisItem));
+                $oilAnalysisItem->oil_status = implode('<br>', DataHandle::getOilStatus($oilAnalysisItem));
                 $oilAnalysisItem->advise     = empty($oilAnalysisItem->oil_status) ? 1 : 0;
                 $oilAnalysisItem->save();
             }
         }
-//            Log::record($e);
         return $this->ajaxReturn('修改参数成功');
     }
 

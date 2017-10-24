@@ -9,13 +9,13 @@
 namespace app\oiling\controller\api;
 
 
-use app\lib\exception\DocumentException;
-use app\model\InfoWarning;
-use app\model\OilAnalysis;
-use app\model\OilDetail;
-use app\model\OilStandard;
-use app\service\BaseController;
-use app\validate\KeywordMustBeHanZiValidate;
+use app\common\exception\DocumentException;
+use app\common\model\InfoWarning;
+use app\common\model\OilAnalysis;
+use app\common\model\OilDetail;
+use app\common\model\OilStandard;
+use app\common\controller\BaseController;
+use app\common\validate\KeywordMustBeHanZiValidate;
 use think\Request;
 
 class Search extends BaseController {

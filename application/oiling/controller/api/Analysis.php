@@ -9,14 +9,15 @@
 namespace app\oiling\controller\api;
 
 
-use app\lib\exception\DocumentException;
-use app\model\OilAnalysis;
-use app\service\BaseController;
-use app\service\ExcelHandle;
-use app\validate\DetailDateValidate;
-use app\validate\EquipmentKeyNoValidate;
-use app\validate\IDMustBePositiveInt;
-use app\validate\OilAnalysisItemValidate;
+use app\common\exception\DocumentException;
+use app\common\model\OilAnalysis;
+use app\common\controller\BaseController;
+use app\common\validate\DetailDateValidate;
+use app\common\validate\EquipmentKeyNoValidate;
+use app\common\validate\IDMustBePositiveInt;
+use app\common\validate\OilAnalysisItemValidate;
+use app\oiling\service\DataHandle;
+use app\oiling\service\ExcelHandle;
 use think\Db;
 
 class Analysis extends BaseController {
@@ -49,17 +50,16 @@ class Analysis extends BaseController {
 
     public function editOilAnalysisItemById($id) {
         (new IDMustBePositiveInt())->goCheck();
-        $analysis    = OilAnalysis::get($id);
-        $excelHandle = new ExcelHandle();
-        $post        = input('post.');
-        $keys        = array_keys($post);
+        $analysis = OilAnalysis::get($id);
+        $post     = input('post.');
+        $keys     = array_keys($post);
         if ($keys[0] == 'sampling_time') {
             $timestamp          = getTimestamp($post[$keys[0]]);
             $analysis->$keys[0] = $timestamp;
         } else {
             $analysis->$keys[0] = $post[$keys[0]];
         }
-        $analysis->oil_status = implode('<br>', $excelHandle->getOilStatus($analysis));
+        $analysis->oil_status = implode('<br>', DataHandle:: getOilStatus($analysis));
         $analysis->advise     = empty($analysis->oil_status) ? 1 : 0;
         $result               = $analysis->save();
         if (!$result) {
@@ -81,13 +81,12 @@ class Analysis extends BaseController {
 
     public function addOilAnalysisItem() {
         (new OilAnalysisItemValidate())->goCheck();
-        $excelHandle            = new ExcelHandle();
         $_POST['equ_key_no']    = $_POST['equ_no'] . config('salt') . $_POST['equ_oil_no'];
         $_POST['sampling_time'] = getTimestamp($_POST['sampling_time']);
-        $_POST['oil_no']        = $excelHandle->getOilNoFromInfo($_POST['equ_key_no']);
-        $_POST['oil_status']    = implode('<br>', $excelHandle->getOilStatus($_POST));
+        $_POST['oil_no']        = DataHandle::getOilNoFromInfo($_POST['equ_key_no']);
+        $_POST['oil_status']    = implode('<br>', DataHandle::getOilStatus($_POST));
         $_POST['advise']        = empty($_POST['oil_status']) ? 1 : 0;
-        $_POST['work_hour']     = $excelHandle->howLong($_POST);
+        $_POST['work_hour']     = DataHandle::howLong($_POST);
         $OilAnalysis            = new OilAnalysis($_POST);
         $MaxSamplingTime        = $OilAnalysis
             ->where('equ_key_no', '=', $_POST['equ_key_no'])

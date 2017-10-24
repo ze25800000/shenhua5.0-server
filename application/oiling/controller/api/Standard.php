@@ -9,18 +9,18 @@
 namespace app\oiling\controller\api;
 
 
-use app\lib\exception\DocumentException;
-use app\model\Equipment;
-use app\model\InfoWarning;
-use app\model\OilAnalysis;
-use app\model\OilNoList;
-use app\model\OilStandard;
-use app\model\OilUsed;
-use app\service\BaseController;
-use app\service\ExcelHandle;
-use app\validate\EquipmentNoValidate;
-use app\validate\EquipmentValidate;
-use app\validate\IDMustBePositiveInt;
+use app\common\exception\DocumentException;
+use app\common\model\Equipment;
+use app\common\model\InfoWarning;
+use app\common\model\OilAnalysis;
+use app\common\model\OilNoList;
+use app\common\model\OilStandard;
+use app\common\model\OilUsed;
+use app\common\controller\BaseController;
+use app\common\validate\EquipmentNoValidate;
+use app\common\validate\EquipmentValidate;
+use app\common\validate\IDMustBePositiveInt;
+use app\oiling\service\DataHandle;
 use think\Validate;
 
 class Standard extends BaseController {
@@ -88,7 +88,7 @@ class Standard extends BaseController {
         $info     = Equipment::where("equ_no='{$equ_no}' or equ_name='{$equ_name}'")->find();
         if ($info) {
             throw new DocumentException([
-                'msg' => '您所输入的设备名称或者编号已经存在'
+                'msg' => '您输入的设备名称或者编号已经存在'
             ]);
         }
         $equ    = new Equipment();
@@ -124,7 +124,6 @@ class Standard extends BaseController {
      */
     public function editOilStandardDetailById($id) {
         (new IDMustBePositiveInt())->goCheck();
-        $excelHandle = new ExcelHandle();
 
         $param       = input('post.');
         $OilStandard = OilStandard::get($id);
@@ -153,9 +152,8 @@ class Standard extends BaseController {
                     ->order('del_warning_time desc')
                     ->find();
                 if ($item) {
-                    $item->how_long = $excelHandle->howLong($item);
-                    $item->status   = $excelHandle->getStatus($item, $item->how_long);
-                    $item->deadline = $excelHandle->getDeadline($item, $item->how_long);
+                    $item->status   = DataHandle::getStatus($item, $item->how_long);
+                    $item->deadline = DataHandle::getDeadline($item, $item->how_long);
                     $item->save();
                 }
             }

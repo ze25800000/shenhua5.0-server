@@ -9,13 +9,14 @@
 namespace app\oiling\controller\api;
 
 
-use app\lib\exception\DocumentException;
-use app\model\InfoWarning;
-use app\model\OilDetail;
-use app\model\OilUsed;
-use app\service\BaseController;
-use app\validate\DetailDateValidate;
-use app\validate\IDMustBePositiveInt;
+use app\common\exception\DocumentException;
+use app\common\model\InfoWarning;
+use app\common\model\OilDetail;
+use app\common\model\OilNoList;
+use app\common\model\OilUsed;
+use app\common\controller\BaseController;
+use app\common\validate\DetailDateValidate;
+use app\common\validate\IDMustBePositiveInt;
 use think\Db;
 
 class OilDetailCost extends BaseController {
@@ -31,7 +32,7 @@ class OilDetailCost extends BaseController {
         foreach ($totals as $total) {
             $totalPrice += $total;
         }
-        return $this->ajaxReturn('success', 0, $temp, $totalPrice);
+        return $this->ajaxReturn('success', 0, $temp, round($totalPrice, 2));
     }
 
     public function getEquTotalPriceByDate($before, $after) {
@@ -66,13 +67,13 @@ class OilDetailCost extends BaseController {
                 ORDER BY equ_no ASC ,equ_oil_no ASC ";
         $list  = Db::query($sql);
 
-        foreach ($list as &$v) {
-            $v['del_warning_time'] = date('Y年m月d日', $v['del_warning_time']);
-        }
         if (!$list) {
             throw new DocumentException([
                 'msg' => '获取润滑点信息失败'
             ]);
+        }
+        foreach ($list as &$v) {
+            $v['del_warning_time'] = date('Y年m月d日', $v['del_warning_time']);
         }
         return $this->ajaxReturn('获取润滑点信息成功', '0', $list);
     }
@@ -86,6 +87,9 @@ class OilDetailCost extends BaseController {
                 'msg' => '删除失败'
             ]);
         }
+        OilNoList::where([
+            'oil_no' => $OilDetail->oil_no
+        ])->delete();
         OilUsed::where([
             'oil_no' => $OilDetail->oil_no
         ])->delete();
