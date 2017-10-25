@@ -25,7 +25,7 @@ use think\Validate;
 
 class Standard extends BaseController {
     protected $beforeActionList = [
-        'checkAdminScope' => ['only' => 'editOilStandardDetailById,deleteOilStandardItemById,addEquipment,delEquipmentById,delEquipmentById']
+        'checkAdminScope' => ['only' => 'modifyOilNo,editOilStandardDetailById,deleteOilStandardItemById,addEquipment,delEquipmentById,delEquipmentById']
     ];
 
     /** 获取设备润滑标准列表

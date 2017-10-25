@@ -316,9 +316,7 @@
             },
             eCallback: function (err) {
                 if (err.errcode == 1) {
-                    layer.msg(err.msg, {icon: 5},function () {
-                        location.reload();
-                    });
+                    layer.msg(err.msg+'，修改失败', {icon: 5});
                 }
             }
         };
@@ -412,7 +410,13 @@
         }
         var input = _this.find('input');
         input.select();
-        window.base.editItemByDblClick(_this, input, oldVal, url);
+        window.base.editItemByDblClick(_this, input, oldVal, url,function () {
+            layer.msg('修改成功')
+        },function (err) {
+            if (err.errcode===1) {
+                layer.msg(err.msg,{icon:5})
+            }
+        });
     });
     //上传excel
     $(document).on('click', '.upload', function () {
